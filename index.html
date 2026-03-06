@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admission Activity Logger</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+    /* Premium "Midnight Glass" Color Palette */
+    :root {
+        --primary: #8b5cf6; 
+        --primary-hover: #7c3aed;
+        --card-bg: rgba(255, 255, 255, 0.92); 
+        --text-main: #0f172a; 
+        --text-muted: #64748b;
+        --border-color: #cbd5e1;
+        --input-bg: #f8fafc;
+        --success: #10b981; 
+        --success-hover: #059669;
+        --info: #3b82f6; 
+        --info-hover: #2563eb;
+        --danger: #f43f5e; 
+        --danger-hover: #e11d48;
+    }
+
+    * {
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Sophisticated Dark Aurora Gradient */
+    body {
+        background: linear-gradient(-45deg, #0f172a, #1e1b4b, #0c4a6e, #172554);
+        background-size: 400% 400%;
+        animation: gradientBG 18s ease infinite;
+        color: var(--text-main);
+        padding: 40px 20px;
+        line-height: 1.5;
+        min-height: 100vh;
+    }
+
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .container {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    .title {
+        font-size: 36px;
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 30px;
+        color: #ffffff;
+        letter-spacing: -0.5px;
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        animation: fadeInDown 0.8s ease-out;
+    }
+
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+        background: var(--card-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        margin-bottom: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: slideUp 0.6s ease-out backwards;
+    }
+
+    .card:nth-child(2) { animation-delay: 0.1s; }
+    .card:nth-child(3) { animation-delay: 0.2s; }
+    .card:nth-child(4) { animation-delay: 0.3s; }
+    .card:nth-child(5) { animation-delay: 0.4s; }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 20px;
+        transform-origin: top;
+    }
+
+    .grid:not(.hidden) {
+        animation: expandOpen 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes expandOpen {
+        from { opacity: 0; transform: scaleY(0.9) translateY(-10px); }
+        to { opacity: 1; transform: scaleY(1) translateY(0); }
+    }
+
+    @media(max-width: 768px) {
+        .grid { grid-template-columns: 1fr; }
+        body { padding: 20px 15px; }
+        .buttons { flex-direction: column; }
+    }
+
+    input, select, .custom-time-btn {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+        background-color: var(--input-bg);
+        font-size: 14px;
+        color: var(--text-main);
+        transition: all 0.3s ease;
+        appearance: none;
+    }
+
+    .custom-time-btn {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        background-color: #fff;
+    }
+
+    .custom-time-btn:hover {
+        border-color: var(--primary);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+        transform: translateY(-1px);
+    }
+
+    .custom-time-btn span {
+        color: #94a3b8;
+    }
+    
+    .custom-time-btn.has-value span {
+        color: var(--text-main);
+        font-weight: 600;
+    }
+
+    select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+        padding-right: 40px;
+    }
+
+    input:focus, select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
+        background-color: #fff;
+        transform: translateY(-2px);
+    }
+
+    input::placeholder { color: #94a3b8; }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 28px;
+    }
+    .switch input { display: none; }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: #cbd5e1;
+        border-radius: 30px;
+        transition: .4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        border-radius: 50%;
+        transition: .4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    input:checked + .slider { background-color: var(--primary); }
+    input:checked + .slider:before { transform: translateX(22px); }
+    .hidden { display: none !important; }
+
+    .buttons { display: flex; gap: 12px; }
+    button {
+        flex: 1;
+        padding: 16px 12px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 15px;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    button:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+    button:active {
+        transform: translateY(0) scale(0.98);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .whatsapp { background: var(--success); color: white; }
+    .whatsapp:hover { background: var(--success-hover); }
+    .pdf { background: var(--info); color: white; }
+    .pdf:hover { background: var(--info-hover); }
+    .reset { background: var(--danger); color: white; }
+    .reset:hover { background: var(--danger-hover); }
+
+    .popup-bg {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+    }
+    .popup {
+        background: white;
+        padding: 40px 32px;
+        border-radius: 24px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes popIn {
+        0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+        100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .popup h3 { margin-bottom: 24px; font-size: 24px; color: var(--text-main); font-weight: 800; }
+    .popup input { margin-bottom: 8px; font-size: 16px; padding: 14px 16px; }
+    .popup .primary-btn { margin-top: 20px; width: 100%; background: var(--primary); color: white; }
+    .popup .primary-btn:hover { background: var(--primary-hover); }
+
+    .time-selector-area {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        margin: 20px 0 30px 0;
+    }
+    .time-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+    .time-col button {
+        background: #f1f5f9;
+        color: var(--text-muted);
+        border-radius: 12px;
+        width: 50px;
+        height: 40px;
+        padding: 0;
+        font-size: 20px;
+        box-shadow: none;
+    }
+    .time-col button:hover {
+        background: var(--primary);
+        color: white;
+        transform: scale(1.05);
+    }
+    .time-val {
+        font-size: 40px;
+        font-weight: 800;
+        color: var(--text-main);
+        width: 60px;
+        text-align: center;
+        line-height: 1;
+    }
+    .time-colon {
+        font-size: 40px;
+        font-weight: 800;
+        color: var(--text-muted);
+        padding-bottom: 6px;
+    }
+    .ampm-btn {
+        background: var(--text-main);
+        color: white;
+        font-size: 22px;
+        width: 70px;
+        height: 70px;
+        border-radius: 20px;
+        margin-left: 10px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .ampm-btn:hover { background: #000; }
+    .time-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .now-btn {
+        background: #ede9fe; 
+        color: var(--primary-hover);
+        box-shadow: none;
+        padding: 12px;
+    }
+    .now-btn:hover { background: #ddd6fe; box-shadow: none; }
+    .cancel-btn {
+        background: transparent;
+        color: var(--text-muted);
+        box-shadow: none;
+        padding: 10px;
+        font-weight: 500;
+    }
+    .cancel-btn:hover { background: #f1f5f9; box-shadow: none; transform: none; }
+
+    /* Footer Styles */
+    .footer {
+        text-align: center;
+        margin-top: 40px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        animation: fadeInDown 1s ease-out;
+    }
+</style>
+</head>
+
+<body>
+
+<div id="popup" class="popup-bg">
+    <div class="popup">
+        <h3>NAMASTE | नमस्ते🙏<br><span style="font-size: 14px; font-weight: 400; color: #64748b;"></span></h3>
+        <input id="internInput" placeholder="Enter Intern Name">
+        <button id="saveBtn" class="primary-btn">Continue</button>
+    </div>
+</div>
+
+<div id="timeModal" class="popup-bg hidden">
+    <div class="popup">
+        <h3>Select Time</h3>
+        
+        <div class="time-selector-area">
+            <div class="time-col">
+                <button onclick="adjustTime('h', 1)">▲</button>
+                <div id="tp-hour" class="time-val">10</div>
+                <button onclick="adjustTime('h', -1)">▼</button>
+            </div>
+            <div class="time-colon">:</div>
+            <div class="time-col">
+                <button onclick="adjustTime('m', 1)">▲</button>
+                <div id="tp-min" class="time-val">30</div>
+                <button onclick="adjustTime('m', -1)">▼</button>
+            </div>
+            <div class="time-col">
+                <button onclick="toggleAMPM()" id="tp-ampm" class="ampm-btn">AM</button>
+            </div>
+        </div>
+
+        <div class="time-actions">
+            <button class="now-btn" onclick="setTimeToNow()">🕒 Auto-fill Current Time</button>
+            <button class="primary-btn" onclick="confirmTime()">Confirm Selection</button>
+            <button class="cancel-btn" onclick="closeTimeModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="title">REPORT GENERATOR</div>
+
+    <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="section-title"> 🎟️ REGISTRATION</div>
+            <label class="switch">
+                <input type="checkbox" class="section-toggle" onchange="toggle('tokenCard',this.checked)">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div id="tokenCard" class="grid hidden">
+            <input id="regname" placeholder="Name">
+            <input id="lead" placeholder="Lead Number">
+            <input id="token" placeholder="Token Number">
+        </div>
+    </div>
+
+    <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="section-title">📍Visit Details</div>
+            <label class="switch">
+                <input type="checkbox" class="section-toggle" onchange="toggle('visitCard',this.checked)">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div id="visitCard" class="grid hidden">
+            <input id="name" placeholder="Student Name">
+            <input id="leadno" placeholder="Lead Number">
+            <select id="course">
+                <option value="">Select Course</option>
+                <option>ANM</option>
+                <option>B.Arch.</option>
+                <option>B.Com B.Ed</option>
+                <option>B.Com.</option>
+                <option>BBA</option>
+                <option>BCA</option>
+                <option>B.Tech.</option>
+                <option>MBA</option>
+                <option>MCA</option>
+            </select>
+            <select id="counselor">
+                <option value="">Select Counselor</option>
+                <option>Chirag Sir</option>
+                <option>Bansi Ma'am</option>
+                <option>Jagrit Sir</option>
+                <option>Vaibhav Sir</option>
+                <option>Dharmesh Sir</option>
+                <option>Ketki Ma'am</option>
+                <option>Ayush Sir</option>
+                <option>Parthavi Ma'am</option>
+                <option>Ankur Sir</option>
+                <option>Dhatri Ma'am</option>
+                <option>Khushi Ma'am</option>
+                <option>Hitanshi Ma'am</option>
+                <option>Naitri Ma'am</option>
+                <option>Simran Ma'am</option>
+                <option>Dikshita Ma'am</option>
+                <option>Kartik Sir</option>
+                <option>Prutviraj</option>
+                <option>Kavita Ma'am</option>
+                <option>Yukta Ma'am</option>
+                <option>Shruti Ma'am</option>
+                <option>Jaimin Sir</option>
+                <option>Riddhi Ma'am</option>
+            </select>
+            <input id="person" placeholder="Concerned Person">
+            <input id="place" placeholder="Place of Visit">
+            
+            <div class="custom-time-btn" onclick="openTimeModal('start1')">
+                <span id="start1_display">Start Time</span>
+                <svg width="20" height="20" fill="none" stroke="#64748b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <input type="hidden" id="start1">
+
+            <div class="custom-time-btn" onclick="openTimeModal('end1')">
+                <span id="end1_display">End Time</span>
+                <svg width="20" height="20" fill="none" stroke="#64748b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <input type="hidden" id="end1">
+        </div>
+    </div>
+
+    <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="section-title">📢 Admission Process</div>
+            <label class="switch">
+                <input type="checkbox" class="section-toggle" onchange="toggle('admissionCard',this.checked)">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div id="admissionCard" class="grid hidden">
+            <input id="name2" placeholder="Student Name">
+            <input id="leadno2" placeholder="Lead Number">
+            <input id="enroll" placeholder="Enrollment Number">
+            
+            <select id="counselor2">
+                <option value="">Select Counselor</option>
+                <option>Chirag Sir</option>
+                <option>Bansi Ma'am</option>
+                <option>Jagrit Sir</option>
+                <option>Vaibhav Sir</option>
+                <option>Dharmesh Sir</option>
+                <option>Ketki Ma'am</option>
+                <option>Ayush Sir</option>
+                <option>Parthavi Ma'am</option>
+                <option>Ankur Sir</option>
+                <option>Dhatri Ma'am</option>
+                <option>Khushi Ma'am</option>
+                <option>Hitanshi Ma'am</option>
+                <option>Naitri Ma'am</option>
+                <option>Simran Ma'am</option>
+                <option>Dikshita Ma'am</option>
+                <option>Kartik Sir</option>
+                <option>Prutviraj</option>
+                <option>Kavita Ma'am</option>
+                <option>Yukta Ma'am</option>
+                <option>Shruti Ma'am</option>
+                <option>Jaimin Sir</option>
+                <option>Riddhi Ma'am</option>
+            </select>
+            
+            <div class="custom-time-btn" onclick="openTimeModal('start2')">
+                <span id="start2_display">Start Time</span>
+                <svg width="20" height="20" fill="none" stroke="#64748b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <input type="hidden" id="start2">
+
+            <div class="custom-time-btn" onclick="openTimeModal('end2')">
+                <span id="end2_display">End Time</span>
+                <svg width="20" height="20" fill="none" stroke="#64748b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <input type="hidden" id="end2">
+        </div>
+    </div>
+
+    <div class="card" style="background: transparent; box-shadow: none; border: none; padding: 0; margin-top: 10px; backdrop-filter: none;">
+        <div class="buttons">
+            <button class="whatsapp" onclick="sendWhatsApp()">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                WhatsApp
+            </button>
+            <button class="pdf" onclick="generatePDF()">
+                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                PDF
+            </button>
+            <button class="reset" onclick="resetForm()">
+                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                Clear
+            </button>
+        </div>
+    </div>
+    
+    <div class="footer">Made with ❤️ by Intern</div>
+</div>
+
+<script>
+/* --- Reset Form Logic --- */
+function resetForm() {
+    if(!confirm("Are you sure you want to clear all data?")) return;
+    
+    document.querySelectorAll('.grid input[type="text"], .grid input:not([type])').forEach(input => input.value = '');
+    document.querySelectorAll('.grid select').forEach(select => select.selectedIndex = 0);
+    
+    let timeFields = ['start1', 'end1', 'start2', 'end2'];
+    timeFields.forEach(id => {
+        let hiddenInput = document.getElementById(id);
+        let displaySpan = document.getElementById(id + '_display');
+        
+        if(hiddenInput && displaySpan) {
+            hiddenInput.value = '';
+            displaySpan.innerText = id.includes('start') ? 'Start Time' : 'End Time';
+            displaySpan.parentElement.classList.remove('has-value');
+        }
+    });
+
+    document.querySelectorAll('.section-toggle').forEach(toggle => {
+        toggle.checked = false;
+        let cardId = toggle.getAttribute('onchange').match(/'([^']+)'/)[1];
+        document.getElementById(cardId).classList.add('hidden');
+    });
+}
+/* ------------------------ */
+
+/* --- Custom Modern Time Picker Logic --- */
+let activeTimeField = '';
+let th = 10;
+let tm = 0;
+let tap = 'AM';
+
+function updateTimeUI() {
+    document.getElementById('tp-hour').innerText = th < 10 ? '0'+th : th;
+    document.getElementById('tp-min').innerText = tm < 10 ? '0'+tm : tm;
+    document.getElementById('tp-ampm').innerText = tap;
+}
+
+function openTimeModal(fieldId) {
+    activeTimeField = fieldId;
+    document.getElementById('timeModal').classList.remove('hidden');
+    updateTimeUI();
+}
+
+function closeTimeModal() {
+    document.getElementById('timeModal').classList.add('hidden');
+}
+
+function adjustTime(type, direction) {
+    if (type === 'h') {
+        th += direction;
+        if (th > 12) th = 1;
+        if (th < 1) th = 12;
+    } else if (type === 'm') {
+        tm += direction;
+        if (tm > 59) tm = 0;
+        if (tm < 0) tm = 59;
+    }
+    updateTimeUI();
+}
+
+function toggleAMPM() {
+    tap = tap === 'AM' ? 'PM' : 'AM';
+    updateTimeUI();
+}
+
+function setTimeToNow() {
+    let d = new Date();
+    let hours = d.getHours();
+    tap = hours >= 12 ? 'PM' : 'AM';
+    th = hours % 12;
+    th = th ? th : 12; 
+    tm = d.getMinutes();
+    updateTimeUI();
+}
+
+function confirmTime() {
+    let formattedH = th < 10 ? '0'+th : th;
+    let formattedM = tm < 10 ? '0'+tm : tm;
+    let finalTimeStr = `${formattedH}:${formattedM} ${tap}`;
+    
+    document.getElementById(activeTimeField).value = finalTimeStr;
+    
+    let displaySpan = document.getElementById(activeTimeField + '_display');
+    displaySpan.innerText = finalTimeStr;
+    displaySpan.parentElement.classList.add('has-value');
+    
+    closeTimeModal();
+}
+/* -------------------------------------- */
+
+
+/* cookie */
+function setCookie(name,value,days){
+    let d=new Date()
+    d.setTime(d.getTime()+(days*24*60*60*1000))
+    document.cookie=name+"="+value+";expires="+d.toUTCString()+";path=/"
+}
+
+function getCookie(name){
+    let cname=name+"="
+    let ca=document.cookie.split(';')
+    for(let i=0;i<ca.length;i++){
+        let c=ca[i].trim()
+        if(c.indexOf(cname)==0){
+            return c.substring(cname.length,c.length)
+        }
+    }
+    return ""
+}
+
+/* popup */
+window.onload=function(){
+    let name=getCookie("intern")
+    if(name!=""){
+        document.getElementById("popup").style.display="none"
+    }
+}
+
+/* save intern */
+document.getElementById("saveBtn").onclick=function(){
+    let name=document.getElementById("internInput").value.trim()
+    if(name===""){
+        alert("Please enter your name")
+        return
+    }
+    setCookie("intern",name,365)
+    document.getElementById("popup").style.display="none"
+}
+
+/* toggle */
+function toggle(id,show){
+    document.getElementById(id).classList.toggle("hidden",!show)
+}
+
+/* date */
+function getToday(){
+    let d=new Date()
+    let day=String(d.getDate()).padStart(2,'0')
+    let month=String(d.getMonth()+1).padStart(2,'0')
+    let year=d.getFullYear()
+    return day+"/"+month+"/"+year
+}
+
+/* Smart Lead # Formatter */
+function formatLead(val) {
+    if (!val) return "";
+    return val.startsWith("#") ? val : "#" + val;
+}
+
+/* message */
+function generateMessage(){
+    let intern=getCookie("intern")
+    let msg=`*Date:* ${getToday()}\n*Intern:* ${intern}\n\n`
+
+    if(!document.getElementById('tokenCard').classList.contains("hidden")){
+        msg+=`*TOKEN Registration*\n\n*Name:* ${document.getElementById('regname').value}\n*Lead No:* ${formatLead(document.getElementById('lead').value)}\n*Token No:* ${document.getElementById('token').value}\n\n`
+    }
+
+    if(!document.getElementById('visitCard').classList.contains("hidden")){
+        msg+=`*VISIT DETAILS*\n\n*Name:* ${document.getElementById('name').value}\n*Lead No:* ${formatLead(document.getElementById('leadno').value)}\n*Course:* ${document.getElementById('course').value}\n*Counselor:* ${document.getElementById('counselor').value}\n*Concerned Person:* ${document.getElementById('person').value}\n*Place Visit:* ${document.getElementById('place').value}\n\n*Start Time:* ${document.getElementById('start1').value}\n*End Time:* ${document.getElementById('end1').value}\n\n`
+    }
+
+    if(!document.getElementById('admissionCard').classList.contains("hidden")){
+        msg+=`*ADMISSION PROCESS*\n\n*Name:* ${document.getElementById('name2').value}\n*Lead No:* ${formatLead(document.getElementById('leadno2').value)}\n*Enrollment No:* ${document.getElementById('enroll').value}\n*Counselor:* ${document.getElementById('counselor2').value}\n\n*Start Time:* ${document.getElementById('start2').value}\n*End Time:* ${document.getElementById('end2').value}\n\n`
+    }
+    return msg
+}
+
+/* whatsapp */
+function sendWhatsApp(){
+    let url="https://wa.me/?text="+encodeURIComponent(generateMessage())
+    window.open(url)
+}
+
+/* pdf */
+function generatePDF(){
+    const { jsPDF } = window.jspdf
+    let doc=new jsPDF()
+    doc.text(generateMessage(),10,10)
+    doc.save("report.pdf")
+}
+</script>
+
+</body>
+</html>
