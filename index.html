@@ -40,6 +40,7 @@
         animation: gradientBG 18s ease infinite;
         color: var(--text-main);
         padding: 40px 20px;
+        padding-bottom: 100px; /* Added padding so content isn't hidden behind the bottom nav */
         line-height: 1.5;
         min-height: 100vh;
     }
@@ -183,7 +184,7 @@
 
     @media(max-width: 768px) {
         .entry-block { grid-template-columns: 1fr; }
-        body { padding: 20px 15px; }
+        body { padding: 20px 15px; padding-bottom: 90px; }
         .buttons { flex-direction: column; }
     }
 
@@ -302,6 +303,9 @@
     .pdf:hover { background: var(--info-hover); }
     .reset { background: var(--danger); color: white; }
     .reset:hover { background: var(--danger-hover); }
+    
+    .primary-btn { background: var(--primary); color: white; }
+    .primary-btn:hover { background: var(--primary-hover); }
 
     .popup-bg {
         position: fixed;
@@ -330,8 +334,7 @@
     }
     .popup h3 { margin-bottom: 24px; font-size: 24px; color: var(--text-main); font-weight: 800; }
     .popup input { margin-bottom: 8px; font-size: 16px; padding: 14px 16px; }
-    .popup .primary-btn { margin-top: 20px; width: 100%; background: var(--primary); color: white; }
-    .popup .primary-btn:hover { background: var(--primary-hover); }
+    .popup .primary-btn { margin-top: 20px; width: 100%; }
 
     .time-selector-area {
         display: flex;
@@ -417,6 +420,140 @@
         letter-spacing: 0.5px;
         animation: fadeInDown 1s ease-out;
     }
+
+    /* --- BOTTOM NAVIGATION STYLES --- */
+    .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 12px 0 16px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 900;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #94a3b8;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+        gap: 4px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        width: 30%;
+    }
+
+    .nav-item svg {
+        width: 24px;
+        height: 24px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: transform 0.3s ease;
+    }
+
+    .nav-item:hover { color: #e2e8f0; }
+    .nav-item.active { color: var(--primary); }
+    .nav-item.active svg { transform: translateY(-2px); }
+    
+    /* --- NEW: MODERN SERVICES GRID STYLES --- */
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-top: 10px;
+    }
+    
+    @media(min-width: 600px) {
+        .services-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .service-tile {
+        background: var(--card-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 20px;
+        padding: 24px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        text-decoration: none;
+        color: var(--text-main);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .service-tile:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary);
+        box-shadow: 0 12px 30px rgba(139, 92, 246, 0.15);
+    }
+
+    .service-icon-wrapper {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        transition: transform 0.3s ease;
+    }
+
+    .service-tile:hover .service-icon-wrapper {
+        transform: scale(1.1);
+    }
+
+    .service-icon-wrapper svg {
+        width: 28px;
+        height: 28px;
+        stroke-width: 2;
+    }
+
+    .service-title {
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.3;
+        color: var(--text-main);
+    }
+
+    /* Custom Colors for Grid Tiles */
+    .tile-1 .service-icon-wrapper { color: var(--primary); background: rgba(139, 92, 246, 0.12); }
+    .tile-2 .service-icon-wrapper { color: var(--info); background: rgba(59, 130, 246, 0.12); }
+    .tile-3 .service-icon-wrapper { color: var(--success); background: rgba(16, 185, 129, 0.12); }
+    .tile-4 .service-icon-wrapper { color: var(--danger); background: rgba(244, 63, 94, 0.12); }
+    .tile-5 .service-icon-wrapper { color: #f59e0b; background: rgba(245, 158, 11, 0.12); } /* Amber */
+    .tile-6 .service-icon-wrapper { color: #06b6d4; background: rgba(6, 182, 212, 0.12); } /* Cyan */
+    .tile-7 .service-icon-wrapper { color: #ec4899; background: rgba(236, 72, 153, 0.12); } /* Pink */
+    .tile-8 .service-icon-wrapper { color: #8b5cf6; background: rgba(139, 92, 246, 0.12); } 
+    .tile-9 .service-icon-wrapper { color: var(--success); background: rgba(16, 185, 129, 0.12); }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        background: rgba(139, 92, 246, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px auto;
+        color: var(--primary);
+    }
 </style>
 </head>
 
@@ -459,262 +596,378 @@
     </div>
 </div>
 
-<div class="container">
-    <div class="title">REPORT GENERATOR</div>
 
-    <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div class="section-title"> 🎟️ REGISTRATION</div>
-            <label class="switch">
-                <input type="checkbox" class="section-toggle" onchange="toggle('tokenCard',this.checked)">
-                <span class="slider"></span>
-            </label>
-        </div>
-        <div id="tokenCard" class="card-content hidden">
-            <div class="entries-container">
-                <div class="entry-block">
-                    <input class="reg-name" placeholder="Name">
-                    <input class="reg-lead" placeholder="Lead Number">
-                    <input class="reg-token" placeholder="Token Number">
-                </div>
+<div id="homeView" class="view-section">
+    <div class="container">
+        <div class="title">REPORT GENERATOR</div>
+
+        <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div class="section-title"> 🎟️ REGISTRATION</div>
+                <label class="switch">
+                    <input type="checkbox" class="section-toggle" onchange="toggle('tokenCard',this.checked)">
+                    <span class="slider"></span>
+                </label>
             </div>
-            <button class="add-entry-btn" onclick="addEntry('tokenCard')">+ Add Another Registration</button>
-        </div>
-    </div>
-
-    <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div class="section-title">📍Visit Details</div>
-            <label class="switch">
-                <input type="checkbox" class="section-toggle" onchange="toggle('visitCard',this.checked)">
-                <span class="slider"></span>
-            </label>
-        </div>
-        <div id="visitCard" class="card-content hidden">
-            <div class="entries-container">
-                <div class="entry-block">
-                    <input class="visit-name" placeholder="Student Name">
-                    <input class="visit-leadno" placeholder="Lead Number">
-                    <select class="visit-course">
-                        <option value="">Select Course</option>
-                        <option>ANM</option>
-                        <option>B.Arch.</option>
-                        <option>B.Com B.Ed</option>
-                        <option>B.Com.</option>
-                        <option>B.Com. - (Hons.)</option>
-                        <option>B.Com. - (Hons.) in Investment Management With CFA Preparation</option>
-                        <option>B.Com. - (Hons.) With ACCA Certification</option>
-                        <option>B.Com. - (Hons.) With Integrated CA Preparation</option>
-                        <option>B.Des.</option>
-                        <option>B.Lib.I.Sc.</option>
-                        <option>B.Pharm.</option>
-                        <option>B.Pharm. - LE</option>
-                        <option>B.Sc B.Ed</option>
-                        <option>B.Sc.</option>
-                        <option>B.Sc. - IT</option>
-                        <option>B.Sc. - IT (Hons.)</option>
-                        <option>B.Sc. - Nursing</option>
-                        <option>B.Sc. (Hons.)</option>
-                        <option>B.Sc. Agriculture (Hons.)</option>
-                        <option>B.Tech.</option>
-                        <option>B.Tech. - WIP</option>
-                        <option>B.Tech. (Hons.)</option>
-                        <option>B.Tech. LE</option>
-                        <option>BA</option>
-                        <option>BA (Hons.)</option>
-                        <option>BA B.Ed</option>
-                        <option>BBA</option>
-                        <option>BBA (Hons.)</option>
-                        <option>BBA - Investment Management With CFA</option>
-                        <option>BCA</option>
-                        <option>BCA (Hons.)</option>
-                        <option>BHMCT</option>
-                        <option>BHMS</option>
-                        <option>BPA</option>
-                        <option>BPA (Hons.)</option>
-                        <option>BPES</option>
-                        <option>BPT</option>
-                        <option>BSW</option>
-                        <option>BSW (Hons.)</option>
-                        <option>BVA</option>
-                        <option>BAMS</option>
-                        <option>MBBS</option>
-                        <option>MBA (1 Year Program)</option>
-                        <option>MBA (2 Years Program)</option>
-                        <option>MCA (1 Year Program)</option>
-                        <option>MCA (2 Years Program)</option>
-                        <option>M.Tech.</option>
-                        <option>M.Sc.</option>
-                        <option>M.Sc. - IT</option>
-                        <option>M.Sc. - Data Science</option>
-                        <option>M.Sc. - Nursing</option>
-                        <option>M.Com.</option>
-                        <option>M.Pharm.</option>
-                        <option>LL.B</option>
-                        <option>LL.M</option>
-                        <option>GNM</option>
-                        <option>D.Pharm.</option>
-                        <option>DHMCT</option>
-                        <option>Diploma in Journalism</option>
-                        <option>Diploma in Robotics and Automation</option>
-                        <option>Diploma in Industrial Automation</option>
-                        <option>Diploma in Cyber Crimes and Security Laws</option>
-                        <option>Certificate Program in Cyber Security</option>
-                        <option>Certificate Program in Business Analytics</option>
-                        <option>Certificate Program in Digital Marketing</option>
-                        <option>Certificate Program in Full Stack Developer</option>
-                        <option>Certificate Program in Cloud Computing</option>
-                        <option>Certificate Program in Interior Designing</option>
-                        <option>Certificate Program in VFX and Animation</option>
-                        <option>Certificate Program in Photography and Cinematography</option>
-                        <option>Certificate Program in Fashion Designing</option>
-                        <option>Post Graduate Diploma in Digital and Social Media Marketing</option>
-                        <option>Post Graduate Diploma in Labour law</option>
-                        <option>Post Graduate Diploma in Intellectual Property Rights</option>
-                    </select>
-                    <select class="visit-counselor">
-                        <option value="">Select Counselor</option>
-                        <option>Chirag Sir</option>
-                        <option>Bansi Ma'am</option>
-                        <option>Jagrit Sir</option>
-                        <option>Vaibhav Sir</option>
-                        <option>Dharmesh Sir</option>
-                        <option>Ketki Ma'am</option>
-                        <option>Ayush Sir</option>
-                        <option>Parthavi Ma'am</option>
-                        <option>Ankur Sir</option>
-                        <option>Dhatri Ma'am</option>
-                        <option>Khushi Ma'am</option>
-                        <option>Hitanshi Ma'am</option>
-                        <option>Naitri Ma'am</option>
-                        <option>Simran Ma'am</option>
-                        <option>Dikshita Ma'am</option>
-                        <option>Kartik Sir</option>
-                        <option>Prutviraj</option>
-                        <option>Kavita Ma'am</option>
-                        <option>Yukta Ma'am</option>
-                        <option>Shruti Ma'am</option>
-                        <option>Jaimin Sir</option>
-                        <option>Riddhi Ma'am</option>
-                    </select>
-                    <input class="visit-person" placeholder="Concerned Person">
-                    <input class="visit-place" placeholder="Place of Visit">
-                    
-                    <div class="custom-time-btn" onclick="openTimeModal(this)">
-                        <span data-default="Start Time">Start Time</span>
-                        <svg width="20" height="20" fill="none" stroke="#64748b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div id="tokenCard" class="card-content hidden">
+                <div class="entries-container">
+                    <div class="entry-block">
+                        <input class="reg-name" placeholder="Name">
+                        <input class="reg-lead" placeholder="Lead Number">
+                        <input class="reg-token" placeholder="Token Number">
                     </div>
-                    <input type="hidden" class="visit-start">
-
-                    <div class="custom-time-btn" onclick="openTimeModal(this)">
-                        <span data-default="End Time">End Time</span>
-                        <svg width="20" height="20" fill="none" stroke="#64748b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <input type="hidden" class="visit-end">
                 </div>
+                <button class="add-entry-btn" onclick="addEntry('tokenCard')">+ Add Another Registration</button>
             </div>
-            <button class="add-entry-btn" onclick="addEntry('visitCard')">+ Add Another Visit</button>
         </div>
-    </div>
 
-    <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div class="section-title">📢 Admission Process</div>
-            <label class="switch">
-                <input type="checkbox" class="section-toggle" onchange="toggle('admissionCard',this.checked)">
-                <span class="slider"></span>
-            </label>
-        </div>
-        <div id="admissionCard" class="card-content hidden">
-            <div class="entries-container">
-                <div class="entry-block">
-                    <input class="adm-name" placeholder="Student Name">
-                    <input class="adm-leadno" placeholder="Lead Number">
-                    <input class="adm-enroll" placeholder="Enrollment Number">
-                    
-                    <select class="adm-counselor">
-                        <option value="">Select Counselor</option>
-                        <option>Chirag Sir</option>
-                        <option>Bansi Ma'am</option>
-                        <option>Jagrit Sir</option>
-                        <option>Vaibhav Sir</option>
-                        <option>Dharmesh Sir</option>
-                        <option>Ketki Ma'am</option>
-                        <option>Ayush Sir</option>
-                        <option>Parthavi Ma'am</option>
-                        <option>Ankur Sir</option>
-                        <option>Dhatri Ma'am</option>
-                        <option>Khushi Ma'am</option>
-                        <option>Hitanshi Ma'am</option>
-                        <option>Naitri Ma'am</option>
-                        <option>Simran Ma'am</option>
-                        <option>Dikshita Ma'am</option>
-                        <option>Kartik Sir</option>
-                        <option>Prutviraj</option>
-                        <option>Kavita Ma'am</option>
-                        <option>Yukta Ma'am</option>
-                        <option>Shruti Ma'am</option>
-                        <option>Jaimin Sir</option>
-                        <option>Riddhi Ma'am</option>
-                    </select>
-                    
-                    <div class="custom-time-btn" onclick="openTimeModal(this)">
-                        <span data-default="Start Time">Start Time</span>
-                        <svg width="20" height="20" fill="none" stroke="#64748b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <input type="hidden" class="adm-start">
+        <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div class="section-title">📍Visit Details</div>
+                <label class="switch">
+                    <input type="checkbox" class="section-toggle" onchange="toggle('visitCard',this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div id="visitCard" class="card-content hidden">
+                <div class="entries-container">
+                    <div class="entry-block">
+                        <input class="visit-name" placeholder="Student Name">
+                        <input class="visit-leadno" placeholder="Lead Number">
+                        <select class="visit-course">
+                            <option value="">Select Course</option>
+                            <option>ANM</option>
+                            <option>B.Arch.</option>
+                            <option>B.Com B.Ed</option>
+                            <option>B.Com.</option>
+                            <option>B.Com. - (Hons.)</option>
+                            <option>B.Com. - (Hons.) in Investment Management With CFA Preparation</option>
+                            <option>B.Com. - (Hons.) With ACCA Certification</option>
+                            <option>B.Com. - (Hons.) With Integrated CA Preparation</option>
+                            <option>B.Des.</option>
+                            <option>B.Lib.I.Sc.</option>
+                            <option>B.Pharm.</option>
+                            <option>B.Pharm. - LE</option>
+                            <option>B.Sc B.Ed</option>
+                            <option>B.Sc.</option>
+                            <option>B.Sc. - IT</option>
+                            <option>B.Sc. - IT (Hons.)</option>
+                            <option>B.Sc. - Nursing</option>
+                            <option>B.Sc. (Hons.)</option>
+                            <option>B.Sc. Agriculture (Hons.)</option>
+                            <option>B.Tech.</option>
+                            <option>B.Tech. - WIP</option>
+                            <option>B.Tech. (Hons.)</option>
+                            <option>B.Tech. LE</option>
+                            <option>BA</option>
+                            <option>BA (Hons.)</option>
+                            <option>BA B.Ed</option>
+                            <option>BBA</option>
+                            <option>BBA (Hons.)</option>
+                            <option>BBA - Investment Management With CFA</option>
+                            <option>BCA</option>
+                            <option>BCA (Hons.)</option>
+                            <option>BHMCT</option>
+                            <option>BHMS</option>
+                            <option>BPA</option>
+                            <option>BPA (Hons.)</option>
+                            <option>BPES</option>
+                            <option>BPT</option>
+                            <option>BSW</option>
+                            <option>BSW (Hons.)</option>
+                            <option>BVA</option>
+                            <option>BAMS</option>
+                            <option>MBBS</option>
+                            <option>MBA (1 Year Program)</option>
+                            <option>MBA (2 Years Program)</option>
+                            <option>MCA (1 Year Program)</option>
+                            <option>MCA (2 Years Program)</option>
+                            <option>M.Tech.</option>
+                            <option>M.Sc.</option>
+                            <option>M.Sc. - IT</option>
+                            <option>M.Sc. - Data Science</option>
+                            <option>M.Sc. - Nursing</option>
+                            <option>M.Com.</option>
+                            <option>M.Pharm.</option>
+                            <option>LL.B</option>
+                            <option>LL.M</option>
+                            <option>GNM</option>
+                            <option>D.Pharm.</option>
+                            <option>DHMCT</option>
+                            <option>Diploma in Journalism</option>
+                            <option>Diploma in Robotics and Automation</option>
+                            <option>Diploma in Industrial Automation</option>
+                            <option>Diploma in Cyber Crimes and Security Laws</option>
+                            <option>Certificate Program in Cyber Security</option>
+                            <option>Certificate Program in Business Analytics</option>
+                            <option>Certificate Program in Digital Marketing</option>
+                            <option>Certificate Program in Full Stack Developer</option>
+                            <option>Certificate Program in Cloud Computing</option>
+                            <option>Certificate Program in Interior Designing</option>
+                            <option>Certificate Program in VFX and Animation</option>
+                            <option>Certificate Program in Photography and Cinematography</option>
+                            <option>Certificate Program in Fashion Designing</option>
+                            <option>Post Graduate Diploma in Digital and Social Media Marketing</option>
+                            <option>Post Graduate Diploma in Labour law</option>
+                            <option>Post Graduate Diploma in Intellectual Property Rights</option>
+                        </select>
+                        <select class="visit-counselor">
+                            <option value="">Select Counselor</option>
+                            <option>Chirag Sir</option>
+                            <option>Bansi Ma'am</option>
+                            <option>Jagrit Sir</option>
+                            <option>Vaibhav Sir</option>
+                            <option>Dharmesh Sir</option>
+                            <option>Ketki Ma'am</option>
+                            <option>Ayush Sir</option>
+                            <option>Parthavi Ma'am</option>
+                            <option>Ankur Sir</option>
+                            <option>Dhatri Ma'am</option>
+                            <option>Khushi Ma'am</option>
+                            <option>Hitanshi Ma'am</option>
+                            <option>Naitri Ma'am</option>
+                            <option>Simran Ma'am</option>
+                            <option>Dikshita Ma'am</option>
+                            <option>Kartik Sir</option>
+                            <option>Prutviraj</option>
+                            <option>Kavita Ma'am</option>
+                            <option>Yukta Ma'am</option>
+                            <option>Shruti Ma'am</option>
+                            <option>Jaimin Sir</option>
+                            <option>Riddhi Ma'am</option>
+                        </select>
+                        <input class="visit-person" placeholder="Concerned Person">
+                        <input class="visit-place" placeholder="Place of Visit">
+                        
+                        <div class="custom-time-btn" onclick="openTimeModal(this)">
+                            <span data-default="Start Time">Start Time</span>
+                            <svg width="20" height="20" fill="none" stroke="#64748b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <input type="hidden" class="visit-start">
 
-                    <div class="custom-time-btn" onclick="openTimeModal(this)">
-                        <span data-default="End Time">End Time</span>
-                        <svg width="20" height="20" fill="none" stroke="#64748b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <div class="custom-time-btn" onclick="openTimeModal(this)">
+                            <span data-default="End Time">End Time</span>
+                            <svg width="20" height="20" fill="none" stroke="#64748b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <input type="hidden" class="visit-end">
                     </div>
-                    <input type="hidden" class="adm-end">
                 </div>
+                <button class="add-entry-btn" onclick="addEntry('visitCard')">+ Add Another Visit</button>
             </div>
-            <button class="add-entry-btn" onclick="addEntry('admissionCard')">+ Add Another Admission</button>
         </div>
-    </div>
 
-    <div class="card" style="background: transparent; box-shadow: none; border: none; padding: 0; margin-top: 10px; backdrop-filter: none;">
-        <div class="buttons">
-            <button class="whatsapp" onclick="sendWhatsApp()">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-                WhatsApp Day Report
-            </button>
+        <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div class="section-title">📢 Admission Process</div>
+                <label class="switch">
+                    <input type="checkbox" class="section-toggle" onchange="toggle('admissionCard',this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div id="admissionCard" class="card-content hidden">
+                <div class="entries-container">
+                    <div class="entry-block">
+                        <input class="adm-name" placeholder="Student Name">
+                        <input class="adm-leadno" placeholder="Lead Number">
+                        <input class="adm-enroll" placeholder="Enrollment Number">
+                        
+                        <select class="adm-counselor">
+                            <option value="">Select Counselor</option>
+                            <option>Chirag Sir</option>
+                            <option>Bansi Ma'am</option>
+                            <option>Jagrit Sir</option>
+                            <option>Vaibhav Sir</option>
+                            <option>Dharmesh Sir</option>
+                            <option>Ketki Ma'am</option>
+                            <option>Ayush Sir</option>
+                            <option>Parthavi Ma'am</option>
+                            <option>Ankur Sir</option>
+                            <option>Dhatri Ma'am</option>
+                            <option>Khushi Ma'am</option>
+                            <option>Hitanshi Ma'am</option>
+                            <option>Naitri Ma'am</option>
+                            <option>Simran Ma'am</option>
+                            <option>Dikshita Ma'am</option>
+                            <option>Kartik Sir</option>
+                            <option>Prutviraj</option>
+                            <option>Kavita Ma'am</option>
+                            <option>Yukta Ma'am</option>
+                            <option>Shruti Ma'am</option>
+                            <option>Jaimin Sir</option>
+                            <option>Riddhi Ma'am</option>
+                        </select>
+                        
+                        <div class="custom-time-btn" onclick="openTimeModal(this)">
+                            <span data-default="Start Time">Start Time</span>
+                            <svg width="20" height="20" fill="none" stroke="#64748b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <input type="hidden" class="adm-start">
 
-            <button class="reset" onclick="resetForm()">
-                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                Clear All Data
-            </button>
+                        <div class="custom-time-btn" onclick="openTimeModal(this)">
+                            <span data-default="End Time">End Time</span>
+                            <svg width="20" height="20" fill="none" stroke="#64748b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <input type="hidden" class="adm-end">
+                    </div>
+                </div>
+                <button class="add-entry-btn" onclick="addEntry('admissionCard')">+ Add Another Admission</button>
+            </div>
         </div>
+
+        <div class="card" style="background: transparent; box-shadow: none; border: none; padding: 0; margin-top: 10px; backdrop-filter: none;">
+            <div class="buttons">
+                <button class="whatsapp" onclick="sendWhatsApp()">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                    WhatsApp Day Report
+                </button>
+                <button class="reset" onclick="resetForm()">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    Clear All Data
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer">Made with ❤️ by Manjeet</div>
     </div>
-    
-    <div class="footer">Made with ❤️ by Manjeet</div>
 </div>
+
+<div id="servicesView" class="view-section hidden">
+    <div class="container">
+        <div class="title" style="margin-bottom: 10px;">WORKSPACE</div>
+        <p style="text-align: center; color: var(--border-color); margin-bottom: 30px; font-weight: 500;">Quick Access Portal</p>
+        
+        <div class="services-grid">
+            <a href="https://admissions.paruluniversity.ac.in/walkin" onclick="alert('Redirecting to Token Generator...')" class="service-tile tile-1">
+                <div class="service-icon-wrapper">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
+                </div>
+                <span class="service-title">Token<br>Generate</span>
+            </a>
+
+            <a href="https://paruluniversity.ac.in/mess/" onclick="alert('Opening Mess Pass Form...')" class="service-tile tile-2">
+                <div class="service-icon-wrapper">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"></path></svg>
+                </div>
+                <span class="service-title">Mess<br>Pass</span>
+            </a>
+
+            <a href="#" onclick="alert('Connecting to Campus EV Dispatch...')" class="service-tile tile-3">
+                <div class="service-icon-wrapper">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <span class="service-title">Call EV<br>Driver</span>
+            </a>
+
+            <a href="#" onclick="alert('Opening Leave Message Draft...')" class="service-tile tile-4">
+                <div class="service-icon-wrapper">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                </div>
+                <span class="service-title">Leave<br>Message</span>
+            </a>
+
+            <a href="#" onclick="alert('Developing Mode')" class="service-tile tile-5">
+                <div class="service-icon-wrapper">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                </div>
+                <span class="service-title">College<br>Map</span>
+            </a>
+
+            <a href="#" onclick="alert('Opening ID Replacement Portal...')" class="service-tile tile-6">
+                <div class="service-icon-wrapper">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path></svg>
+                </div>
+                <span class="service-title">Demo<br></span>
+            </a>
+
+            <a href="#" onclick="alert('Accessing Faculty & Staff Directory...')" class="service-tile tile-7">
+                <div class="service-icon-wrapper">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+                <span class="service-title">Demo<br></span>
+            </a>
+
+            <a href="#" onclick="alert('Syncing University Event Calendar...')" class="service-tile tile-8">
+                <div class="service-icon-wrapper">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                </div>
+                <span class="service-title">Demo<br></span>
+            </a>
+            
+            <a href="#" onclick="alert('Connecting to IT Support Helpdesk...')" class="service-tile tile-9">
+                <div class="service-icon-wrapper">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </div>
+                <span class="service-title">Tech<br>Support</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div id="profileView" class="view-section hidden">
+    <div class="container">
+        <div class="title">PROFILE</div>
+        
+        <div class="card" style="text-align: center; padding-top: 40px; padding-bottom: 40px;">
+            <div class="profile-avatar">
+                <svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="2" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+            
+            <h2 id="profileNameDisplay" style="margin: 15px 0; color: var(--text-main); font-size: 28px;">Intern Name</h2>
+            <p style="color: var(--text-muted); margin-bottom: 30px;">Admission Activity Logger</p>
+            
+            <button class="add-entry-btn" onclick="triggerEditName()" style="max-width: 250px; margin: 0 auto; display: flex;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-right: 8px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                Edit Saved Name
+            </button>
+        </div>
+    </div>
+</div>
+
+<nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchNav(this, 'homeView')">
+        <svg viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Home</span>
+    </div>
+    <div class="nav-item" onclick="switchNav(this, 'servicesView')">
+        <svg viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <span>Services</span>
+    </div>
+    <div class="nav-item" onclick="switchNav(this, 'profileView')">
+        <svg viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Profile</span>
+    </div>
+</nav>
 
 <script>
 /* =======================================================
    ORIGINAL FUNCTIONS (UNTOUCHED)
    ======================================================= */
 
-/* --- Duplicate Entry Logic --- */
 function addEntry(cardId) {
     const container = document.querySelector(`#${cardId} .entries-container`);
     const firstBlock = container.querySelector('.entry-block');
     const newBlock = firstBlock.cloneNode(true);
 
-    // Clear the cloned inputs
     newBlock.querySelectorAll('input:not([type="hidden"])').forEach(input => input.value = '');
     newBlock.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
     newBlock.querySelectorAll('input[type="hidden"]').forEach(input => input.value = '');
     
-    // Reset Time Picker displays
     newBlock.querySelectorAll('.custom-time-btn span').forEach(span => {
         span.innerText = span.getAttribute('data-default') || 'Time';
         span.parentElement.classList.remove('has-value');
     });
 
-    // Add Remove Button
     const removeBtn = document.createElement('button');
     removeBtn.className = 'remove-entry-btn';
     removeBtn.innerHTML = '✕';
@@ -724,37 +977,30 @@ function addEntry(cardId) {
     container.appendChild(newBlock);
 }
 
-/* --- Reset Form Logic --- */
 function resetForm() {
     if(!confirm("Are you sure you want to clear all data?")) return;
     
-    // Remove dynamically added entries
     document.querySelectorAll('.entry-block').forEach(block => {
         if(block !== block.parentElement.firstElementChild) {
             block.remove();
         }
     });
 
-    // Clear remaining fields in the original blocks
     document.querySelectorAll('.entry-block input[type="text"], .entry-block input:not([type]), .entry-block input[type="hidden"]').forEach(input => input.value = '');
     document.querySelectorAll('.entry-block select').forEach(select => select.selectedIndex = 0);
     
-    // Reset Time Picker displays
     document.querySelectorAll('.custom-time-btn span').forEach(span => {
         span.innerText = span.getAttribute('data-default') || 'Time';
         span.parentElement.classList.remove('has-value');
     });
 
-    // Close all toggles
     document.querySelectorAll('.section-toggle').forEach(toggle => {
         toggle.checked = false;
         let cardId = toggle.getAttribute('onchange').match(/'([^']+)'/)[1];
         document.getElementById(cardId).classList.add('hidden');
     });
 }
-/* ------------------------ */
 
-/* --- Custom Modern Time Picker Logic --- */
 let activeTimeBtn = null;
 let th = 10;
 let tm = 0;
@@ -767,7 +1013,7 @@ function updateTimeUI() {
 }
 
 function openTimeModal(btnElement) {
-    activeTimeBtn = btnElement; // Targets the specific button clicked
+    activeTimeBtn = btnElement; 
     document.getElementById('timeModal').classList.remove('hidden');
     updateTimeUI();
 }
@@ -809,7 +1055,6 @@ function confirmTime() {
     let formattedM = tm < 10 ? '0'+tm : tm;
     let finalTimeStr = `${formattedH}:${formattedM} ${tap}`;
     
-    // Find the hidden input that comes immediately after the clicked button
     let hiddenInput = activeTimeBtn.nextElementSibling;
     hiddenInput.value = finalTimeStr;
     
@@ -819,9 +1064,7 @@ function confirmTime() {
     
     closeTimeModal();
 }
-/* -------------------------------------- */
 
-/* cookie */
 function setCookie(name,value,days){
     let d=new Date()
     d.setTime(d.getTime()+(days*24*60*60*1000))
@@ -840,7 +1083,6 @@ function getCookie(name){
     return ""
 }
 
-/* popup */
 window.onload=function(){
     let name=getCookie("intern")
     if(name!=""){
@@ -848,7 +1090,6 @@ window.onload=function(){
     }
 }
 
-/* save intern */
 document.getElementById("saveBtn").onclick=function(){
     let name=document.getElementById("internInput").value.trim()
     if(name===""){
@@ -857,14 +1098,15 @@ document.getElementById("saveBtn").onclick=function(){
     }
     setCookie("intern",name,365)
     document.getElementById("popup").style.display="none"
+    
+    // Quick update to profile name if they change it while viewing the profile
+    document.getElementById('profileNameDisplay').innerText = name;
 }
 
-/* toggle */
 function toggle(id,show){
     document.getElementById(id).classList.toggle("hidden",!show)
 }
 
-/* date */
 function getToday(){
     let d=new Date()
     let day=String(d.getDate()).padStart(2,'0')
@@ -873,18 +1115,15 @@ function getToday(){
     return day+"/"+month+"/"+year
 }
 
-/* Smart Lead # Formatter */
 function formatLead(val) {
     if (!val) return "";
     return val.startsWith("#") ? val : "#" + val;
 }
 
-/* message compiler */
 function generateMessage(){
     let intern=getCookie("intern")
     let msg=`*Date:* ${getToday()}\n*Intern:* ${intern}\n\n`
 
-    // Registration Card Loop
     if(!document.getElementById('tokenCard').classList.contains("hidden")){
         msg+=`*🎟️ TOKEN REGISTRATION*\n\n`;
         let entries = document.querySelectorAll('#tokenCard .entry-block');
@@ -899,7 +1138,6 @@ function generateMessage(){
         });
     }
 
-    // Visit Details Card Loop
     if(!document.getElementById('visitCard').classList.contains("hidden")){
         msg+=`*📍 VISIT DETAILS*\n\n`;
         let entries = document.querySelectorAll('#visitCard .entry-block');
@@ -920,7 +1158,6 @@ function generateMessage(){
         });
     }
 
-    // Admission Process Card Loop
     if(!document.getElementById('admissionCard').classList.contains("hidden")){
         msg+=`*📢 ADMISSION PROCESS*\n\n`;
         let entries = document.querySelectorAll('#admissionCard .entry-block');
@@ -941,13 +1178,11 @@ function generateMessage(){
     return msg
 }
 
-/* whatsapp */
 function sendWhatsApp(){
     let url="https://wa.me/?text="+encodeURIComponent(generateMessage())
     window.open(url)
 }
 
-/* pdf */
 function generatePDF(){
     const { jsPDF } = window.jspdf
     let doc=new jsPDF()
@@ -957,7 +1192,7 @@ function generatePDF(){
 
 
 /* =======================================================
-   NEW FEATURE: BROWSER AUTO-SAVE & PERSISTENCE
+   BROWSER AUTO-SAVE & PERSISTENCE (UNTOUCHED)
    ======================================================= */
 
 let isRestoringData = false;
@@ -967,13 +1202,11 @@ function saveAllProgress() {
     
     const appData = { toggles: {}, tokenCard: [], visitCard: [], admissionCard: [] };
 
-    // 1. Save toggle switch states
     document.querySelectorAll('.section-toggle').forEach(toggle => {
         let cardId = toggle.getAttribute('onchange').match(/'([^']+)'/)[1];
         appData.toggles[cardId] = toggle.checked;
     });
 
-    // 2. Helper function to extract input data from blocks
     const extractEntriesData = (cardId, classes) => {
         document.querySelectorAll(`#${cardId} .entry-block`).forEach(block => {
             let entry = {};
@@ -989,7 +1222,6 @@ function saveAllProgress() {
     extractEntriesData('visitCard', ['visit-name', 'visit-leadno', 'visit-course', 'visit-counselor', 'visit-person', 'visit-place', 'visit-start', 'visit-end']);
     extractEntriesData('admissionCard', ['adm-name', 'adm-leadno', 'adm-enroll', 'adm-counselor', 'adm-start', 'adm-end']);
 
-    // Save to browser's Local Storage
     localStorage.setItem('admissionAppSavedState', JSON.stringify(appData));
 }
 
@@ -997,11 +1229,10 @@ function loadAllProgress() {
     const savedState = localStorage.getItem('admissionAppSavedState');
     if (!savedState) return;
 
-    isRestoringData = true; // Prevent saving while we load
+    isRestoringData = true; 
     try {
         const appData = JSON.parse(savedState);
 
-        // 1. Restore toggle switch states
         document.querySelectorAll('.section-toggle').forEach(toggle => {
             let cardId = toggle.getAttribute('onchange').match(/'([^']+)'/)[1];
             if (appData.toggles && appData.toggles[cardId]) {
@@ -1010,17 +1241,14 @@ function loadAllProgress() {
             }
         });
 
-        // 2. Helper function to inject data back into the blocks
         const restoreEntriesData = (cardId, classes) => {
             const entries = appData[cardId];
             if (!entries || entries.length === 0) return;
 
-            // Generate necessary duplicate blocks
             for (let i = 1; i < entries.length; i++) {
                 addEntry(cardId);
             }
 
-            // Fill all blocks with the saved data
             const blocks = document.querySelectorAll(`#${cardId} .entry-block`);
             entries.forEach((entryData, index) => {
                 let block = blocks[index];
@@ -1029,7 +1257,6 @@ function loadAllProgress() {
                     if (el && entryData[cls]) {
                         el.value = entryData[cls];
                         
-                        // If it's a hidden time field, update the visual span above it
                         if (el.type === 'hidden' && (cls.includes('start') || cls.includes('end'))) {
                             let timeSpan = el.previousElementSibling.querySelector('span');
                             if (timeSpan) {
@@ -1052,30 +1279,20 @@ function loadAllProgress() {
     isRestoringData = false;
 }
 
-// -----------------------------------------------------
-// LISTENERS & HOOKS (Trigger saves without editing old code)
-// -----------------------------------------------------
-
-// Save whenever a user types or selects a dropdown
 document.addEventListener('input', saveAllProgress);
 document.addEventListener('change', saveAllProgress);
-
-// Load data immediately when the DOM is ready
 window.addEventListener('DOMContentLoaded', loadAllProgress);
 
-// Intercept 'confirmTime' to save after time is selected
 const _originalConfirmTimeHook = confirmTime;
 confirmTime = function() {
-    _originalConfirmTimeHook(); // Run the old function exactly as it was
-    saveAllProgress();          // Then save
+    _originalConfirmTimeHook(); 
+    saveAllProgress();          
 };
 
-// Intercept 'addEntry' to save after adding a new row, and handle removing rows
 const _originalAddEntryHook = addEntry;
 addEntry = function(cardId) {
     _originalAddEntryHook(cardId); 
     
-    // Grab the newly created "X" remove button to ensure it saves when clicked
     const blocks = document.querySelectorAll(`#${cardId} .entry-block`);
     const newestBlock = blocks[blocks.length - 1];
     const removeBtn = newestBlock.querySelector('.remove-entry-btn');
@@ -1090,16 +1307,43 @@ addEntry = function(cardId) {
     saveAllProgress();
 };
 
-// Intercept 'resetForm' to handle completely erasing the saved data
 const _originalResetFormHook = resetForm;
 resetForm = function() {
-    _originalResetFormHook(); // Runs your original popup confirm("Are you sure...")
-    
-    // We wait 50 milliseconds. If the user clicked "Yes", the inputs will be empty. 
-    // If they clicked "Cancel", the inputs will still be full.
-    // Either way, we save the resulting state to storage! 
+    _originalResetFormHook(); 
     setTimeout(saveAllProgress, 50); 
 };
+
+
+/* =======================================================
+   BOTTOM NAVIGATION LOGIC (UNTOUCHED)
+   ======================================================= */
+
+function switchNav(element, targetViewId) {
+    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+    element.classList.add('active');
+
+    document.querySelectorAll('.view-section').forEach(view => {
+        view.classList.add('hidden');
+    });
+
+    const targetView = document.getElementById(targetViewId);
+    if (targetView) {
+        targetView.classList.remove('hidden');
+        targetView.querySelector('.title').style.animation = 'none';
+        targetView.querySelector('.title').offsetHeight; 
+        targetView.querySelector('.title').style.animation = 'fadeInDown 0.8s ease-out';
+    }
+
+    if (targetViewId === 'profileView') {
+        let storedName = getCookie('intern');
+        document.getElementById('profileNameDisplay').innerText = storedName ? storedName : "Intern";
+    }
+}
+
+function triggerEditName() {
+    document.getElementById('internInput').value = getCookie('intern');
+    document.getElementById('popup').style.display = 'flex';
+}
 </script>
 
 </body>
