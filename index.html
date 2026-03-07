@@ -693,6 +693,10 @@
 </div>
 
 <script>
+/* =======================================================
+   ORIGINAL FUNCTIONS (UNTOUCHED)
+   ======================================================= */
+
 /* --- Duplicate Entry Logic --- */
 function addEntry(cardId) {
     const container = document.querySelector(`#${cardId} .entries-container`);
@@ -950,6 +954,152 @@ function generatePDF(){
     doc.text(generateMessage(),10,10)
     doc.save("report.pdf")
 }
+
+
+/* =======================================================
+   NEW FEATURE: BROWSER AUTO-SAVE & PERSISTENCE
+   ======================================================= */
+
+let isRestoringData = false;
+
+function saveAllProgress() {
+    if (isRestoringData) return;
+    
+    const appData = { toggles: {}, tokenCard: [], visitCard: [], admissionCard: [] };
+
+    // 1. Save toggle switch states
+    document.querySelectorAll('.section-toggle').forEach(toggle => {
+        let cardId = toggle.getAttribute('onchange').match(/'([^']+)'/)[1];
+        appData.toggles[cardId] = toggle.checked;
+    });
+
+    // 2. Helper function to extract input data from blocks
+    const extractEntriesData = (cardId, classes) => {
+        document.querySelectorAll(`#${cardId} .entry-block`).forEach(block => {
+            let entry = {};
+            classes.forEach(cls => {
+                let el = block.querySelector(`.${cls}`);
+                if (el) entry[cls] = el.value;
+            });
+            appData[cardId].push(entry);
+        });
+    };
+
+    extractEntriesData('tokenCard', ['reg-name', 'reg-lead', 'reg-token']);
+    extractEntriesData('visitCard', ['visit-name', 'visit-leadno', 'visit-course', 'visit-counselor', 'visit-person', 'visit-place', 'visit-start', 'visit-end']);
+    extractEntriesData('admissionCard', ['adm-name', 'adm-leadno', 'adm-enroll', 'adm-counselor', 'adm-start', 'adm-end']);
+
+    // Save to browser's Local Storage
+    localStorage.setItem('admissionAppSavedState', JSON.stringify(appData));
+}
+
+function loadAllProgress() {
+    const savedState = localStorage.getItem('admissionAppSavedState');
+    if (!savedState) return;
+
+    isRestoringData = true; // Prevent saving while we load
+    try {
+        const appData = JSON.parse(savedState);
+
+        // 1. Restore toggle switch states
+        document.querySelectorAll('.section-toggle').forEach(toggle => {
+            let cardId = toggle.getAttribute('onchange').match(/'([^']+)'/)[1];
+            if (appData.toggles && appData.toggles[cardId]) {
+                toggle.checked = true;
+                document.getElementById(cardId).classList.remove('hidden');
+            }
+        });
+
+        // 2. Helper function to inject data back into the blocks
+        const restoreEntriesData = (cardId, classes) => {
+            const entries = appData[cardId];
+            if (!entries || entries.length === 0) return;
+
+            // Generate necessary duplicate blocks
+            for (let i = 1; i < entries.length; i++) {
+                addEntry(cardId);
+            }
+
+            // Fill all blocks with the saved data
+            const blocks = document.querySelectorAll(`#${cardId} .entry-block`);
+            entries.forEach((entryData, index) => {
+                let block = blocks[index];
+                classes.forEach(cls => {
+                    let el = block.querySelector(`.${cls}`);
+                    if (el && entryData[cls]) {
+                        el.value = entryData[cls];
+                        
+                        // If it's a hidden time field, update the visual span above it
+                        if (el.type === 'hidden' && (cls.includes('start') || cls.includes('end'))) {
+                            let timeSpan = el.previousElementSibling.querySelector('span');
+                            if (timeSpan) {
+                                timeSpan.innerText = entryData[cls];
+                                timeSpan.parentElement.classList.add('has-value');
+                            }
+                        }
+                    }
+                });
+            });
+        };
+
+        restoreEntriesData('tokenCard', ['reg-name', 'reg-lead', 'reg-token']);
+        restoreEntriesData('visitCard', ['visit-name', 'visit-leadno', 'visit-course', 'visit-counselor', 'visit-person', 'visit-place', 'visit-start', 'visit-end']);
+        restoreEntriesData('admissionCard', ['adm-name', 'adm-leadno', 'adm-enroll', 'adm-counselor', 'adm-start', 'adm-end']);
+
+    } catch (e) {
+        console.error("Could not load saved data", e);
+    }
+    isRestoringData = false;
+}
+
+// -----------------------------------------------------
+// LISTENERS & HOOKS (Trigger saves without editing old code)
+// -----------------------------------------------------
+
+// Save whenever a user types or selects a dropdown
+document.addEventListener('input', saveAllProgress);
+document.addEventListener('change', saveAllProgress);
+
+// Load data immediately when the DOM is ready
+window.addEventListener('DOMContentLoaded', loadAllProgress);
+
+// Intercept 'confirmTime' to save after time is selected
+const _originalConfirmTimeHook = confirmTime;
+confirmTime = function() {
+    _originalConfirmTimeHook(); // Run the old function exactly as it was
+    saveAllProgress();          // Then save
+};
+
+// Intercept 'addEntry' to save after adding a new row, and handle removing rows
+const _originalAddEntryHook = addEntry;
+addEntry = function(cardId) {
+    _originalAddEntryHook(cardId); 
+    
+    // Grab the newly created "X" remove button to ensure it saves when clicked
+    const blocks = document.querySelectorAll(`#${cardId} .entry-block`);
+    const newestBlock = blocks[blocks.length - 1];
+    const removeBtn = newestBlock.querySelector('.remove-entry-btn');
+    
+    if (removeBtn) {
+        const _originalRemoveHook = removeBtn.onclick;
+        removeBtn.onclick = function() {
+            _originalRemoveHook();
+            saveAllProgress();
+        };
+    }
+    saveAllProgress();
+};
+
+// Intercept 'resetForm' to handle completely erasing the saved data
+const _originalResetFormHook = resetForm;
+resetForm = function() {
+    _originalResetFormHook(); // Runs your original popup confirm("Are you sure...")
+    
+    // We wait 50 milliseconds. If the user clicked "Yes", the inputs will be empty. 
+    // If they clicked "Cancel", the inputs will still be full.
+    // Either way, we save the resulting state to storage! 
+    setTimeout(saveAllProgress, 50); 
+};
 </script>
 
 </body>
