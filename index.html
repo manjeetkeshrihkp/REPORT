@@ -40,7 +40,7 @@
         animation: gradientBG 18s ease infinite;
         color: var(--text-main);
         padding: 40px 20px;
-        padding-bottom: 100px; /* Added padding so content isn't hidden behind the bottom nav */
+        padding-bottom: 100px; 
         line-height: 1.5;
         min-height: 100vh;
     }
@@ -108,7 +108,6 @@
         align-items: center;
     }
 
-    /* --- Multiple Entries Styles --- */
     .entries-container {
         display: flex;
         flex-direction: column;
@@ -200,6 +199,20 @@
         appearance: none;
     }
 
+    /* Style the datalist inputs to have a dropdown arrow */
+    input[list] {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+        padding-right: 40px;
+    }
+    /* Hide the ugly default browser datalist arrow but keep it clickable */
+    input[list]::-webkit-calendar-picker-indicator {
+        opacity: 0;
+        cursor: pointer;
+    }
+
     .custom-time-btn {
         display: flex;
         justify-content: space-between;
@@ -215,22 +228,8 @@
         transform: translateY(-1px);
     }
 
-    .custom-time-btn span {
-        color: #94a3b8;
-    }
-    
-    .custom-time-btn.has-value span {
-        color: var(--text-main);
-        font-weight: 600;
-    }
-
-    select {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 12px center;
-        background-size: 16px;
-        padding-right: 40px;
-    }
+    .custom-time-btn span { color: #94a3b8; }
+    .custom-time-btn.has-value span { color: var(--text-main); font-weight: 600; }
 
     input:focus, select:focus {
         outline: none;
@@ -289,21 +288,14 @@
         gap: 8px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
-    button:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    }
-    button:active {
-        transform: translateY(0) scale(0.98);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
+    button:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+    button:active { transform: translateY(0) scale(0.98); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     .whatsapp { background: var(--success); color: white; }
     .whatsapp:hover { background: var(--success-hover); }
     .pdf { background: var(--info); color: white; }
     .pdf:hover { background: var(--info-hover); }
     .reset { background: var(--danger); color: white; }
     .reset:hover { background: var(--danger-hover); }
-    
     .primary-btn { background: var(--primary); color: white; }
     .primary-btn:hover { background: var(--primary-hover); }
 
@@ -364,200 +356,189 @@
         color: white;
         transform: scale(1.05);
     }
-    .time-val {
-        font-size: 40px;
-        font-weight: 800;
-        color: var(--text-main);
-        width: 60px;
-        text-align: center;
-        line-height: 1;
-    }
-    .time-colon {
-        font-size: 40px;
-        font-weight: 800;
-        color: var(--text-muted);
-        padding-bottom: 6px;
-    }
+    .time-val { font-size: 40px; font-weight: 800; color: var(--text-main); width: 60px; text-align: center; line-height: 1; }
+    .time-colon { font-size: 40px; font-weight: 800; color: var(--text-muted); padding-bottom: 6px; }
+    
+    /* NEW CSS for editable time boxes */
+    .time-val[contenteditable="true"] { cursor: text; transition: all 0.2s ease; }
+    .time-val[contenteditable="true"]:focus { outline: 2px solid var(--primary); border-radius: 8px; background: rgba(139, 92, 246, 0.05); }
+
     .ampm-btn {
-        background: var(--text-main);
-        color: white;
-        font-size: 22px;
-        width: 70px;
-        height: 70px;
-        border-radius: 20px;
-        margin-left: 10px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        background: var(--text-main); color: white; font-size: 22px; width: 70px; height: 70px;
+        border-radius: 20px; margin-left: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
     .ampm-btn:hover { background: #000; }
-    .time-actions {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-    .now-btn {
-        background: #ede9fe; 
-        color: var(--primary-hover);
-        box-shadow: none;
-        padding: 12px;
-    }
+    .time-actions { display: flex; flex-direction: column; gap: 12px; }
+    .now-btn { background: #ede9fe; color: var(--primary-hover); box-shadow: none; padding: 12px; }
     .now-btn:hover { background: #ddd6fe; box-shadow: none; }
-    .cancel-btn {
-        background: transparent;
-        color: var(--text-muted);
-        box-shadow: none;
-        padding: 10px;
-        font-weight: 500;
-    }
+    .cancel-btn { background: transparent; color: var(--text-muted); box-shadow: none; padding: 10px; font-weight: 500; }
     .cancel-btn:hover { background: #f1f5f9; box-shadow: none; transform: none; }
 
-    /* Footer Styles */
     .footer {
-        text-align: center;
-        margin-top: 40px;
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 14px;
-        font-weight: 500;
-        letter-spacing: 0.5px;
-        animation: fadeInDown 1s ease-out;
+        text-align: center; margin-top: 40px; color: rgba(255, 255, 255, 0.7);
+        font-size: 14px; font-weight: 500; letter-spacing: 0.5px; animation: fadeInDown 1s ease-out;
     }
 
-    /* --- BOTTOM NAVIGATION STYLES --- */
     .bottom-nav {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background: rgba(15, 23, 42, 0.85);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        padding: 12px 0 16px 0;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        z-index: 900;
+        position: fixed; bottom: 0; left: 0; width: 100%;
+        background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px); display: flex;
+        justify-content: space-around; align-items: center; padding: 12px 0 16px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1); z-index: 900;
         box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
     }
-
     .nav-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        color: #94a3b8;
-        text-decoration: none;
-        font-size: 12px;
-        font-weight: 600;
-        gap: 4px;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        width: 30%;
+        display: flex; flex-direction: column; align-items: center; color: #94a3b8;
+        text-decoration: none; font-size: 12px; font-weight: 600; gap: 4px;
+        transition: all 0.3s ease; cursor: pointer; width: 30%;
     }
-
     .nav-item svg {
-        width: 24px;
-        height: 24px;
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        transition: transform 0.3s ease;
+        width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2;
+        stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s ease;
     }
-
     .nav-item:hover { color: #e2e8f0; }
     .nav-item.active { color: var(--primary); }
     .nav-item.active svg { transform: translateY(-2px); }
     
-    /* --- NEW: MODERN SERVICES GRID STYLES --- */
-    .services-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-        margin-top: 10px;
-    }
-    
-    @media(min-width: 600px) {
-        .services-grid { grid-template-columns: repeat(3, 1fr); }
-    }
+    .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 10px; }
+    @media(min-width: 600px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
 
     .service-tile {
-        background: var(--card-bg);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        border-radius: 20px;
-        padding: 24px 16px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        text-decoration: none;
-        color: var(--text-main);
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        cursor: pointer;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        background: var(--card-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 24px 16px;
+        display: flex; flex-direction: column; align-items: center; text-align: center;
+        text-decoration: none; color: var(--text-main); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
-
-    .service-tile:hover {
-        transform: translateY(-5px);
-        border-color: var(--primary);
-        box-shadow: 0 12px 30px rgba(139, 92, 246, 0.15);
-    }
-
+    .service-tile:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 12px 30px rgba(139, 92, 246, 0.15); }
     .service-icon-wrapper {
-        width: 56px;
-        height: 56px;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 16px;
-        transition: transform 0.3s ease;
+        width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center;
+        justify-content: center; margin-bottom: 16px; transition: transform 0.3s ease;
     }
+    .service-tile:hover .service-icon-wrapper { transform: scale(1.1); }
+    .service-icon-wrapper svg { width: 28px; height: 28px; stroke-width: 2; }
+    .service-title { font-size: 14px; font-weight: 700; line-height: 1.3; color: var(--text-main); }
 
-    .service-tile:hover .service-icon-wrapper {
-        transform: scale(1.1);
-    }
-
-    .service-icon-wrapper svg {
-        width: 28px;
-        height: 28px;
-        stroke-width: 2;
-    }
-
-    .service-title {
-        font-size: 14px;
-        font-weight: 700;
-        line-height: 1.3;
-        color: var(--text-main);
-    }
-
-    /* Custom Colors for Grid Tiles */
     .tile-1 .service-icon-wrapper { color: var(--primary); background: rgba(139, 92, 246, 0.12); }
     .tile-2 .service-icon-wrapper { color: var(--info); background: rgba(59, 130, 246, 0.12); }
     .tile-3 .service-icon-wrapper { color: var(--success); background: rgba(16, 185, 129, 0.12); }
     .tile-4 .service-icon-wrapper { color: var(--danger); background: rgba(244, 63, 94, 0.12); }
-    .tile-5 .service-icon-wrapper { color: #f59e0b; background: rgba(245, 158, 11, 0.12); } /* Amber */
-    .tile-6 .service-icon-wrapper { color: #06b6d4; background: rgba(6, 182, 212, 0.12); } /* Cyan */
-    .tile-7 .service-icon-wrapper { color: #ec4899; background: rgba(236, 72, 153, 0.12); } /* Pink */
+    .tile-5 .service-icon-wrapper { color: #f59e0b; background: rgba(245, 158, 11, 0.12); }
+    .tile-6 .service-icon-wrapper { color: #06b6d4; background: rgba(6, 182, 212, 0.12); }
+    .tile-7 .service-icon-wrapper { color: #ec4899; background: rgba(236, 72, 153, 0.12); }
     .tile-8 .service-icon-wrapper { color: #8b5cf6; background: rgba(139, 92, 246, 0.12); } 
     .tile-9 .service-icon-wrapper { color: var(--success); background: rgba(16, 185, 129, 0.12); }
 
     .profile-avatar {
-        width: 80px;
-        height: 80px;
-        background: rgba(139, 92, 246, 0.1);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 16px auto;
-        color: var(--primary);
+        width: 80px; height: 80px; background: rgba(139, 92, 246, 0.1); border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; color: var(--primary);
     }
 </style>
 </head>
 
 <body>
+
+<datalist id="courseList">
+    <option value="ANM">
+    <option value="B.Arch.">
+    <option value="B.Com B.Ed">
+    <option value="B.Com">
+    <option value="B.Com - (Hons.)">
+    <option value="B.Com - (Hons.) in Investment Management With CFA Preparation">
+    <option value="B.Com - (Hons.) With ACCA Certification">
+    <option value="B.Com - (Hons.) With Integrated CA Preparation">
+    <option value="B.Des">
+    <option value="B.Lib.I.Sc">
+    <option value="B.Pharm">
+    <option value="B.Pharm - LE">
+    <option value="B.Sc B.Ed">
+    <option value="B.Sc">
+    <option value="B.Sc - IT">
+    <option value="B.Sc - IT (Hons.)">
+    <option value="B.Sc - Nursing">
+    <option value="B.Sc (Hons.)">
+    <option value="B.Sc Agriculture (Hons.)">
+    <option value="B.Tech">
+    <option value="B.Tech - WIP">
+    <option value="B.Tech (Hons.)">
+    <option value="B.Tech LE">
+    <option value="BA">
+    <option value="BA (Hons)">
+    <option value="BA B.Ed">
+    <option value="BBA">
+    <option value="BBA (Hons.)">
+    <option value="BBA - Investment Management With CFA">
+    <option value="BCA">
+    <option value="BCA (Hons.)">
+    <option value="BHMCT">
+    <option value="BHMS">
+    <option value="BPA">
+    <option value="BPA (Hons.)">
+    <option value="BPES">
+    <option value="BPT">
+    <option value="BSW">
+    <option value="BSW (Hons.)">
+    <option value="BVA">
+    <option value="BAMS">
+    <option value="MBBS">
+    <option value="MBA (1 Year Program)">
+    <option value="MBA (2 Years Program)">
+    <option value="MCA (1 Year Program)">
+    <option value="MCA (2 Years Program)">
+    <option value="M.Tech">
+    <option value="M.Sc">
+    <option value="M.Sc - IT">
+    <option value="M.Sc - Data Science">
+    <option value="M.Sc - Nursing">
+    <option value="M.Com">
+    <option value="M.Pharm">
+    <option value="LL.B">
+    <option value="LL.M">
+    <option value="GNM">
+    <option value="D.Pharm">
+    <option value="DHMCT">
+    <option value="Diploma in Journalism">
+    <option value="Diploma in Robotics and Automation">
+    <option value="Diploma in Industrial Automation">
+    <option value="Diploma in Cyber Crimes and Security Laws">
+    <option value="Certificate Program in Cyber Security">
+    <option value="Certificate Program in Business Analytics">
+    <option value="Certificate Program in Digital Marketing">
+    <option value="Certificate Program in Full Stack Developer">
+    <option value="Certificate Program in Cloud Computing">
+    <option value="Certificate Program in Interior Designing">
+    <option value="Certificate Program in VFX and Animation">
+    <option value="Certificate Program in Photography and Cinematography">
+    <option value="Certificate Program in Fashion Designing">
+    <option value="Post Graduate Diploma in Digital and Social Media Marketing">
+    <option value="Post Graduate Diploma in Labour law">
+    <option value="Post Graduate Diploma in Intellectual Property Rights">
+</datalist>
+
+<datalist id="counselorList">
+    <option value="Chirag Sir">
+    <option value="Bansi Ma'am">
+    <option value="Jagrit Sir">
+    <option value="Vaibhav Sir">
+    <option value="Dharmesh Sir">
+    <option value="Ketki Ma'am">
+    <option value="Ayush Sir">
+    <option value="Parthavi Ma'am">
+    <option value="Ankur Sir">
+    <option value="Dhatri Ma'am">
+    <option value="Khushi Ma'am">
+    <option value="Hitanshi Ma'am">
+    <option value="Naitri Ma'am">
+    <option value="Simran Ma'am">
+    <option value="Dikshita Ma'am">
+    <option value="Kartik Sir">
+    <option value="Prutviraj">
+    <option value="Kavita Ma'am">
+    <option value="Yukta Ma'am">
+    <option value="Shruti Ma'am">
+    <option value="Jaimin Sir">
+    <option value="Riddhi Ma'am">
+</datalist>
 
 <div id="popup" class="popup-bg">
     <div class="popup">
@@ -570,24 +551,22 @@
 <div id="timeModal" class="popup-bg hidden">
     <div class="popup">
         <h3>Select Time</h3>
-        
         <div class="time-selector-area">
             <div class="time-col">
                 <button onclick="adjustTime('h', 1)">▲</button>
-                <div id="tp-hour" class="time-val">10</div>
+                <div id="tp-hour" class="time-val" contenteditable="true" inputmode="numeric" title="Click to type">10</div>
                 <button onclick="adjustTime('h', -1)">▼</button>
             </div>
             <div class="time-colon">:</div>
             <div class="time-col">
                 <button onclick="adjustTime('m', 1)">▲</button>
-                <div id="tp-min" class="time-val">30</div>
+                <div id="tp-min" class="time-val" contenteditable="true" inputmode="numeric" title="Click to type">30</div>
                 <button onclick="adjustTime('m', -1)">▼</button>
             </div>
             <div class="time-col">
                 <button onclick="toggleAMPM()" id="tp-ampm" class="ampm-btn">AM</button>
             </div>
         </div>
-
         <div class="time-actions">
             <button class="now-btn" onclick="setTimeToNow()">🕒 Auto-fill Current Time</button>
             <button class="primary-btn" onclick="confirmTime()">Confirm Selection</button>
@@ -595,7 +574,6 @@
         </div>
     </div>
 </div>
-
 
 <div id="homeView" class="view-section">
     <div class="container">
@@ -634,108 +612,11 @@
                     <div class="entry-block">
                         <input class="visit-name" placeholder="Student Name">
                         <input class="visit-leadno" placeholder="Lead Number">
-                        <select class="visit-course">
-                            <option value="">Select Course</option>
-                            <option>ANM</option>
-                            <option>B.Arch.</option>
-                            <option>B.Com B.Ed</option>
-                            <option>B.Com.</option>
-                            <option>B.Com. - (Hons.)</option>
-                            <option>B.Com. - (Hons.) in Investment Management With CFA Preparation</option>
-                            <option>B.Com. - (Hons.) With ACCA Certification</option>
-                            <option>B.Com. - (Hons.) With Integrated CA Preparation</option>
-                            <option>B.Des.</option>
-                            <option>B.Lib.I.Sc.</option>
-                            <option>B.Pharm.</option>
-                            <option>B.Pharm. - LE</option>
-                            <option>B.Sc B.Ed</option>
-                            <option>B.Sc.</option>
-                            <option>B.Sc. - IT</option>
-                            <option>B.Sc. - IT (Hons.)</option>
-                            <option>B.Sc. - Nursing</option>
-                            <option>B.Sc. (Hons.)</option>
-                            <option>B.Sc. Agriculture (Hons.)</option>
-                            <option>B.Tech.</option>
-                            <option>B.Tech. - WIP</option>
-                            <option>B.Tech. (Hons.)</option>
-                            <option>B.Tech. LE</option>
-                            <option>BA</option>
-                            <option>BA (Hons.)</option>
-                            <option>BA B.Ed</option>
-                            <option>BBA</option>
-                            <option>BBA (Hons.)</option>
-                            <option>BBA - Investment Management With CFA</option>
-                            <option>BCA</option>
-                            <option>BCA (Hons.)</option>
-                            <option>BHMCT</option>
-                            <option>BHMS</option>
-                            <option>BPA</option>
-                            <option>BPA (Hons.)</option>
-                            <option>BPES</option>
-                            <option>BPT</option>
-                            <option>BSW</option>
-                            <option>BSW (Hons.)</option>
-                            <option>BVA</option>
-                            <option>BAMS</option>
-                            <option>MBBS</option>
-                            <option>MBA (1 Year Program)</option>
-                            <option>MBA (2 Years Program)</option>
-                            <option>MCA (1 Year Program)</option>
-                            <option>MCA (2 Years Program)</option>
-                            <option>M.Tech.</option>
-                            <option>M.Sc.</option>
-                            <option>M.Sc. - IT</option>
-                            <option>M.Sc. - Data Science</option>
-                            <option>M.Sc. - Nursing</option>
-                            <option>M.Com.</option>
-                            <option>M.Pharm.</option>
-                            <option>LL.B</option>
-                            <option>LL.M</option>
-                            <option>GNM</option>
-                            <option>D.Pharm.</option>
-                            <option>DHMCT</option>
-                            <option>Diploma in Journalism</option>
-                            <option>Diploma in Robotics and Automation</option>
-                            <option>Diploma in Industrial Automation</option>
-                            <option>Diploma in Cyber Crimes and Security Laws</option>
-                            <option>Certificate Program in Cyber Security</option>
-                            <option>Certificate Program in Business Analytics</option>
-                            <option>Certificate Program in Digital Marketing</option>
-                            <option>Certificate Program in Full Stack Developer</option>
-                            <option>Certificate Program in Cloud Computing</option>
-                            <option>Certificate Program in Interior Designing</option>
-                            <option>Certificate Program in VFX and Animation</option>
-                            <option>Certificate Program in Photography and Cinematography</option>
-                            <option>Certificate Program in Fashion Designing</option>
-                            <option>Post Graduate Diploma in Digital and Social Media Marketing</option>
-                            <option>Post Graduate Diploma in Labour law</option>
-                            <option>Post Graduate Diploma in Intellectual Property Rights</option>
-                        </select>
-                        <select class="visit-counselor">
-                            <option value="">Select Counselor</option>
-                            <option>Chirag Sir</option>
-                            <option>Bansi Ma'am</option>
-                            <option>Jagrit Sir</option>
-                            <option>Vaibhav Sir</option>
-                            <option>Dharmesh Sir</option>
-                            <option>Ketki Ma'am</option>
-                            <option>Ayush Sir</option>
-                            <option>Parthavi Ma'am</option>
-                            <option>Ankur Sir</option>
-                            <option>Dhatri Ma'am</option>
-                            <option>Khushi Ma'am</option>
-                            <option>Hitanshi Ma'am</option>
-                            <option>Naitri Ma'am</option>
-                            <option>Simran Ma'am</option>
-                            <option>Dikshita Ma'am</option>
-                            <option>Kartik Sir</option>
-                            <option>Prutviraj</option>
-                            <option>Kavita Ma'am</option>
-                            <option>Yukta Ma'am</option>
-                            <option>Shruti Ma'am</option>
-                            <option>Jaimin Sir</option>
-                            <option>Riddhi Ma'am</option>
-                        </select>
+                        
+                        <input class="visit-course" list="courseList" placeholder="Search or add course...">
+                        
+                        <input class="visit-counselor" list="counselorList" placeholder="Search or add counselor...">
+                        
                         <input class="visit-person" placeholder="Concerned Person">
                         <input class="visit-place" placeholder="Place of Visit">
                         
@@ -771,31 +652,7 @@
                         <input class="adm-leadno" placeholder="Lead Number">
                         <input class="adm-enroll" placeholder="Enrollment Number">
                         
-                        <select class="adm-counselor">
-                            <option value="">Select Counselor</option>
-                            <option>Chirag Sir</option>
-                            <option>Bansi Ma'am</option>
-                            <option>Jagrit Sir</option>
-                            <option>Vaibhav Sir</option>
-                            <option>Dharmesh Sir</option>
-                            <option>Ketki Ma'am</option>
-                            <option>Ayush Sir</option>
-                            <option>Parthavi Ma'am</option>
-                            <option>Ankur Sir</option>
-                            <option>Dhatri Ma'am</option>
-                            <option>Khushi Ma'am</option>
-                            <option>Hitanshi Ma'am</option>
-                            <option>Naitri Ma'am</option>
-                            <option>Simran Ma'am</option>
-                            <option>Dikshita Ma'am</option>
-                            <option>Kartik Sir</option>
-                            <option>Prutviraj</option>
-                            <option>Kavita Ma'am</option>
-                            <option>Yukta Ma'am</option>
-                            <option>Shruti Ma'am</option>
-                            <option>Jaimin Sir</option>
-                            <option>Riddhi Ma'am</option>
-                        </select>
+                        <input class="adm-counselor" list="counselorList" placeholder="Search or add counselor...">
                         
                         <div class="custom-time-btn" onclick="openTimeModal(this)">
                             <span data-default="Start Time">Start Time</span>
@@ -837,14 +694,14 @@
         <p style="text-align: center; color: var(--border-color); margin-bottom: 30px; font-weight: 500;">Quick Access Portal</p>
         
         <div class="services-grid">
-            <a href="https://admissions.paruluniversity.ac.in/walkin" onclick="alert('Redirecting to Token Generator...')" class="service-tile tile-1">
+            <a href="#" onclick="alert('Redirecting to Token Generator...')" class="service-tile tile-1">
                 <div class="service-icon-wrapper">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
                 </div>
                 <span class="service-title">Token<br>Generate</span>
             </a>
 
-            <a href="https://paruluniversity.ac.in/mess/" onclick="alert('Opening Mess Pass Form...')" class="service-tile tile-2">
+            <a href="#" onclick="alert('Opening Mess Pass Form...')" class="service-tile tile-2">
                 <div class="service-icon-wrapper">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"></path></svg>
                 </div>
@@ -865,7 +722,7 @@
                 <span class="service-title">Leave<br>Message</span>
             </a>
 
-            <a href="https://paruluniversity.ac.in/wp-content/uploads/2025/12/A3-PU-Campus-Map-2023-R1-c2c_latest.pdf" onclick="alert('Opening Map')" class="service-tile tile-5">
+            <a href="#" onclick="alert('Loading Interactive Campus Map...')" class="service-tile tile-5">
                 <div class="service-icon-wrapper">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                 </div>
@@ -876,28 +733,28 @@
                 <div class="service-icon-wrapper">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path></svg>
                 </div>
-                <span class="service-title">Demo<br></span>
+                <span class="service-title">Request<br>ID Card</span>
             </a>
 
             <a href="#" onclick="alert('Accessing Faculty & Staff Directory...')" class="service-tile tile-7">
                 <div class="service-icon-wrapper">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 </div>
-                <span class="service-title">Demo<br></span>
+                <span class="service-title">Faculty<br>Directory</span>
             </a>
 
             <a href="#" onclick="alert('Syncing University Event Calendar...')" class="service-tile tile-8">
                 <div class="service-icon-wrapper">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 </div>
-                <span class="service-title">Demo<br></span>
+                <span class="service-title">Event<br>Calendar</span>
             </a>
             
             <a href="#" onclick="alert('Connecting to IT Support Helpdesk...')" class="service-tile tile-9">
                 <div class="service-icon-wrapper">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 </div>
-                <span class="service-title">Tech<br>Support</span>
+                <span class="service-title">IT Tech<br>Support</span>
             </a>
         </div>
     </div>
@@ -1099,7 +956,6 @@ document.getElementById("saveBtn").onclick=function(){
     setCookie("intern",name,365)
     document.getElementById("popup").style.display="none"
     
-    // Quick update to profile name if they change it while viewing the profile
     document.getElementById('profileNameDisplay').innerText = name;
 }
 
@@ -1255,6 +1111,7 @@ function loadAllProgress() {
                 classes.forEach(cls => {
                     let el = block.querySelector(`.${cls}`);
                     if (el && entryData[cls]) {
+                        
                         el.value = entryData[cls];
                         
                         if (el.type === 'hidden' && (cls.includes('start') || cls.includes('end'))) {
@@ -1344,7 +1201,53 @@ function triggerEditName() {
     document.getElementById('internInput').value = getCookie('intern');
     document.getElementById('popup').style.display = 'flex';
 }
+
+/* =======================================================
+   NEW FEATURE: MANUAL TIME TYPING 
+   ======================================================= */
+
+const tpHourEl = document.getElementById('tp-hour');
+const tpMinEl = document.getElementById('tp-min');
+
+// When user stops typing the hour
+tpHourEl.addEventListener('blur', function() {
+    let val = parseInt(this.innerText.replace(/[^0-9]/g, ''), 10);
+    if (!isNaN(val)) {
+        if (val > 12) val = 12;
+        if (val < 1) val = 1;
+        th = val;
+    }
+    updateTimeUI(); // Formats it back nicely to 01, 02, etc. using your original function
+});
+
+// When user hits Enter on the hour
+tpHourEl.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        this.blur();
+    }
+});
+
+// When user stops typing the minute
+tpMinEl.addEventListener('blur', function() {
+    let val = parseInt(this.innerText.replace(/[^0-9]/g, ''), 10);
+    if (!isNaN(val)) {
+        if (val > 59) val = 59;
+        if (val < 0) val = 0;
+        tm = val;
+    }
+    updateTimeUI(); // Formats it back nicely to 00, 05, etc. using your original function
+});
+
+// When user hits Enter on the minute
+tpMinEl.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        this.blur();
+    }
+});
+
 </script>
 
 </body>
-</html>
+                </html>
