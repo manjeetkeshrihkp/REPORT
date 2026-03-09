@@ -94,7 +94,7 @@
     .card-content:not(.hidden) { animation: expandOpen 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
     @keyframes expandOpen { from { opacity: 0; transform: scaleY(0.9) translateY(-10px); } to { opacity: 1; transform: scaleY(1) translateY(0); } }
-    @media(max-width: 768px) { .entry-block { grid-template-columns: 1fr; } body { padding: 20px 15px; padding-bottom: 90px; } .buttons { flex-direction: column; } }
+    @media(max-width: 768px) { .entry-block { grid-template-columns: 1fr; } body { padding: 40px 15px; padding-bottom: 90px; } .buttons { flex-direction: column; } }
 
     input, select, .custom-time-btn {
         width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-color);
@@ -143,6 +143,8 @@
     .primary-btn:hover { background: var(--primary-hover); }
     .server-btn { background: var(--server); color: white; margin-top: 12px; width: 100%; }
     .server-btn:hover { background: var(--server-hover); }
+    .danger-btn { background: var(--danger); color: white; }
+    .danger-btn:hover { background: var(--danger-hover); }
 
     .popup-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; z-index: 999; }
     .popup { background: white; padding: 40px 32px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -227,6 +229,27 @@
 </head>
 
 <body>
+
+<div id="lunchTimerWidget" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: var(--card-bg); backdrop-filter: blur(16px); padding: 12px 20px; border-bottom: 3px solid var(--success); box-shadow: 0 4px 20px rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center; gap: 15px; transition: all 0.3s ease;">
+    <div style="font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">🍔 TIME TAKEN:</div>
+    <div id="lunchTimerText" style="font-size: 24px; font-weight: 800; color: var(--success); font-variant-numeric: tabular-nums; line-height: 1;">00:00</div>
+</div>
+
+<div id="lunchModal" class="popup-bg hidden">
+    <div class="popup">
+        <h3>🍔 Lunch Break</h3>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Request a 30-minute break. The timer will start automatically once approved by Admin.</p>
+        
+        <div id="lunchStatusDisplay" style="margin-bottom: 20px; font-weight: 600; padding: 10px; background: var(--input-bg); border-radius: 10px; font-size: 15px;">
+            Status: Not Requested
+        </div>
+        
+        <input id="lunchNote" placeholder="Optional Note (e.g., Going to Canteen)" style="margin-bottom: 15px;">
+        
+        <button id="requestLunchBtn" class="primary-btn" onclick="requestLunch()">Request Break</button>
+        <button class="cancel-btn" style="width: 100%; margin-top: 10px;" onclick="closeLunchModal()">Close Window</button>
+    </div>
+</div>
 
 <div id="banOverlay" class="hidden">
     <div style="font-size: 64px; margin-bottom: 20px; animation: pulse 2s infinite;">🚫</div>
@@ -361,7 +384,7 @@
 
 <div id="homeView" class="view-section">
     <div class="container">
-        <div class="title" style="margin-bottom: 10px;">Intern Base </div>
+        <div class="title" style="margin-bottom: 10px;">Intern Base ⚡</div>
         <p style="text-align: center; color: rgba(255,255,255,0.7); margin-bottom: 30px; font-weight: 500;">Welcome! Select a workspace tool to begin</p>
         
         <div class="services-grid">
@@ -389,10 +412,14 @@
                 <div class="service-icon-wrapper"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg></div>
                 <span class="service-title">College<br>Map</span>
             </a>
-            <a href="#" onclick="alert('Opening ID Replacement Portal...')" class="service-tile tile-7">
-                <div class="service-icon-wrapper"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path></svg></div>
-                <span class="service-title">Comming<br>Soon</span>
+            
+            <a href="#" onclick="openLunchModal()" class="service-tile tile-7">
+                <div class="service-icon-wrapper">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <span class="service-title">Lunch<br>Break</span>
             </a>
+
             <a href="#" onclick="alert('Accessing Faculty & Staff Directory...')" class="service-tile tile-8">
                 <div class="service-icon-wrapper"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg></div>
                 <span class="service-title">Comming<br>Soon</span>
@@ -580,7 +607,7 @@
 
 <script>
 /* =======================================================
-   YOUR FIREBASE CONFIGURATION
+   YOUR ORIGINAL FIREBASE CONFIGURATION & JS (UNTCHOUCHED)
    ======================================================= */
 const firebaseConfig = {
   apiKey: "AIzaSyBfGntQM2J3RB60RnJl1Sua_kyAjUXNDu4",
@@ -596,9 +623,6 @@ if (!firebase.apps.length) {
 }
 const db = firebase.firestore();
 
-/* =======================================================
-   ORIGINAL FUNCTIONS (UNTOUCHED)
-   ======================================================= */
 function addEntry(cardId) {
     const container = document.querySelector(`#${cardId} .entries-container`);
     const firstBlock = container.querySelector('.entry-block');
@@ -740,23 +764,17 @@ function showCustomDropdown(inputEl) {
     inputEl.parentNode.insertBefore(drop, inputEl.nextSibling); drop.inputEl = inputEl; activeDropdown = drop;
 }
 
-
-/* =======================================================
-   NEW: IP BANNING, LISTENER & FIREBASE UPLOAD
-   ======================================================= */
 let analyticsChartInstance = null;
 window.internGlobalIP = "Unknown";
 
-// 1. Fetch IP secretly in background
 fetch('https://api.ipify.org?format=json')
   .then(response => response.json())
   .then(data => {
       window.internGlobalIP = data.ip;
-      checkIfBanned(); // Check ban status immediately once IP is known
+      checkIfBanned(); 
   })
   .catch(err => console.error("IP Fetch Error:", err));
 
-// 2. Continuous real-time listener to lock screen if Admin presses Ban
 function checkIfBanned() {
     let currentName = getCookie('intern');
     
@@ -767,7 +785,6 @@ function checkIfBanned() {
 
         snapshot.forEach((doc) => {
             let data = doc.data();
-            // Check if their Name OR their IP matches the ban list
             if ((doc.id === currentName && currentName !== "") || (doc.id === window.internGlobalIP && window.internGlobalIP !== "Unknown")) {
                 if (data.permanent === true || data.bannedUntil > now) {
                     isBanned = true;
@@ -780,7 +797,6 @@ function checkIfBanned() {
             }
         });
 
-        // Toggle the massive lock screen overlay
         let overlay = document.getElementById('banOverlay');
         if (isBanned) {
             overlay.classList.remove('hidden');
@@ -790,10 +806,8 @@ function checkIfBanned() {
         }
     });
 }
-// Run once on load just in case IP takes a while
 checkIfBanned();
 
-// 3. Upload function now includes IP for Admin tracking
 function uploadDataToServer() {
     let regCount = 0, visCount = 0, admCount = 0;
     
@@ -817,7 +831,7 @@ function uploadDataToServer() {
 
     db.collection("reports").add({
         intern: internName,
-        ip: window.internGlobalIP,  // NEW: Sends IP to boss dashboard secretly
+        ip: window.internGlobalIP, 
         date: todayISO,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         registrations: regCount,
@@ -887,6 +901,143 @@ function updateAnalyticsUI() {
     });
 }
 window.addEventListener('DOMContentLoaded', updateAnalyticsUI);
+
+/* =======================================================
+   NEW FEATURE: LUNCH BREAK SYSTEM 
+   (MODIFIED TO REMOVE INTERN "END BREAK" ACCESS)
+   ======================================================= */
+let lunchTimerInterval;
+const BREAK_DURATION_MINUTES = 30;
+
+function openLunchModal() {
+    document.getElementById('lunchModal').classList.remove('hidden');
+}
+
+function closeLunchModal() {
+    document.getElementById('lunchModal').classList.add('hidden');
+}
+
+function requestLunch() {
+    let internName = getCookie('intern');
+    if (!internName) { 
+        alert("Please set your name first!"); 
+        return; 
+    }
+    
+    let note = document.getElementById('lunchNote').value;
+    let statusEl = document.getElementById('lunchStatusDisplay');
+    let reqBtn = document.getElementById('requestLunchBtn');
+    
+    // Disable button to prevent double clicks
+    reqBtn.disabled = true;
+    reqBtn.innerText = "Requesting...";
+
+    db.collection('lunch_breaks').doc(internName).set({
+        internName: internName,
+        status: 'pending',
+        note: note,
+        requestTime: firebase.firestore.FieldValue.serverTimestamp(),
+        startTime: null
+    }, { merge: true }).then(() => {
+        statusEl.innerHTML = '<span style="color: #f59e0b;">Status: Pending Admin Approval ⏳</span>';
+        reqBtn.classList.add('hidden');
+        reqBtn.disabled = false;
+        reqBtn.innerText = "Request Break";
+    }).catch(error => {
+        alert("Error requesting lunch: " + error.message);
+        reqBtn.disabled = false;
+        reqBtn.innerText = "Request Break";
+    });
+}
+
+function initLunchListener() {
+    let internName = getCookie('intern');
+    if (!internName) return;
+
+    db.collection('lunch_breaks').doc(internName).onSnapshot(doc => {
+        if (doc.exists) {
+            let data = doc.data();
+            let statusEl = document.getElementById('lunchStatusDisplay');
+            let reqBtn = document.getElementById('requestLunchBtn');
+            let widget = document.getElementById('lunchTimerWidget');
+            
+            if (data.status === 'pending') {
+                statusEl.innerHTML = '<span style="color: #f59e0b;">Status: Pending Admin Approval ⏳</span>';
+                reqBtn.classList.add('hidden');
+                widget.classList.add('hidden');
+                
+            } else if (data.status === 'rejected') {
+                statusEl.innerHTML = '<span style="color: var(--danger);">Status: Rejected ❌</span>';
+                reqBtn.classList.remove('hidden');
+                reqBtn.innerText = "Request Again";
+                widget.classList.add('hidden');
+                
+            } else if (data.status === 'approved') {
+                statusEl.innerHTML = '<span style="color: var(--success);">Status: Approved! ✅</span>';
+                reqBtn.classList.add('hidden');
+                closeLunchModal();
+                widget.classList.remove('hidden');
+                
+                // Set the start time globally if it hasn't been set yet
+                if (!data.startTime) {
+                    let startTimeMs = new Date().getTime();
+                    db.collection('lunch_breaks').doc(internName).update({ startTime: startTimeMs });
+                    startLunchTimer(startTimeMs);
+                } else {
+                    startLunchTimer(data.startTime);
+                }
+                
+            } else if (data.status === 'completed') {
+                statusEl.innerHTML = 'Status: Not Requested';
+                reqBtn.classList.remove('hidden');
+                reqBtn.innerText = "Request 30 Min Break";
+                widget.classList.add('hidden');
+                clearInterval(lunchTimerInterval);
+            }
+        }
+    });
+}
+
+function startLunchTimer(startTimeMs) {
+    clearInterval(lunchTimerInterval);
+    let durationMs = BREAK_DURATION_MINUTES * 60 * 1000;
+    
+    lunchTimerInterval = setInterval(() => {
+        let now = new Date().getTime();
+        
+        // Timer counts UP from 0 to show Total Time Taken
+        let elapsed = now - startTimeMs; 
+        
+        let timerEl = document.getElementById('lunchTimerText');
+        
+        let totalSecs = Math.floor(elapsed / 1000);
+        let mins = Math.floor(totalSecs / 60);
+        let secs = totalSecs % 60;
+        
+        let formattedTime = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        
+        if (elapsed <= durationMs) {
+            // Under 30 mins
+            timerEl.innerText = formattedTime;
+            timerEl.style.color = 'var(--success)';
+            timerEl.style.opacity = '1'; 
+        } else {
+            // Over 30 mins - Text turns red and blinks
+            timerEl.innerText = formattedTime + " (OVERTIME)";
+            timerEl.style.color = 'var(--danger)';
+            
+            // Blinking effect for overtime
+            if (secs % 2 === 0) {
+                timerEl.style.opacity = '1';
+            } else {
+                timerEl.style.opacity = '0.5';
+            }
+        }
+    }, 1000);
+}
+
+// Start the listener shortly after page loads to ensure cookies are read
+setTimeout(initLunchListener, 2000);
 </script>
 
 </body>
