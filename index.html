@@ -43,7 +43,7 @@
         padding-bottom: 100px; 
         line-height: 1.5;
         min-height: 100vh;
-        transition: padding-top 0.3s ease; /* Added for smooth timer transition */
+        transition: padding-top 0.3s ease;
     }
 
     @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
@@ -232,13 +232,19 @@
 <body>
 
 <div id="lunchTimerWidget" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: var(--card-bg); backdrop-filter: blur(16px); padding: 12px 20px; border-bottom: 3px solid var(--success); box-shadow: 0 4px 20px rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center; gap: 15px; transition: all 0.3s ease;">
-    <div style="font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">🍔 TIME TAKEN:</div>
+    <div style="font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="vertical-align: text-bottom; margin-right: 4px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        TIME TAKEN:
+    </div>
     <div id="lunchTimerText" style="font-size: 24px; font-weight: 800; color: var(--success); font-variant-numeric: tabular-nums; line-height: 1;">00:00</div>
 </div>
 
 <div id="lunchModal" class="popup-bg hidden">
     <div class="popup">
-        <h3>🍔 Lunch Break</h3>
+        <h3 style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Lunch Break
+        </h3>
         <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Request a 30-minute break. The timer will start automatically once approved by Admin.</p>
         
         <div id="lunchStatusDisplay" style="margin-bottom: 20px; font-weight: 600; padding: 10px; background: var(--input-bg); border-radius: 10px; font-size: 15px;">
@@ -254,7 +260,10 @@
 
 <div id="leaveRequestModal" class="popup-bg hidden">
     <div class="popup">
-        <h3>🌴 Request Leave</h3>
+        <h3 style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            Request Leave
+        </h3>
         <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Submit your leave application for Admin approval.</p>
         
         <div id="leaveStatusDisplay" class="hidden" style="margin-bottom: 20px; font-weight: 600; padding: 10px; background: var(--input-bg); border-radius: 10px; font-size: 15px;">
@@ -408,7 +417,10 @@
 </datalist>
 <div id="popup" class="popup-bg">
     <div class="popup">
-        <h3>NAMASTE | नमस्ते🙏<br><span style="font-size: 14px; font-weight: 400; color: #64748b;"></span></h3>
+        <h3 style="display:flex; justify-content:center; align-items:center; gap:8px;">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            NAMASTE<br><span style="font-size: 14px; font-weight: 400; color: #64748b;"></span>
+        </h3>
         <input id="internInput" placeholder="Enter Intern Name">
         <button id="saveBtn" class="primary-btn">Continue</button>
     </div>
@@ -501,7 +513,10 @@
 
         <div class="card">
             <div style="display:flex;justify-content:space-between;align-items:center;">
-                <div class="section-title"> 🎟️ REGISTRATION</div>
+                <div class="section-title">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-right: 8px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
+                    REGISTRATION
+                </div>
                 <label class="switch"><input type="checkbox" class="section-toggle" onchange="toggle('tokenCard',this.checked)"><span class="slider"></span></label>
             </div>
             <div id="tokenCard" class="card-content hidden">
@@ -518,7 +533,10 @@
 
         <div class="card">
             <div style="display:flex;justify-content:space-between;align-items:center;">
-                <div class="section-title">📍Visit Details</div>
+                <div class="section-title">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-right: 8px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    Visit Details
+                </div>
                 <label class="switch"><input type="checkbox" class="section-toggle" onchange="toggle('visitCard',this.checked)"><span class="slider"></span></label>
             </div>
             <div id="visitCard" class="card-content hidden">
@@ -550,7 +568,10 @@
 
         <div class="card">
             <div style="display:flex;justify-content:space-between;align-items:center;">
-                <div class="section-title">📢 Admission Process</div>
+                <div class="section-title">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-right: 8px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+                    Admission Process
+                </div>
                 <label class="switch"><input type="checkbox" class="section-toggle" onchange="toggle('admissionCard',this.checked)"><span class="slider"></span></label>
             </div>
             <div id="admissionCard" class="card-content hidden">
@@ -592,7 +613,7 @@
             
             <button class="server-btn button" onclick="uploadDataToServer()">
                 <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-right: 8px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                Upload Data to Server (Analytics)
+                SUBMIT
             </button>
         </div>
     </div>
@@ -601,6 +622,13 @@
 <div id="analyticsView" class="view-section hidden">
     <div class="container">
         <div class="title">ANALYTICS</div>
+
+        <div style="text-align: center; margin-top: -10px; margin-bottom: 25px; animation: slideUp 0.6s ease-out backwards; animation-delay: 0.05s;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); padding: 10px 24px; border-radius: 30px; font-weight: 700; font-size: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                <svg width="20" height="20" fill="none" stroke="var(--warning)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                Global Rank: <span id="myRankDisplay" style="color: var(--primary); margin-left: 4px;">Loading...</span>
+            </div>
+        </div>
         
         <div class="stats-overview-row">
             <div class="stat-circle circle-reg"><div class="stat-circle-val" id="top-circ-reg">0</div><div class="stat-circle-label">Tokens</div></div>
@@ -632,6 +660,34 @@
         <div class="chart-container-card">
             <canvas id="analyticsChart"></canvas>
         </div>
+        
+        <div class="card" style="padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <h3 style="font-size: 16px; color: var(--text-main); margin: 0; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                    <svg width="20" height="20" fill="none" stroke="var(--warning)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                    Top Performers
+                </h3>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="date" id="internLeaderboardDate" onchange="loadInternLeaderboard(this.value)" style="width: auto; padding: 6px 10px; font-size: 13px; margin: 0; border: 1px solid var(--border-color); border-radius: 8px;">
+                    <button onclick="document.getElementById('internLeaderboardDate').value=''; loadInternLeaderboard('');" style="padding: 6px 10px; font-size: 12px; border-radius: 8px; background: transparent; border: 1px solid var(--primary); color: var(--primary); box-shadow: none; flex: none; width: auto; margin: 0;">All Time</button>
+                </div>
+            </div>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-muted);">
+                            <th style="padding: 10px; text-align: center; width: 50px;">Rank</th>
+                            <th style="padding: 10px;">Intern</th>
+                            <th style="padding: 10px; text-align: center;">Total Tasks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="internLeaderboardBody">
+                        <tr><td colspan="3" style="text-align: center; padding: 20px; color: var(--text-muted);">Loading live data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -647,6 +703,32 @@
                 Edit Saved Name
             </button>
         </div>
+
+        <div class="card" style="margin-top: 30px; text-align: left;">
+            <h3 style="font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                <span style="display:flex; align-items:center; gap:8px;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 
+                    My History
+                </span>
+                <input type="date" id="internHistoryDate" onchange="loadInternHistory()" style="width: auto; padding: 6px 10px; font-size: 13px; margin: 0;">
+            </h3>
+
+            <div style="margin-bottom: 20px;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px dashed var(--border-color); padding-bottom: 4px;">Submissions</div>
+                <div id="historyTasks" style="font-size: 14px; color: var(--text-main);">Loading...</div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px dashed var(--border-color); padding-bottom: 4px;">Lunch Break</div>
+                <div id="historyLunch" style="font-size: 14px; color: var(--text-main);">Loading...</div>
+            </div>
+
+            <div>
+                <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px dashed var(--border-color); padding-bottom: 4px;">Leave Requests</div>
+                <div id="historyLeaves" style="font-size: 14px; color: var(--text-main);">Loading...</div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -655,6 +737,18 @@
     <div class="nav-item" onclick="switchNav(this, 'analyticsView')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="3" width="4" height="18"></rect><rect x="10" y="8" width="4" height="13"></rect><rect x="2" y="13" width="4" height="8"></rect></svg><span>Analytics</span></div>
     <div class="nav-item" onclick="switchNav(this, 'profileView')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Profile</span></div>
 </nav>
+
+<div id="internDetailsModal" class="popup-bg hidden">
+    <div class="popup" style="max-width: 500px; text-align: left;">
+        <h3 style="margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            Submission Details
+        </h3>
+        <div id="internDetailsContent" style="max-height: 400px; overflow-y: auto; font-size: 13px;">
+            </div>
+        <button class="cancel-btn" style="width: 100%; margin-top: 15px;" onclick="document.getElementById('internDetailsModal').classList.add('hidden')">Close</button>
+    </div>
+</div>
 
 <script>
 /* =======================================================
@@ -784,8 +878,16 @@ function switchNav(element, targetViewId) {
     document.querySelectorAll('.view-section').forEach(view => { view.classList.add('hidden'); });
     const targetView = document.getElementById(targetViewId);
     if (targetView) { targetView.classList.remove('hidden'); targetView.querySelector('.title').style.animation = 'none'; targetView.querySelector('.title').offsetHeight; targetView.querySelector('.title').style.animation = 'fadeInDown 0.8s ease-out'; }
-    if (targetViewId === 'profileView') { let storedName = getCookie('intern'); document.getElementById('profileNameDisplay').innerText = storedName ? storedName : "Intern"; }
-    if (targetViewId === 'analyticsView') { updateAnalyticsUI(); }
+    if (targetViewId === 'profileView') { 
+        let storedName = getCookie('intern'); 
+        document.getElementById('profileNameDisplay').innerText = storedName ? storedName : "Intern"; 
+        initInternHistory(); 
+    }
+    if (targetViewId === 'analyticsView') { 
+        updateAnalyticsUI(); 
+        document.getElementById('internLeaderboardDate').value = '';
+        loadInternLeaderboard('');
+    }
 }
 function triggerEditName() { document.getElementById('internInput').value = getCookie('intern'); document.getElementById('popup').style.display = 'flex'; }
 
@@ -860,6 +962,8 @@ function checkIfBanned() {
 checkIfBanned();
 
 function uploadDataToServer() {
+    if(!confirm("Are you sure you want to SUBMIT this data?")) return;
+    
     let regCount = 0, visCount = 0, admCount = 0;
     let regDetails = [], visDetails = [], admDetails = [];
     
@@ -921,6 +1025,14 @@ function uploadDataToServer() {
         storedData.push({ date: todayISO, timestamp: new Date().getTime(), registrations: regCount, visits: visCount, admissions: admCount });
         localStorage.setItem('appPermanentAnalytics', JSON.stringify(storedData));
         updateAnalyticsUI();
+        
+        document.querySelectorAll('.entry-block').forEach(block => { if(block !== block.parentElement.firstElementChild) { block.remove(); } });
+        document.querySelectorAll('.entry-block input[type="text"], .entry-block input:not([type]), .entry-block input[type="hidden"]').forEach(input => input.value = '');
+        document.querySelectorAll('.entry-block select').forEach(select => select.selectedIndex = 0);
+        document.querySelectorAll('.custom-time-btn span').forEach(span => { span.innerText = span.getAttribute('data-default') || 'Time'; span.parentElement.classList.remove('has-value'); });
+        document.querySelectorAll('.section-toggle').forEach(toggle => { toggle.checked = false; let cardId = toggle.getAttribute('onchange').match(/'([^']+)'/)[1]; document.getElementById(cardId).classList.add('hidden'); });
+        saveAllProgress();
+        
     }).catch((error) => {
         console.error("Error adding document: ", error); alert("Failed to connect to Server.");
     });
@@ -1047,7 +1159,7 @@ function initLunchListener() {
                 reqBtn.classList.add('hidden');
                 closeLunchModal();
                 widget.classList.remove('hidden');
-                document.body.style.paddingTop = '90px'; // Prevent overlapping the back button
+                document.body.style.paddingTop = '90px'; 
                 
                 if (!data.startTime) {
                     let startTimeMs = new Date().getTime();
@@ -1193,12 +1305,11 @@ function initLeaveListener() {
       .onSnapshot(snapshot => {
         let statusEl = document.getElementById('leaveStatusDisplay');
         if (!snapshot.empty) {
-            // Sort in browser to find latest request without requiring Firebase composite indexes
             let docs = snapshot.docs.map(d => d.data());
             docs.sort((a, b) => {
                 let timeA = a.requestTime ? a.requestTime.toMillis() : 0;
                 let timeB = b.requestTime ? b.requestTime.toMillis() : 0;
-                return timeB - timeA; // Descending
+                return timeB - timeA; 
             });
             
             let latestData = docs[0];
@@ -1219,7 +1330,315 @@ function initLeaveListener() {
 
 setTimeout(initLeaveListener, 2500);
 
+/* =======================================================
+   NEW PROFILE HISTORY SYSTEM
+   ======================================================= */
+window.internCurrentDayReports = [];
+
+function initInternHistory() {
+    let dateInput = document.getElementById('internHistoryDate');
+    if (!dateInput.value) {
+        let d = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+        let todayISO = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        dateInput.value = todayISO;
+    }
+    loadInternHistory();
+}
+
+async function loadInternHistory() {
+    let internName = getCookie('intern');
+    if (!internName) return;
+
+    let selectedDate = document.getElementById('internHistoryDate').value;
+    if(!selectedDate) return;
+
+    let tasksEl = document.getElementById('historyTasks');
+    let lunchEl = document.getElementById('historyLunch');
+    let leavesEl = document.getElementById('historyLeaves');
+
+    tasksEl.innerHTML = "Loading...";
+    lunchEl.innerHTML = "Loading...";
+    leavesEl.innerHTML = "Loading...";
+
+    // 1. Fetch Tasks (Reports)
+    let rReg = 0, rVis = 0, rAdm = 0;
+    window.internCurrentDayReports = [];
+    
+    try {
+        let snap = await db.collection("reports")
+            .where("intern", "==", internName)
+            .where("date", "==", selectedDate)
+            .get();
+        
+        snap.forEach(doc => {
+            let d = doc.data();
+            rReg += (d.registrations || 0);
+            rVis += (d.visits || 0);
+            rAdm += (d.admissions || 0);
+            window.internCurrentDayReports.push(d);
+        });
+
+        if (snap.empty) {
+            tasksEl.innerHTML = "<div style='color:var(--text-muted); font-size: 13px;'>No tasks submitted on this date.</div>";
+        } else {
+            tasksEl.innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom: 5px;"><span>Tokens:</span> <strong style="color:var(--primary);">${rReg}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom: 5px;"><span>Visits:</span> <strong style="color:var(--info);">${rVis}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom: 15px;"><span>Admissions:</span> <strong style="color:var(--success);">${rAdm}</strong></div>
+                <button onclick="openInternDetailsModal()" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; font-weight: 600; transition: all 0.2s ease;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    View Full Details
+                </button>
+            `;
+        }
+    } catch(e) { tasksEl.innerHTML = "Error loading tasks."; }
+
+    // 2. Fetch Lunch Breaks
+    let d = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+    let todayISO = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    
+    let pendingIcon = `<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:inline; vertical-align:middle; margin-bottom:2px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+    let approvedIcon = `<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:inline; vertical-align:middle; margin-bottom:2px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+    let rejectedIcon = `<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:inline; vertical-align:middle; margin-bottom:2px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+
+    try {
+        let lunchHTML = "";
+        let totalLunchMs = 0;
+        
+        let snap = await db.collection("lunch_history")
+            .where("internName", "==", internName)
+            .where("date", "==", selectedDate)
+            .get();
+        
+        snap.forEach(doc => {
+            totalLunchMs += doc.data().sessionMs || 0;
+        });
+
+        if (totalLunchMs > 0) {
+            let m = Math.floor(totalLunchMs / 60000);
+            let s = Math.floor((totalLunchMs % 60000) / 1000);
+            lunchHTML += `<div style="margin-bottom:5px;">Completed Time: <strong style="color:var(--text-main);">${m}m ${s}s</strong></div>`;
+        }
+
+        if (selectedDate === todayISO) {
+            let liveDoc = await db.collection("lunch_breaks").doc(internName).get();
+            if (liveDoc.exists) {
+                let ld = liveDoc.data();
+                let isToday = false;
+                if (ld.requestTime) {
+                    let reqDateIST = new Date(ld.requestTime.toDate().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+                    if (reqDateIST.toDateString() === d.toDateString()) isToday = true;
+                }
+                if(ld.dailyDate === todayISO) isToday = true;
+
+                if (isToday) {
+                    if (ld.status === 'pending') lunchHTML += `<div style="color:var(--warning); display:flex; align-items:center; gap:4px;">Live Status: Pending Approval ${pendingIcon}</div>`;
+                    if (ld.status === 'approved') lunchHTML += `<div style="color:var(--success); display:flex; align-items:center; gap:4px;">Live Status: Currently on Break ${approvedIcon}</div>`;
+                    if (ld.status === 'rejected') lunchHTML += `<div style="color:var(--danger); display:flex; align-items:center; gap:4px;">Live Status: Rejected ${rejectedIcon}</div>`;
+                }
+            }
+        }
+
+        if (lunchHTML === "") {
+            lunchEl.innerHTML = "<div style='color:var(--text-muted); font-size: 13px;'>No lunch break data for this date.</div>";
+        } else {
+            lunchEl.innerHTML = lunchHTML;
+        }
+    } catch(e) { lunchEl.innerHTML = "Error loading lunch data."; }
+
+    // 3. Fetch Leaves
+    try {
+        let leavesHTML = "";
+        let snap = await db.collection("leave_requests")
+            .where("internName", "==", internName)
+            .get();
+        
+        let foundLeave = false;
+        snap.forEach(doc => {
+            let data = doc.data();
+            if (data.requestTime) {
+                let reqD = new Date(data.requestTime.toDate().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+                let reqISO = reqD.getFullYear() + '-' + String(reqD.getMonth() + 1).padStart(2, '0') + '-' + String(reqD.getDate()).padStart(2, '0');
+                if (reqISO === selectedDate) {
+                    foundLeave = true;
+                    let statusColor = data.status === 'approved' ? 'var(--success)' : (data.status === 'rejected' ? 'var(--danger)' : 'var(--warning)');
+                    let statusIcon = data.status === 'approved' ? approvedIcon : (data.status === 'rejected' ? rejectedIcon : pendingIcon);
+                    
+                    leavesHTML += `
+                        <div style="border-left: 3px solid ${statusColor}; padding-left: 10px; margin-bottom: 10px;">
+                            <div style="font-weight: 600; color:var(--text-main);">${data.leaveDates}</div>
+                            <div style="font-size: 13px; color:var(--text-muted); font-style:italic;">"${data.reason}"</div>
+                            <div style="font-size: 12px; font-weight: bold; color:${statusColor}; text-transform:uppercase; margin-top:4px; display:flex; align-items:center; gap:4px;">STATUS: ${data.status} ${statusIcon}</div>
+                        </div>
+                    `;
+                }
+            }
+        });
+
+        if (!foundLeave) {
+            leavesEl.innerHTML = "<div style='color:var(--text-muted); font-size: 13px;'>No leave requested on this date.</div>";
+        } else {
+            leavesEl.innerHTML = leavesHTML;
+        }
+    } catch(e) { leavesEl.innerHTML = "Error loading leaves."; }
+}
+
+function openInternDetailsModal() {
+    let contentEl = document.getElementById('internDetailsContent');
+    let html = "";
+    
+    let reports = window.internCurrentDayReports || [];
+    if (reports.length === 0) {
+        html = "<p style='color: var(--text-muted); text-align: center; padding: 20px;'>No details available.</p>";
+    } else {
+        reports.forEach(d => {
+            let timeString = "Just now";
+            if (d.timestamp && typeof d.timestamp.toDate === 'function') {
+                timeString = new Date(d.timestamp.toDate().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            } else if (d.timestamp) {
+                timeString = new Date(new Date(d.timestamp).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            }
+
+            html += `<div style="margin-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 15px;">`;
+            html += `<div style="font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">Submitted at: ${timeString}</div>`;
+            
+            let hasDetails = false;
+
+            if (d.registrationDetails && d.registrationDetails.length > 0) {
+                hasDetails = true;
+                d.registrationDetails.forEach(entry => {
+                    html += `<div style="margin-bottom: 8px; padding-left: 10px; border-left: 2px solid var(--primary);">
+                        <span style="font-size: 10px; font-weight: bold; color: var(--primary); text-transform: uppercase;">Token Generation</span><br>
+                        <span style="color:var(--text-muted);">Student:</span> <strong style="color:var(--text-main);">${entry['reg-name'] || 'N/A'}</strong><br>
+                        <span style="color:var(--text-muted);">Lead No:</span> <strong style="color:var(--text-main);">${entry['reg-lead'] || 'N/A'}</strong><br>
+                        <span style="color:var(--text-muted);">Token:</span> <strong style="color:var(--text-main);">${entry['reg-token'] || 'N/A'}</strong>
+                    </div>`;
+                });
+            }
+
+            if (d.visitDetails && d.visitDetails.length > 0) {
+                hasDetails = true;
+                d.visitDetails.forEach(entry => {
+                    html += `<div style="margin-bottom: 8px; padding-left: 10px; border-left: 2px solid var(--info);">
+                        <span style="font-size: 10px; font-weight: bold; color: var(--info); text-transform: uppercase;">Campus Visit</span><br>
+                        <span style="color:var(--text-muted);">Student:</span> <strong style="color:var(--text-main);">${entry['visit-name'] || 'N/A'}</strong><br>
+                        <span style="color:var(--text-muted);">Lead No:</span> <strong style="color:var(--text-main);">${entry['visit-leadno'] || 'N/A'}</strong><br>
+                        <span style="color:var(--text-muted);">Course:</span> <strong style="color:var(--text-main);">${entry['visit-course'] || 'N/A'}</strong><br>
+                        <span style="color:var(--text-muted);">Counselor:</span> <strong style="color:var(--text-main);">${entry['visit-counselor'] || 'N/A'}</strong>
+                    </div>`;
+                });
+            }
+
+            if (d.admissionDetails && d.admissionDetails.length > 0) {
+                hasDetails = true;
+                d.admissionDetails.forEach(entry => {
+                    html += `<div style="margin-bottom: 8px; padding-left: 10px; border-left: 2px solid var(--success);">
+                        <span style="font-size: 10px; font-weight: bold; color: var(--success); text-transform: uppercase;">Admission</span><br>
+                        <span style="color:var(--text-muted);">Student:</span> <strong style="color:var(--text-main);">${entry['adm-name'] || 'N/A'}</strong><br>
+                        <span style="color:var(--text-muted);">Lead No:</span> <strong style="color:var(--text-main);">${entry['adm-leadno'] || 'N/A'}</strong><br>
+                        <span style="color:var(--text-muted);">Enrollment:</span> <strong style="color:var(--text-main);">${entry['adm-enroll'] || 'N/A'}</strong><br>
+                        <span style="color:var(--text-muted);">Counselor:</span> <strong style="color:var(--text-main);">${entry['adm-counselor'] || 'N/A'}</strong>
+                    </div>`;
+                });
+            }
+            
+            if (!hasDetails) {
+                html += `<div style="font-style: italic; color: var(--text-muted); font-size: 12px;">Only counts recorded (legacy format).</div>`;
+            }
+
+            html += `</div>`;
+        });
+    }
+    
+    contentEl.innerHTML = html;
+    document.getElementById('internDetailsModal').classList.remove('hidden');
+}
+
+// =======================================================
+//   MODIFIED: ASYNC LEADERBOARD FETCH FOR ANALYTICS TAB
+// =======================================================
+async function loadInternLeaderboard(filterDate = "") {
+    let leaderboardEl = document.getElementById('internLeaderboardBody');
+    let rankDisplayEl = document.getElementById('myRankDisplay');
+    if(!leaderboardEl) return;
+    
+    leaderboardEl.innerHTML = "<tr><td colspan='3' style='text-align:center; padding: 20px; color: var(--text-muted);'>Loading data...</td></tr>";
+    if(rankDisplayEl) rankDisplayEl.innerText = "Loading...";
+
+    try {
+        let snap;
+        if (filterDate) {
+            snap = await db.collection("reports").where("date", "==", filterDate).get();
+        } else {
+            snap = await db.collection("reports").get();
+        }
+        
+        let aggregated = {};
+
+        snap.forEach(doc => {
+            let data = doc.data();
+            let name = data.intern || "Unknown";
+            if (!aggregated[name]) {
+                aggregated[name] = { reg: 0, vis: 0, adm: 0, total: 0 };
+            }
+            aggregated[name].reg += (data.registrations || 0);
+            aggregated[name].vis += (data.visits || 0);
+            aggregated[name].adm += (data.admissions || 0);
+            aggregated[name].total += (data.registrations || 0) + (data.visits || 0) + (data.admissions || 0);
+        });
+
+        let ranked = Object.entries(aggregated).map(([name, stats]) => ({ name, ...stats })).sort((a, b) => {
+            if (b.total !== a.total) return b.total - a.total;
+            if (b.vis !== a.vis) return b.vis - a.vis;
+            return b.reg - a.reg;
+        });
+
+        let html = "";
+        let myName = getCookie('intern');
+        let myRank = "Unranked";
+
+        ranked.forEach((intern, index) => {
+            let rank = index + 1;
+            
+            if (intern.name === myName) {
+                myRank = rank;
+            }
+
+            let medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : `#${rank}`;
+            let isMe = intern.name === myName ? "font-weight:800; color:var(--primary);" : "font-weight:600;";
+            html += `
+                <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                    <td style="padding: 12px; text-align: center; font-size: 16px;">${medal}</td>
+                    <td style="padding: 12px; ${isMe}">${intern.name}</td>
+                    <td style="padding: 12px; text-align: center; font-weight: 700; color: var(--text-main);">${intern.total}</td>
+                </tr>
+            `;
+        });
+
+        if (html === "") {
+            html = "<tr><td colspan='3' style='text-align:center; padding: 20px; color: var(--text-muted);'>No submissions found.</td></tr>";
+        }
+        leaderboardEl.innerHTML = html;
+
+        if(rankDisplayEl) {
+            let totalInterns = ranked.length;
+            if (totalInterns === 0) {
+                rankDisplayEl.innerText = "No Data";
+            } else if (myRank === "Unranked") {
+                rankDisplayEl.innerText = `N/A out of ${totalInterns}`;
+            } else {
+                rankDisplayEl.innerText = `${myRank} out of ${totalInterns}`;
+            }
+        }
+
+    } catch (e) {
+        console.error(e);
+        leaderboardEl.innerHTML = "<tr><td colspan='3' style='text-align:center; padding: 20px; color: var(--danger);'>Error loading leaderboard.</td></tr>";
+        if(rankDisplayEl) rankDisplayEl.innerText = "Error";
+    }
+}
+
 </script>
 
 </body>
-</html>
+    </html>
