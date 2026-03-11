@@ -149,7 +149,9 @@
         <div class="nav-item" id="navLeave" onclick="superSwitch('leaveView', 'navLeave')">
             🌴 Leaves <span id="leaveBadge" class="badge-pill hidden">0</span>
         </div>
-        <div class="nav-item" id="navPast" onclick="superSwitch('pastDataView', 'navPast')">📅 Past Records</div>
+        <div class="nav-item" id="navOnboard" onclick="superSwitch('onboardView', 'navOnboard')">
+            🚀 Onboard <span id="onboardBadge" class="badge-pill hidden">0</span>
+        </div>
     </nav>
 
     <div id="dashboardView" class="view-section">
@@ -396,40 +398,46 @@
         </div>
     </div>
 
-    <div id="pastDataView" class="view-section hidden">
-        <div style="background: var(--card-bg); padding: 24px; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); text-align: center;">
-            <h3 style="margin-bottom: 15px; color: var(--text-main);">View Historical Daily Data</h3>
-            <input type="date" id="historyDateSelect" onchange="loadPastData()" style="padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); width: 100%; max-width: 300px; font-size: 16px;">
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card" style="border-top: 4px solid var(--primary); padding: 15px;">
-                <h3 style="font-size: 12px;">Past Tokens</h3>
-                <h2 class="c-reg" id="pastTotalReg" style="font-size: 36px;">0</h2>
-            </div>
-            <div class="stat-card" style="border-top: 4px solid var(--info); padding: 15px;">
-                <h3 style="font-size: 12px;">Past Visits</h3>
-                <h2 class="c-vis" id="pastTotalVis" style="font-size: 36px;">0</h2>
-            </div>
-            <div class="stat-card" style="border-top: 4px solid var(--success); padding: 15px;">
-                <h3 style="font-size: 12px;">Past Admissions</h3>
-                <h2 class="c-adm" id="pastTotalAdm" style="font-size: 36px;">0</h2>
-            </div>
-        </div>
-
-        <div class="table-container">
-            <h2 style="margin-bottom: 20px; font-size: 20px;">Intern Submissions for Selected Date</h2>
+    <div id="onboardView" class="view-section hidden">
+        <div class="table-container" style="margin-bottom: 30px; border-top: 4px solid var(--success);">
+            <h2 style="margin-bottom: 15px; font-size: 18px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                🚀 Pending Access Requests
+            </h2>
             <table>
                 <thead>
                     <tr>
                         <th>Intern Name</th>
-                        <th>Tokens</th>
-                        <th>Visits</th>
-                        <th>Admissions</th>
+                        <th>Request Time</th>
+                        <th style="text-align: right;">Action</th>
                     </tr>
                 </thead>
-                <tbody id="pastTableBody">
-                    <tr><td colspan="4" style="text-align: center; padding: 40px; color: var(--text-muted);">Please select a date above.</td></tr>
+                <tbody id="pendingRequestsBody">
+                    <tr><td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">Loading requests...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-container" style="border-top: 4px solid var(--danger);">
+            <h2 style="margin-bottom: 15px; font-size: 18px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                🚫 Ban Management
+            </h2>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                <input type="text" id="quickBanName" placeholder="Enter Intern Name to Ban" style="flex: 1; min-width: 200px; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 14px; margin: 0;">
+                <button class="action-btn btn-temp" style="padding: 10px 16px;" onclick="if(document.getElementById('quickBanName').value) { openTempBanModal(document.getElementById('quickBanName').value.trim()); document.getElementById('quickBanName').value=''; }">⏱️ Temp Ban</button>
+                <button class="action-btn btn-ban" style="padding: 10px 16px;" onclick="if(document.getElementById('quickBanName').value) { permanentBan(document.getElementById('quickBanName').value.trim()); document.getElementById('quickBanName').value=''; }">🚫 Perm Ban</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Banned Intern</th>
+                        <th>Ban Details</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="bannedInternsTableBody">
+                    <tr><td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">No banned interns.</td></tr>
                 </tbody>
             </table>
         </div>
@@ -703,18 +711,8 @@ function superSwitch(viewId, navId) {
 }
 
 /* =======================================================
-   YOUR OLD FUNCTIONS - STRICTLY UNTOUCHED
+   USER ACCESS & BAN LOGIC 
    ======================================================= */
-function switchAdminTab(targetViewId) {
-    document.getElementById('dashboardView').classList.add('hidden');
-    document.getElementById('usersView').classList.add('hidden');
-    document.getElementById('tabDash').classList.remove('active');
-    document.getElementById('tabUsers').classList.remove('active');
-    document.getElementById(targetViewId).classList.remove('hidden');
-    if(targetViewId === 'dashboardView') document.getElementById('tabDash').classList.add('active');
-    if(targetViewId === 'usersView') document.getElementById('tabUsers').classList.add('active');
-}
-
 function renderUserTable() {
     let tableHTML = "";
     
@@ -776,7 +774,8 @@ function renderUserTable() {
             </tr>
         `;
     });
-    document.getElementById("userTableBody").innerHTML = tableHTML;
+    let uBody = document.getElementById("userTableBody");
+    if(uBody) uBody.innerHTML = tableHTML;
 }
 
 function permanentBan(internName) {
@@ -836,47 +835,80 @@ function confirmTempBan() {
     });
 }
 
-function loadPastData() {
-    let selectedDate = document.getElementById('historyDateSelect').value;
-    if (!selectedDate) return;
-
-    let tableBody = document.getElementById('pastTableBody');
-    tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 40px; color: var(--text-muted);">Fetching reports for ${selectedDate}...</td></tr>`;
-    
-    db.collection("reports").where("date", "==", selectedDate).get().then((querySnapshot) => {
-        let pReg = 0, pVis = 0, pAdm = 0;
-        let html = "";
-        
-        if (querySnapshot.empty) {
-            tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 40px; color: var(--danger);">No reports were uploaded on ${selectedDate}</td></tr>`;
-            document.getElementById('pastTotalReg').innerText = 0;
-            document.getElementById('pastTotalVis').innerText = 0;
-            document.getElementById('pastTotalAdm').innerText = 0;
-            return;
-        }
-
-        querySnapshot.forEach((doc) => {
-            let data = doc.data();
-            pReg += data.registrations || 0;
-            pVis += data.visits || 0;
-            pAdm += data.admissions || 0;
-
-            html += `<tr>
-                <td><span class="badge" style="background: #334155;">${data.intern || 'Unknown'}</span></td>
-                <td style="font-weight: bold; font-size: 16px; color: var(--primary);">${data.registrations || 0}</td>
-                <td style="font-weight: bold; font-size: 16px; color: var(--info);">${data.visits || 0}</td>
-                <td style="font-weight: bold; font-size: 16px; color: var(--success);">${data.admissions || 0}</td>
+db.collection("banned_interns").onSnapshot((snapshot) => {
+    bannedInternsList = {}; let now = new Date().getTime();
+    let bannedHTML = "";
+    snapshot.forEach((doc) => {
+        let data = doc.data();
+        if (data.permanent === true || data.bannedUntil > now) { 
+            bannedInternsList[doc.id] = data; 
+            let details = data.permanent ? "Permanent Ban" : `Until ${new Date(data.bannedUntil).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'})}`;
+            bannedHTML += `<tr>
+                <td style="font-weight: 700; font-size: 15px;">${doc.id}</td>
+                <td style="color: var(--danger); font-weight: 600;">${details}</td>
+                <td style="text-align: right;"><button class="action-btn btn-unban" onclick="unbanUser('${doc.id}')">✅ Unban</button></td>
             </tr>`;
-        });
-
-        document.getElementById('pastTotalReg').innerText = pReg;
-        document.getElementById('pastTotalVis').innerText = pVis;
-        document.getElementById('pastTotalAdm').innerText = pAdm;
-        tableBody.innerHTML = html;
-    }).catch(error => {
-        console.error("Error fetching past data: ", error);
-        tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: red;">Error connecting to database.</td></tr>`;
+        } 
+        else { db.collection("banned_interns").doc(doc.id).delete(); }
     });
+    
+    let banBody = document.getElementById("bannedInternsTableBody");
+    if(banBody) {
+        if(bannedHTML === "") bannedHTML = `<tr><td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">No banned interns.</td></tr>`;
+        banBody.innerHTML = bannedHTML;
+    }
+    
+    renderUserTable(); 
+});
+
+/* =======================================================
+   NEW: ONBOARD & ACCESS REQUEST SYSTEM 
+   ======================================================= */
+db.collection("access_requests").orderBy("requestTime", "desc").onSnapshot(snapshot => {
+    let pendingHTML = "";
+    let badgeCount = 0;
+    snapshot.forEach(doc => {
+        let data = doc.data();
+        if(data.status === 'pending') {
+            badgeCount++;
+            let timeStr = data.requestTime ? new Date(data.requestTime.toDate().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : 'Just now';
+            pendingHTML += `<tr>
+                <td style="font-weight: 700; font-size: 15px;">${data.internName}</td>
+                <td style="color: var(--text-muted); font-size: 13px;">${timeStr}</td>
+                <td style="text-align:right;">
+                    <button class="action-btn btn-unban" onclick="handleAccess('${doc.id}', '${data.internName}', 'approved')">✅ Allow</button>
+                    <button class="action-btn btn-ban" onclick="handleAccess('${doc.id}', '${data.internName}', 'rejected')">❌ Reject</button>
+                </td>
+            </tr>`;
+        }
+    });
+    let pBody = document.getElementById('pendingRequestsBody');
+    if(pBody) {
+        if(pendingHTML === "") pendingHTML = "<tr><td colspan='3' style='text-align:center; padding: 30px; color: var(--text-muted);'>No pending access requests.</td></tr>";
+        pBody.innerHTML = pendingHTML;
+    }
+    
+    let badge = document.getElementById("onboardBadge");
+    if(badge) {
+        if(badgeCount > 0) {
+            badge.innerText = badgeCount;
+            badge.classList.remove("hidden");
+        } else {
+            badge.classList.add("hidden");
+        }
+    }
+});
+
+function handleAccess(docId, internName, status) {
+    if(confirm(`Are you sure you want to ${status.toUpperCase()} access for ${internName}?`)) {
+        db.collection("access_requests").doc(docId).update({ status: status });
+        if (status === 'approved') {
+            db.collection("allowed_interns").doc(internName).set({ active: true, approvedAt: firebase.firestore.FieldValue.serverTimestamp() });
+            db.collection("banned_interns").doc(internName).delete();
+        } else if (status === 'rejected') {
+            db.collection("banned_interns").doc(internName).set({ permanent: true, bannedAt: new Date().getTime(), reason: "Access Rejected" });
+        }
+    }
 }
 
 /* =======================================================
@@ -907,7 +939,7 @@ db.collection("reports").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             let recD = new Date(data.timestamp.toDate().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
             recordDateStr = recD.getFullYear() + '-' + String(recD.getMonth() + 1).padStart(2, '0') + '-' + String(recD.getDate()).padStart(2, '0');
         } else if (!data.timestamp) {
-            recordDateStr = todayStr; // Pending write
+            recordDateStr = todayStr; 
         }
         data.correctedDate = recordDateStr;
         
@@ -1244,17 +1276,6 @@ async function exportMainLeaderboardPDF() {
     doc.save(`Leaderboard_Report_${reportDate}.pdf`);
     if(btn) btn.innerText = originalText;
 }
-
-
-db.collection("banned_interns").onSnapshot((snapshot) => {
-    bannedInternsList = {}; let now = new Date().getTime();
-    snapshot.forEach((doc) => {
-        let data = doc.data();
-        if (data.permanent === true || data.bannedUntil > now) { bannedInternsList[doc.id] = data; } 
-        else { db.collection("banned_interns").doc(doc.id).delete(); }
-    });
-    renderUserTable(); 
-});
 
 function handleBreak(internName, newStatus) {
     if(confirm(`Are you sure you want to ${newStatus === 'approved' ? 'APPROVE' : 'REJECT'} the break for ${internName}?`)) {
