@@ -193,7 +193,14 @@
 
         <div class="table-container">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
-                <h2 style="font-size: 20px; color: var(--text-main); margin: 0;">Daily Leaderboard & Submissions</h2>
+                <div>
+                    <h2 style="font-size: 20px; color: var(--text-main); margin: 0;">Daily Leaderboard & Submissions</h2>
+                    <div id="selectedDateTotals" style="margin-top: 8px; display: none; gap: 10px; font-size: 12px; font-weight: 700; color: var(--text-main);">
+                        <span style="background: rgba(139, 92, 246, 0.1); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(139, 92, 246, 0.3); color: var(--primary);">Tokens: <span id="sdTotalReg">0</span></span>
+                        <span style="background: rgba(59, 130, 246, 0.1); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(59, 130, 246, 0.3); color: var(--info);">Visits: <span id="sdTotalVis">0</span></span>
+                        <span style="background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.3); color: var(--success);">Admissions: <span id="sdTotalAdm">0</span></span>
+                    </div>
+                </div>
                 <div style="display: flex; gap: 15px; align-items: center;">
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <span style="font-size: 13px; font-weight: 600; color: var(--text-muted);">Select Date:</span>
@@ -511,6 +518,7 @@
             <div class="stat-card" style="padding: 15px; border-top: 4px solid var(--info);"><h3 style="margin-bottom:5px; font-size:12px;">Total Visits</h3><h2 id="ufdVisits" style="font-size: 32px; color:var(--info);">0</h2></div>
             <div class="stat-card" style="padding: 15px; border-top: 4px solid var(--success);"><h3 style="margin-bottom:5px; font-size:12px;">Total Admissions</h3><h2 id="ufdAdmissions" style="font-size: 32px; color:var(--success);">0</h2></div>
             <div class="stat-card" style="padding: 15px; border-top: 4px solid var(--warning);"><h3 style="margin-bottom:5px; font-size:12px;">Avg Lunch Break</h3><h2 id="ufdAvgLunch" style="font-size: 32px; color:var(--warning);">0m</h2></div>
+            <div class="stat-card" style="padding: 15px; border-top: 4px solid var(--danger);"><h3 style="margin-bottom:5px; font-size:12px;">Total Leaves</h3><h2 id="ufdTotalLeaves" style="font-size: 32px; color:var(--danger);">0</h2></div>
         </div>
 
         <h3 style="margin-bottom: 10px; font-size: 16px; color: var(--primary); display:flex; align-items:center; gap:6px;">📝 Submissions Details</h3>
@@ -897,6 +905,7 @@ async function renderMainLeaderboard(targetDate) {
     
     let aggregated = {};
     window.internDetailedReports = {}; 
+    let sumReg = 0, sumVis = 0, sumAdm = 0;
     
     window.allReportsGlobal.forEach(data => {
         if (data.correctedDate === targetDate) {
@@ -905,6 +914,10 @@ async function renderMainLeaderboard(targetDate) {
             let r = data.registrations || 0;
             let v = data.visits || 0;
             let a = data.admissions || 0;
+
+            sumReg += r;
+            sumVis += v;
+            sumAdm += a;
             
             if (!aggregated[internName]) {
                 aggregated[internName] = { reg: 0, vis: 0, adm: 0, latestTime: 0, name: internName };
@@ -929,6 +942,21 @@ async function renderMainLeaderboard(targetDate) {
             window.internDetailedReports[internName].push({ time: timeString, reg: r, vis: v, adm: a, rawData: data });
         }
     });
+
+    let dNow = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+    let todayISO = dNow.getFullYear() + '-' + String(dNow.getMonth() + 1).padStart(2, '0') + '-' + String(dNow.getDate()).padStart(2, '0');
+
+    let totalsDiv = document.getElementById("selectedDateTotals");
+    if (totalsDiv) {
+        if (targetDate !== todayISO && (sumReg > 0 || sumVis > 0 || sumAdm > 0)) {
+            totalsDiv.style.display = "flex";
+            document.getElementById("sdTotalReg").innerText = sumReg;
+            document.getElementById("sdTotalVis").innerText = sumVis;
+            document.getElementById("sdTotalAdm").innerText = sumAdm;
+        } else {
+            totalsDiv.style.display = "none";
+        }
+    }
 
     let pastLunchMap = {};
     try {
@@ -955,8 +983,6 @@ async function renderMainLeaderboard(targetDate) {
     window.currentLeaderboardExportData = rankedInterns;
 
     let tableHTML = "";
-    let dNow = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
-    let todayISO = dNow.getFullYear() + '-' + String(dNow.getMonth() + 1).padStart(2, '0') + '-' + String(dNow.getDate()).padStart(2, '0');
 
     rankedInterns.forEach((intern, index) => {
         let rank = index + 1;
@@ -1054,6 +1080,17 @@ async function exportMainLeaderboardPDF() {
     doc.setFont("helvetica", "normal");
     doc.text(`Date: ${reportDate}`, 14, 28);
     
+    let sumReg = 0, sumVis = 0, sumAdm = 0;
+    exportData.forEach(intern => {
+        sumReg += intern.reg;
+        sumVis += intern.vis;
+        sumAdm += intern.adm;
+    });
+    
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.text(`Total Tokens: ${sumReg}   |   Total Visits: ${sumVis}   |   Total Admissions: ${sumAdm}`, 14, 35);
+    
     let tableData = exportData.map((intern, index) => {
         let name = intern.name;
         let tMs = pastLunchMap[name] || 0;
@@ -1093,7 +1130,7 @@ async function exportMainLeaderboardPDF() {
     doc.autoTable({
         head: [['Rank', 'Intern Name', 'Tokens', 'Visits', 'Admissions', 'Total Tasks', 'Lunch Break', 'Time Range']],
         body: tableData,
-        startY: 35,
+        startY: 42,
         theme: 'grid',
         headStyles: { fillColor: [139, 92, 246] },
         styles: { cellPadding: 3, valign: 'middle' }
@@ -1882,6 +1919,7 @@ async function loadUserFullDetailsData() {
     } catch(e) { console.error("Error loading user leaves", e); }
     
     document.getElementById('ufdLeavesBody').innerHTML = leaveHtml || "<tr><td colspan='4' style='text-align:center; padding: 20px; color:var(--text-muted);'>No leave requests.</td></tr>";
+    document.getElementById('ufdTotalLeaves').innerText = window.ufdData.leaves.length;
 }
 
 function exportUserFullDetailsPDF() {
