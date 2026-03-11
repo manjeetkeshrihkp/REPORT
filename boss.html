@@ -440,8 +440,16 @@
 <div id="tempBanModal" class="popup-bg hidden">
     <div class="popup">
         <h3 id="banTitle">Temporary Ban</h3>
-        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Enter the number of hours to ban this user.</p>
-        <input type="number" id="banHoursInput" placeholder="e.g., 24" min="1">
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Select a date/time OR enter hours.</p>
+        <div style="text-align: left; margin-bottom: 10px;">
+            <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Ban Until (Date & Time):</label>
+            <input type="datetime-local" id="banDateInput" style="margin-bottom: 10px; color-scheme: light;">
+        </div>
+        <div style="text-align: center; font-weight: bold; color: var(--text-muted); margin-bottom: 10px; font-size: 12px;">OR</div>
+        <div style="text-align: left; margin-bottom: 20px;">
+            <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Ban for (Hours):</label>
+            <input type="number" id="banHoursInput" placeholder="e.g., 24" min="1" style="margin-bottom: 0;">
+        </div>
         <div class="popup-btns">
             <button class="btn-cancel" onclick="closeBanModal()">Cancel</button>
             <button class="btn-confirm" onclick="confirmTempBan()">Apply Ban</button>
@@ -711,10 +719,25 @@ function renderUserTable() {
     let tableHTML = "";
     
     let uniqueInternsMap = {};
+    let latestSubmissionMap = {};
+    
     Array.from(knownInterns).forEach(name => {
         let lower = name.toLowerCase().trim();
         if(!uniqueInternsMap[lower]) uniqueInternsMap[lower] = name;
     });
+
+    if (window.allReportsGlobal) {
+        window.allReportsGlobal.forEach(r => {
+            let name = r.intern || "Unknown";
+            let tMs = r.timestamp ? (typeof r.timestamp.toMillis === 'function' ? r.timestamp.toMillis() : r.timestamp) : 0;
+            if(tMs === 0 && r.date) {
+                tMs = new Date(r.date).getTime(); 
+            }
+            if (!latestSubmissionMap[name] || tMs > latestSubmissionMap[name]) {
+                latestSubmissionMap[name] = tMs;
+            }
+        });
+    }
 
     let internArray = Object.values(uniqueInternsMap).sort();
 
@@ -723,10 +746,18 @@ function renderUserTable() {
         return;
     }
     
+    let now = new Date().getTime();
+    let threeDaysMs = 3 * 24 * 60 * 60 * 1000;
+
     internArray.forEach(intern => {
         let isBanned = bannedInternsList[intern] !== undefined;
         let banData = bannedInternsList[intern];
-        let statusBadge = `<span class="badge active">🟢 Active</span>`;
+        
+        let lastSub = latestSubmissionMap[intern] || 0;
+        let isActive = (now - lastSub) <= threeDaysMs;
+        
+        let statusBadge = isActive ? `<span class="badge active">🟢 Active</span>` : `<span class="badge" style="background:#64748b;">⚪ Deactive</span>`;
+        
         let actionButtons = `
             <button class="action-btn" style="background: var(--info);" onclick="openUserFullDetails('${intern}')">👁️ View Details</button>
             <button class="action-btn btn-temp" onclick="openTempBanModal('${intern}')">⏱️ Temp Ban</button>
@@ -767,6 +798,7 @@ function openTempBanModal(internName) {
     targetInternToBan = internName;
     document.getElementById('banTitle').innerText = `Ban ${internName}`;
     document.getElementById('banHoursInput').value = '';
+    document.getElementById('banDateInput').value = '';
     document.getElementById('tempBanModal').classList.remove('hidden');
 }
 
@@ -777,12 +809,23 @@ function closeBanModal() {
 
 function confirmTempBan() {
     let hours = parseFloat(document.getElementById('banHoursInput').value);
-    if (!hours || hours <= 0) {
-        alert("Please enter a valid number of hours.");
+    let dateVal = document.getElementById('banDateInput').value;
+    
+    let unbanTime = 0;
+    let now = new Date().getTime();
+
+    if (dateVal) {
+        unbanTime = new Date(dateVal).getTime();
+        if(unbanTime <= now) {
+            alert("Please select a future date/time.");
+            return;
+        }
+    } else if (hours && hours > 0) {
+        unbanTime = now + (hours * 60 * 60 * 1000);
+    } else {
+        alert("Please select a date/time OR enter valid hours.");
         return;
     }
-    let now = new Date().getTime();
-    let unbanTime = now + (hours * 60 * 60 * 1000); 
 
     db.collection("banned_interns").doc(targetInternToBan).set({
         permanent: false,
