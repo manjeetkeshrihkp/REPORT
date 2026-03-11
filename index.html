@@ -100,7 +100,6 @@
     input, select, .custom-time-btn {
         width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-color);
         background-color: var(--input-bg); font-size: 14px; color: var(--text-main); transition: all 0.3s ease; appearance: none;
-        color-scheme: light; /* FIX for white text on mobile calendars */
     }
 
     input[data-custom-list] {
@@ -274,11 +273,11 @@
         <div style="display: flex; gap: 10px; margin-bottom: 10px;">
             <div style="flex: 1; text-align: left;">
                 <label style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; display: block; font-weight: 600;">Start Date</label>
-                <input type="date" id="leaveDateFrom" style="margin-bottom: 0;">
+                <input type="date" id="leaveDateFrom" style="margin-bottom: 0; color: var(--text-main); -webkit-text-fill-color: var(--text-main); color-scheme: light;">
             </div>
             <div style="flex: 1; text-align: left;">
                 <label style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; display: block; font-weight: 600;">End Date (Optional)</label>
-                <input type="date" id="leaveDateTo" style="margin-bottom: 0;">
+                <input type="date" id="leaveDateTo" style="margin-bottom: 0; color: var(--text-main); -webkit-text-fill-color: var(--text-main); color-scheme: light;">
             </div>
         </div>
         
@@ -673,10 +672,11 @@
                 
                 <div style="display: flex; gap: 10px; width: 100%; align-items: center;">
                     <div style="flex: 1; position: relative;">
-                        <input type="date" id="internLeaderboardDate" onchange="document.getElementById('internFilterSelect').value='custom'; loadInternLeaderboard(this.value);" style="width: 100%; padding: 8px 10px; font-size: 12px; font-weight: 500; border: 1px solid var(--border-color); border-radius: 8px; background: var(--input-bg); color: var(--text-main); margin: 0; outline: none; box-sizing: border-box; height: 36px; color-scheme: light;">
+                        <svg width="16" height="16" fill="none" stroke="var(--primary)" viewBox="0 0 24 24" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <input type="date" id="internLeaderboardDate" onchange="document.getElementById('internFilterSelect').value='custom'; loadInternLeaderboard(this.value);" style="width: 100%; padding: 8px 10px 8px 32px; font-size: 12px; font-weight: 700; border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 8px; background: rgba(139, 92, 246, 0.08); color: var(--primary); -webkit-text-fill-color: var(--primary); margin: 0; outline: none; box-sizing: border-box; height: 36px; appearance: none; color-scheme: light;">
                     </div>
                     <div style="flex: 1; position: relative;">
-                        <select id="internFilterSelect" onchange="if(this.value !== 'custom') { document.getElementById('internLeaderboardDate').value=''; loadInternLeaderboard(this.value); }" style="width: 100%; padding: 8px 25px 8px 10px; font-size: 12px; font-weight: 700; border-radius: 8px; background-color: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.3); color: var(--primary); margin: 0; outline: none; cursor: pointer; box-sizing: border-box; height: 36px; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=%22none%22 stroke=\"%238b5cf6\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 9l-7 7-7-7\"></path></svg>'); background-repeat: no-repeat; background-position: right 8px center; background-size: 14px;">
+                        <select id="internFilterSelect" onchange="if(this.value !== 'custom') { document.getElementById('internLeaderboardDate').value=''; loadInternLeaderboard(this.value); }" style="width: 100%; padding: 8px 25px 8px 10px; font-size: 12px; font-weight: 700; border-radius: 8px; background-color: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.3); color: var(--primary); -webkit-text-fill-color: var(--primary); margin: 0; outline: none; cursor: pointer; box-sizing: border-box; height: 36px; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=%22none%22 stroke=\"%238b5cf6\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 9l-7 7-7-7\"></path></svg>'); background-repeat: no-repeat; background-position: right 8px center; background-size: 14px;">
                             <option value="all">All Time</option>
                             <option value="week">This Week</option>
                             <option value="month">This Month</option>
@@ -723,7 +723,10 @@
                     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 
                     My History
                 </span>
-                <input type="date" id="internHistoryDate" onchange="loadInternHistory()" style="width: auto; padding: 6px 10px; font-size: 13px; margin: 0; color-scheme: light;">
+                <div style="position: relative; display: inline-block;">
+                    <svg width="14" height="14" fill="none" stroke="var(--primary)" viewBox="0 0 24 24" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); pointer-events: none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <input type="date" id="internHistoryDate" onchange="loadInternHistory()" style="width: auto; padding: 6px 10px 6px 28px; font-size: 13px; font-weight: 600; margin: 0; border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 8px; background: rgba(139, 92, 246, 0.08); color: var(--primary); -webkit-text-fill-color: var(--primary); outline: none; appearance: none; color-scheme: light;">
+                </div>
             </h3>
 
             <div style="margin-bottom: 20px;">
