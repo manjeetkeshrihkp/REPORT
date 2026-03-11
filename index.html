@@ -623,10 +623,13 @@
     <div class="container">
         <div class="title">ANALYTICS</div>
 
-        <div style="text-align: center; margin-top: -10px; margin-bottom: 25px; animation: slideUp 0.6s ease-out backwards; animation-delay: 0.05s;">
-            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); padding: 10px 24px; border-radius: 30px; font-weight: 700; font-size: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                <svg width="20" height="20" fill="none" stroke="var(--warning)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
-                Global Rank: <span id="myRankDisplay" style="color: var(--primary); margin-left: 4px;">Loading...</span>
+        <div style="text-align: center; margin-top: 0px; margin-bottom: 25px; animation: slideUp 0.6s ease-out backwards; animation-delay: 0.05s;">
+            <div style="display: inline-flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(59, 130, 246, 0.15)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.2); padding: 15px 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                <div style="font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                    <svg width="14" height="14" fill="none" stroke="var(--warning)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                    My Global Rank
+                </div>
+                <div id="myRankDisplay" style="font-size: 26px; font-weight: 800; color: #ffffff; text-shadow: 0 2px 10px rgba(139,92,246,0.3); line-height: 1;">Loading...</div>
             </div>
         </div>
         
@@ -662,16 +665,27 @@
         </div>
         
         <div class="card" style="padding: 20px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
                 <h3 style="font-size: 16px; color: var(--text-main); margin: 0; font-weight: 800; display: flex; align-items: center; gap: 8px;">
                     <svg width="20" height="20" fill="none" stroke="var(--warning)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
                     Top Performers
                 </h3>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <input type="date" id="internLeaderboardDate" onchange="loadInternLeaderboard(this.value)" style="width: auto; padding: 6px 10px; font-size: 13px; margin: 0; border: 1px solid var(--border-color); border-radius: 8px;">
-                    <button onclick="document.getElementById('internLeaderboardDate').value=''; loadInternLeaderboard('');" style="padding: 6px 10px; font-size: 12px; border-radius: 8px; background: transparent; border: 1px solid var(--primary); color: var(--primary); box-shadow: none; flex: none; width: auto; margin: 0;">All Time</button>
+                
+                <div style="display: flex; gap: 10px; width: 100%; align-items: center;">
+                    <div style="flex: 1; position: relative;">
+                        <input type="date" id="internLeaderboardDate" onchange="document.getElementById('internFilterSelect').value='custom'; loadInternLeaderboard(this.value);" style="width: 100%; padding: 8px 10px; font-size: 12px; font-weight: 500; border: 1px solid var(--border-color); border-radius: 8px; background: var(--input-bg); color: var(--text-main); margin: 0; outline: none; box-sizing: border-box; height: 36px;">
+                    </div>
+                    <div style="flex: 1; position: relative;">
+                        <select id="internFilterSelect" onchange="if(this.value !== 'custom') { document.getElementById('internLeaderboardDate').value=''; loadInternLeaderboard(this.value); }" style="width: 100%; padding: 8px 25px 8px 10px; font-size: 12px; font-weight: 700; border-radius: 8px; background-color: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.3); color: var(--primary); margin: 0; outline: none; cursor: pointer; box-sizing: border-box; height: 36px; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=%22none%22 stroke=\"%238b5cf6\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 9l-7 7-7-7\"></path></svg>'); background-repeat: no-repeat; background-position: right 8px center; background-size: 14px;">
+                            <option value="all">All Time</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="custom" style="display:none;">Custom Date</option>
+                        </select>
+                    </div>
                 </div>
             </div>
+            
             <div style="overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
                     <thead>
@@ -886,7 +900,9 @@ function switchNav(element, targetViewId) {
     if (targetViewId === 'analyticsView') { 
         updateAnalyticsUI(); 
         document.getElementById('internLeaderboardDate').value = '';
-        loadInternLeaderboard('');
+        let selectEl = document.getElementById('internFilterSelect');
+        if(selectEl) selectEl.value = 'all';
+        loadInternLeaderboard('all');
     }
 }
 function triggerEditName() { document.getElementById('internInput').value = getCookie('intern'); document.getElementById('popup').style.display = 'flex'; }
@@ -1557,7 +1573,9 @@ function openInternDetailsModal() {
 // =======================================================
 //   MODIFIED: ASYNC LEADERBOARD FETCH FOR ANALYTICS TAB
 // =======================================================
-async function loadInternLeaderboard(filterDate = "") {
+async function loadInternLeaderboard(filter = "all") {
+    if (filter === "") filter = "all";
+    
     let leaderboardEl = document.getElementById('internLeaderboardBody');
     let rankDisplayEl = document.getElementById('myRankDisplay');
     if(!leaderboardEl) return;
@@ -1567,24 +1585,57 @@ async function loadInternLeaderboard(filterDate = "") {
 
     try {
         let snap;
-        if (filterDate) {
-            snap = await db.collection("reports").where("date", "==", filterDate).get();
+        let isCustomDate = filter.includes("-");
+        
+        if (isCustomDate) {
+            snap = await db.collection("reports").where("date", "==", filter).get();
         } else {
             snap = await db.collection("reports").get();
         }
         
         let aggregated = {};
+        
+        let now = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+        let currentMonthStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+        
+        let currentDay = now.getDay(); 
+        let firstDayOfWeek = new Date(now);
+        firstDayOfWeek.setDate(now.getDate() - currentDay); 
+        firstDayOfWeek.setHours(0,0,0,0);
 
         snap.forEach(doc => {
             let data = doc.data();
-            let name = data.intern || "Unknown";
-            if (!aggregated[name]) {
-                aggregated[name] = { reg: 0, vis: 0, adm: 0, total: 0 };
+            let recordDate = data.date; 
+            
+            let includeRecord = true;
+            
+            if (!isCustomDate && filter === "month") {
+                if (!recordDate || !recordDate.startsWith(currentMonthStr)) {
+                    includeRecord = false;
+                }
+            } else if (!isCustomDate && filter === "week") {
+                if (recordDate) {
+                    let rDateParts = recordDate.split('-');
+                    let rDateObj = new Date(rDateParts[0], parseInt(rDateParts[1])-1, rDateParts[2]);
+                    rDateObj.setHours(0,0,0,0);
+                    if (rDateObj < firstDayOfWeek || rDateObj > now) {
+                        includeRecord = false;
+                    }
+                } else {
+                    includeRecord = false; 
+                }
             }
-            aggregated[name].reg += (data.registrations || 0);
-            aggregated[name].vis += (data.visits || 0);
-            aggregated[name].adm += (data.admissions || 0);
-            aggregated[name].total += (data.registrations || 0) + (data.visits || 0) + (data.admissions || 0);
+
+            if (includeRecord) {
+                let name = data.intern || "Unknown";
+                if (!aggregated[name]) {
+                    aggregated[name] = { reg: 0, vis: 0, adm: 0, total: 0 };
+                }
+                aggregated[name].reg += (data.registrations || 0);
+                aggregated[name].vis += (data.visits || 0);
+                aggregated[name].adm += (data.admissions || 0);
+                aggregated[name].total += (data.registrations || 0) + (data.visits || 0) + (data.admissions || 0);
+            }
         });
 
         let ranked = Object.entries(aggregated).map(([name, stats]) => ({ name, ...stats })).sort((a, b) => {
@@ -1641,4 +1692,4 @@ async function loadInternLeaderboard(filterDate = "") {
 </script>
 
 </body>
-    </html>
+</html>
