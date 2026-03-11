@@ -103,8 +103,9 @@
     .action-btn {
         padding: 8px 14px; border: none; border-radius: 8px; font-weight: 600; font-size: 12px;
         cursor: pointer; transition: all 0.2s; color: white; display: inline-flex; align-items: center; gap: 4px;
+        background: var(--text-main);
     }
-    .action-btn:hover { transform: translateY(-2px); }
+    .action-btn:hover { transform: translateY(-2px); opacity: 0.9; }
     .btn-ban { background: var(--danger); }
     .btn-temp { background: var(--warning); color: #000 !important; }
     .btn-unban { background: var(--success); }
@@ -117,6 +118,7 @@
         backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; z-index: 999;
     }
     .popup { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); }
+    .popup.large { max-width: 650px; }
     .popup h3 { margin-bottom: 15px; font-size: 20px; color: var(--text-main); font-weight: 800; }
     .popup input { width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; }
     .popup-btns { display: flex; gap: 10px; }
@@ -138,44 +140,82 @@
     </div>
 
     <nav class="premium-nav" id="mainNav">
-        <div class="nav-item active" id="navDash" onclick="superSwitch('dashboardView', 'navDash')">📊 Activity Feed</div>
+        <div class="nav-item active" id="navDash" onclick="superSwitch('dashboardView', 'navDash')">📊 Super Dashboard</div>
         <div class="nav-item" id="navUsers" onclick="superSwitch('usersView', 'navUsers')">👥 User Access</div>
         <div class="nav-item" id="navBreaks" onclick="superSwitch('breaksUnifiedView', 'navBreaks')">
             🍔 Lunch Breaks <span id="pendingBadge" class="badge-pill hidden">0</span>
+        </div>
+        <div class="nav-item" id="navLeave" onclick="superSwitch('leaveView', 'navLeave')">
+            🌴 Leaves <span id="leaveBadge" class="badge-pill hidden">0</span>
         </div>
         <div class="nav-item" id="navPast" onclick="superSwitch('pastDataView', 'navPast')">📅 Past Records</div>
     </nav>
 
     <div id="dashboardView" class="view-section">
-        <div class="stats-grid">
-            <div class="stat-card" style="border-top: 4px solid var(--primary);">
-                <h3>Total Tokens</h3>
-                <h2 class="c-reg" id="totalReg">0</h2>
-            </div>
-            <div class="stat-card" style="border-top: 4px solid var(--info);">
-                <h3>Total Visits</h3>
-                <h2 class="c-vis" id="totalVis">0</h2>
-            </div>
-            <div class="stat-card" style="border-top: 4px solid var(--success);">
-                <h3>Total Admissions</h3>
-                <h2 class="c-adm" id="totalAdm">0</h2>
+        
+        <div style="background: var(--card-bg); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.4); border-radius: 12px; padding: 24px; margin-bottom: 30px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+            <h2 style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 24px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                Mega Dashboard Overview
+            </h2>
+            
+            <div style="display: grid; grid-template-columns: auto 1fr 1fr 1fr; gap: 16px 20px; align-items: center; overflow-x: auto;">
+                <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Period</div>
+                <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; text-align: right;">Tokens</div>
+                <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; text-align: right;">Visits</div>
+                <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; text-align: right;">Admissions</div>
+
+                <div style="grid-column: 1 / -1; height: 1px; background: var(--border-color); opacity: 0.5; margin: -8px 0;"></div>
+
+                <div style="font-size: 14px; font-weight: 500; color: var(--text-main); display: flex; align-items: center; gap: 8px; white-space: nowrap;">
+                    <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--primary); box-shadow: 0 0 4px var(--primary);"></span> Today
+                </div>
+                <div id="todayReg" style="font-size: 18px; font-weight: 600; text-align: right; color: var(--text-main); font-variant-numeric: tabular-nums;">0</div>
+                <div id="todayVis" style="font-size: 18px; font-weight: 600; text-align: right; color: var(--text-main); font-variant-numeric: tabular-nums;">0</div>
+                <div id="todayAdm" style="font-size: 18px; font-weight: 600; text-align: right; color: var(--text-main); font-variant-numeric: tabular-nums;">0</div>
+
+                <div style="font-size: 14px; font-weight: 500; color: var(--text-main); display: flex; align-items: center; gap: 8px; white-space: nowrap;">
+                    <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--info); box-shadow: 0 0 4px var(--info);"></span> This Month
+                </div>
+                <div id="monthReg" style="font-size: 18px; font-weight: 600; text-align: right; color: var(--text-main); font-variant-numeric: tabular-nums;">0</div>
+                <div id="monthVis" style="font-size: 18px; font-weight: 600; text-align: right; color: var(--text-main); font-variant-numeric: tabular-nums;">0</div>
+                <div id="monthAdm" style="font-size: 18px; font-weight: 600; text-align: right; color: var(--text-main); font-variant-numeric: tabular-nums;">0</div>
+
+                <div style="font-size: 14px; font-weight: 500; color: var(--text-main); display: flex; align-items: center; gap: 8px; white-space: nowrap;">
+                    <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--success); box-shadow: 0 0 4px var(--success);"></span> All-Time
+                </div>
+                <div id="totalReg" style="font-size: 18px; font-weight: 600; text-align: right; color: var(--text-main); font-variant-numeric: tabular-nums;">0</div>
+                <div id="totalVis" style="font-size: 18px; font-weight: 600; text-align: right; color: var(--text-main); font-variant-numeric: tabular-nums;">0</div>
+                <div id="totalAdm" style="font-size: 18px; font-weight: 600; text-align: right; color: var(--text-main); font-variant-numeric: tabular-nums;">0</div>
             </div>
         </div>
 
         <div class="table-container">
-            <h2 style="margin-bottom: 20px; font-size: 20px; color: var(--text-main);">Recent Submissions</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                <h2 style="font-size: 20px; color: var(--text-main); margin: 0;">Daily Leaderboard & Submissions</h2>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 13px; font-weight: 600; color: var(--text-muted);">Select Date:</span>
+                        <input type="date" id="leaderboardDate" onchange="changeLeaderboardDate(this.value)" style="padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 14px; cursor: pointer;">
+                    </div>
+                    <button class="btn-export" onclick="exportMainLeaderboardPDF()">📄 Export PDF</button>
+                </div>
+            </div>
             <table>
                 <thead>
                     <tr>
-                        <th>Time Submitted</th>
+                        <th style="width: 50px;">Rank</th>
+                        <th>Last Updated</th>
                         <th>Intern Name</th>
                         <th>Tokens</th>
                         <th>Visits</th>
                         <th>Admissions</th>
+                        <th>Lunch Break</th>
+                        <th style="text-align: right;">Action</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <tr><td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted);">Waiting for live data...</td></tr>
+                    <tr><td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">Waiting for live data...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -264,6 +304,63 @@
         </div>
     </div>
 
+    <div id="leaveView" class="view-section hidden">
+        <div class="stats-grid" style="margin-bottom: 20px;">
+            <div class="stat-card" style="border-top: 4px solid var(--warning); padding: 15px;">
+                <h3 style="font-size: 13px;">Pending Leaves</h3>
+                <h2 id="leaveStatPending" style="font-size: 40px; color: var(--warning);">0</h2>
+            </div>
+            <div class="stat-card" style="border-top: 4px solid var(--success); padding: 15px;">
+                <h3 style="font-size: 13px;">Approved Leaves</h3>
+                <h2 id="leaveStatApproved" style="font-size: 40px; color: var(--success);">0</h2>
+            </div>
+            <div class="stat-card" style="border-top: 4px solid var(--danger); padding: 15px;">
+                <h3 style="font-size: 13px;">Rejected Leaves</h3>
+                <h2 id="leaveStatRejected" style="font-size: 40px; color: var(--danger);">0</h2>
+            </div>
+        </div>
+
+        <div class="table-container" style="margin-bottom: 30px; border-top: 4px solid var(--warning);">
+            <h2 style="margin-bottom: 15px; font-size: 18px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                ⏳ Pending Leave Requests
+            </h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Intern Name</th>
+                        <th>Leave Date(s)</th>
+                        <th>Reason</th>
+                        <th>Request Time</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="pendingLeaveTableBody">
+                    <tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">No pending leave requests.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-container">
+            <h2 style="margin-bottom: 15px; font-size: 18px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                📋 Leave History
+            </h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Intern Name</th>
+                        <th>Leave Date(s)</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Processed Time</th>
+                    </tr>
+                </thead>
+                <tbody id="historyLeaveTableBody">
+                    <tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">No leave history.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div id="pastDataView" class="view-section hidden">
         <div style="background: var(--card-bg); padding: 24px; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); text-align: center;">
             <h3 style="margin-bottom: 15px; color: var(--text-main);">View Historical Daily Data</h3>
@@ -317,6 +414,28 @@
     </div>
 </div>
 
+<div id="detailModal" class="popup-bg hidden">
+    <div class="popup large">
+        <h3 id="detailTitle" style="margin-bottom: 20px;">Intern Detailed Submissions</h3>
+        <div style="max-height: 450px; overflow-y: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr>
+                        <th style="padding: 12px; border-bottom: 2px solid var(--border-color);">Time</th>
+                        <th style="padding: 12px; border-bottom: 2px solid var(--border-color);">Activity Type</th>
+                        <th style="padding: 12px; border-bottom: 2px solid var(--border-color);">Form Details</th>
+                    </tr>
+                </thead>
+                <tbody id="detailTableBody">
+                    </tbody>
+            </table>
+        </div>
+        <div class="popup-btns" style="margin-top: 20px;">
+            <button class="btn-cancel" onclick="closeDetailModal()">Close</button>
+        </div>
+    </div>
+</div>
+
 <script>
 /* =======================================================
    FIREBASE CLOUD DATABASE SETUP 
@@ -343,6 +462,98 @@ let targetInternToBan = null;
 let globalCompletedBreaks = []; 
 let isViewingPastLunch = false; 
 let liveCompletedBreaksCache = []; 
+
+// GLOBALS FOR LEADERBOARD FILTERING
+window.allReportsGlobal = [];
+window.currentLeaderboardExportData = [];
+window.internDetailedReports = {};
+
+/* =======================================================
+   NEW DETAIL MODAL FUNCTIONS - SPECIFIC FIELD EXTRACTION
+   ======================================================= */
+function viewDetailedReports(internName) {
+    let dateInput = document.getElementById('leaderboardDate');
+    let selectedDateStr = dateInput && dateInput.value ? dateInput.value : "Today";
+    document.getElementById("detailTitle").innerText = `${internName}'s Detailed Submissions (${selectedDateStr})`;
+    
+    let tbody = document.getElementById("detailTableBody");
+    let html = "";
+    let reports = window.internDetailedReports[internName] || [];
+
+    if (reports.length === 0) {
+        html = `<tr><td colspan="3" style="text-align: center; padding: 20px; color: var(--text-muted);">No individual records found.</td></tr>`;
+    } else {
+        reports.forEach(r => {
+            let d = r.rawData;
+            let hasDetailedArrays = (d.registrationDetails && d.registrationDetails.length > 0) || 
+                                    (d.visitDetails && d.visitDetails.length > 0) || 
+                                    (d.admissionDetails && d.admissionDetails.length > 0);
+
+            if (hasDetailedArrays) {
+                if (d.registrationDetails) {
+                    d.registrationDetails.forEach(entry => {
+                        let detailsHTML = `
+                            <div style="margin-bottom: 4px;"><strong style="color:var(--text-main);">Student Name:</strong> <span style="color:var(--text-muted);">${entry['reg-name'] || 'N/A'}</span></div>
+                            <div style="margin-bottom: 4px;"><strong style="color:var(--text-main);">Lead No:</strong> <span style="color:var(--text-muted);">${entry['reg-lead'] || 'N/A'}</span></div>
+                            <div style="margin-bottom: 4px;"><strong style="color:var(--text-main);">Token No:</strong> <span style="color:var(--text-muted);">${entry['reg-token'] || 'N/A'}</span></div>
+                        `;
+                        html += generateDetailRow(r.time, `<span class="badge" style="background:var(--primary); color:white;">Token Generation</span>`, detailsHTML);
+                    });
+                }
+
+                if (d.visitDetails) {
+                    d.visitDetails.forEach(entry => {
+                        let detailsHTML = `
+                            <div style="margin-bottom: 4px;"><strong style="color:var(--text-main);">Student Name:</strong> <span style="color:var(--text-muted);">${entry['visit-name'] || 'N/A'}</span></div>
+                            <div style="margin-bottom: 4px;"><strong style="color:var(--text-main);">Lead No:</strong> <span style="color:var(--text-muted);">${entry['visit-leadno'] || 'N/A'}</span></div>
+                            <div style="margin-bottom: 4px;"><strong style="color:var(--text-main);">Course:</strong> <span style="color:var(--text-muted);">${entry['visit-course'] || 'N/A'}</span></div>
+                            <div style="margin-bottom: 4px;"><strong style="color:var(--text-main);">Counselor:</strong> <span style="color:var(--text-muted);">${entry['visit-counselor'] || 'N/A'}</span></div>
+                            <div style="margin-bottom: 4px;"><strong style="color:var(--text-main);">Concerned Person:</strong> <span style="color:var(--text-muted);">${entry['visit-person'] || 'N/A'}</span></div>
+                            <div style="margin-bottom: 4px;"><strong style="color:var(--text-main);">Place:</strong> <span style="color:var(--text-muted);">${entry['visit-place'] || 'N/A'}</span></div>
+                            <div style="margin-bottom: 4px;"><strong style="color:var(--text-main);">Time:</strong> <span style="color:var(--text-muted);">${entry['visit-start'] || '?'} to ${entry['visit-end'] || '?'}</span></div>
+                        `;
+                        html += generateDetailRow(r.time, `<span class="badge" style="background:var(--info); color:white;">Campus Visit</span>`, detailsHTML);
+                    });
+                }
+
+                if (d.admissionDetails) {
+                    d.admissionDetails.forEach(entry => {
+                        let detailsHTML = `
+                            <div style="margin-bottom: 4px;"><strong style="color:var(--text-main);">Student Name:</strong> <span style="color:var(--text-muted);">${entry['adm-name'] || 'N/A'}</span></div>
+                            <div style="margin-bottom: 4px;"><strong style="color:var(--text-main);">Lead No:</strong> <span style="color:var(--text-muted);">${entry['adm-leadno'] || 'N/A'}</span></div>
+                            <div style="margin-bottom: 4px;"><strong style="color:var(--text-main);">Enrollment:</strong> <span style="color:var(--text-muted);">${entry['adm-enroll'] || 'N/A'}</span></div>
+                            <div style="margin-bottom: 4px;"><strong style="color:var(--text-main);">Counselor:</strong> <span style="color:var(--text-muted);">${entry['adm-counselor'] || 'N/A'}</span></div>
+                            <div style="margin-bottom: 4px;"><strong style="color:var(--text-main);">Time:</strong> <span style="color:var(--text-muted);">${entry['adm-start'] || '?'} to ${entry['adm-end'] || '?'}</span></div>
+                        `;
+                        html += generateDetailRow(r.time, `<span class="badge" style="background:var(--success); color:white;">Admission Done</span>`, detailsHTML);
+                    });
+                }
+            } else {
+                let activityType = "";
+                if (r.reg > 0) activityType = `<span class="badge" style="background:var(--primary); color:white;">Token Generation</span>`;
+                else if (r.vis > 0) activityType = `<span class="badge" style="background:var(--info); color:white;">Campus Visit</span>`;
+                else if (r.adm > 0) activityType = `<span class="badge" style="background:var(--success); color:white;">Admission Done</span>`;
+                else activityType = `<span class="badge" style="background:#64748b; color:white;">General Update</span>`;
+                
+                html += generateDetailRow(r.time, activityType, '<span style="color:var(--text-muted); font-style:italic; font-size: 12px;">Waiting for user to update app to send detailed form data...</span>');
+            }
+        });
+    }
+    tbody.innerHTML = html;
+    document.getElementById("detailModal").classList.remove("hidden");
+}
+
+function generateDetailRow(time, typeBadge, detailsHTML) {
+    return `<tr>
+        <td style="padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); color: var(--text-muted); vertical-align: top; width: 100px;">${time}</td>
+        <td style="padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); vertical-align: top; width: 140px;">${typeBadge}</td>
+        <td style="padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); vertical-align: top; font-size: 13px;">${detailsHTML}</td>
+    </tr>`;
+}
+
+function closeDetailModal() {
+    document.getElementById("detailModal").classList.add("hidden");
+}
 
 /* =======================================================
    ADVANCED NAV BAR ROUTING
@@ -489,25 +700,277 @@ function loadPastData() {
     });
 }
 
+/* =======================================================
+   MEGA DASHBOARD UPDATED LISTENER & LEADERBOARD RENDERING
+   ======================================================= */
 db.collection("reports").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
     let totalReg = 0, totalVis = 0, totalAdm = 0;
-    let tableHTML = "";
+    let todayReg = 0, todayVis = 0, todayAdm = 0;
+    let monthReg = 0, monthVis = 0, monthAdm = 0;
+    
+    let d = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+    let localYear = d.getFullYear();
+    let localMonth = String(d.getMonth() + 1).padStart(2, '0');
+    let localDay = String(d.getDate()).padStart(2, '0');
+    
+    let todayStr = `${localYear}-${localMonth}-${localDay}`;
+    let currentMonthStr = `${localYear}-${localMonth}`;
+
+    window.allReportsGlobal = [];
+
     snapshot.forEach((doc) => {
         let data = doc.data();
         let internName = data.intern || "Unknown";
         if(internName !== "Unknown") { knownInterns.add(internName); }
-        totalReg += data.registrations || 0; totalVis += data.visits || 0; totalAdm += data.admissions || 0;
-        let dateStr = "Just now";
-        if (data.timestamp) {
-            let dateObj = data.timestamp.toDate();
-            dateStr = dateObj.toLocaleDateString() + " at " + dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        
+        let recordDateStr = data.date;
+        if (data.timestamp && typeof data.timestamp.toDate === 'function') {
+            let recD = new Date(data.timestamp.toDate().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+            recordDateStr = recD.getFullYear() + '-' + String(recD.getMonth() + 1).padStart(2, '0') + '-' + String(recD.getDate()).padStart(2, '0');
+        } else if (!data.timestamp) {
+            recordDateStr = todayStr; // Pending write
         }
-        tableHTML += `<tr><td style="color: var(--text-muted); font-size: 13px;">${dateStr}</td><td><span class="badge">${internName}</span></td><td style="font-weight: 800; font-size: 16px; color: var(--primary);">${data.registrations || 0}</td><td style="font-weight: 800; font-size: 16px; color: var(--info);">${data.visits || 0}</td><td style="font-weight: 800; font-size: 16px; color: var(--success);">${data.admissions || 0}</td></tr>`;
+        data.correctedDate = recordDateStr;
+        
+        window.allReportsGlobal.push(data); 
+        
+        let r = data.registrations || 0;
+        let v = data.visits || 0;
+        let a = data.admissions || 0;
+        
+        totalReg += r; totalVis += v; totalAdm += a;
+        if (recordDateStr.startsWith(currentMonthStr)) { monthReg += r; monthVis += v; monthAdm += a; }
+        if (recordDateStr === todayStr) { todayReg += r; todayVis += v; todayAdm += a; }
     });
+    
     document.getElementById("totalReg").innerText = totalReg; document.getElementById("totalVis").innerText = totalVis; document.getElementById("totalAdm").innerText = totalAdm;
-    if(tableHTML !== "") document.getElementById("tableBody").innerHTML = tableHTML;
+    document.getElementById("todayReg").innerText = todayReg; document.getElementById("todayVis").innerText = todayVis; document.getElementById("todayAdm").innerText = todayAdm;
+    document.getElementById("monthReg").innerText = monthReg; document.getElementById("monthVis").innerText = monthVis; document.getElementById("monthAdm").innerText = monthAdm;
+
     renderUserTable();
+
+    let datePicker = document.getElementById("leaderboardDate");
+    if (datePicker && !datePicker.value) { datePicker.value = todayStr; }
+    let selectedDate = datePicker ? datePicker.value : todayStr;
+    renderMainLeaderboard(selectedDate);
 });
+
+function changeLeaderboardDate(val) {
+    if(!val) {
+        let d = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+        val = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        document.getElementById("leaderboardDate").value = val;
+    }
+    renderMainLeaderboard(val);
+}
+
+async function renderMainLeaderboard(targetDate) {
+    document.getElementById("tableBody").innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">Fetching exact data...</td></tr>`;
+    
+    let aggregated = {};
+    window.internDetailedReports = {}; 
+    
+    window.allReportsGlobal.forEach(data => {
+        if (data.correctedDate === targetDate) {
+            let internName = data.intern || "Unknown";
+            
+            let r = data.registrations || 0;
+            let v = data.visits || 0;
+            let a = data.admissions || 0;
+            
+            if (!aggregated[internName]) {
+                aggregated[internName] = { reg: 0, vis: 0, adm: 0, latestTime: 0, name: internName };
+                window.internDetailedReports[internName] = [];
+            }
+            
+            aggregated[internName].reg += r;
+            aggregated[internName].vis += v;
+            aggregated[internName].adm += a;
+            
+            let timeMs = data.timestamp ? (typeof data.timestamp.toMillis === 'function' ? data.timestamp.toMillis() : data.timestamp) : 0;
+            if (timeMs > aggregated[internName].latestTime) {
+                aggregated[internName].latestTime = timeMs;
+            }
+            
+            let timeString = "Just now";
+            if (data.timestamp && typeof data.timestamp.toDate === 'function') {
+                timeString = new Date(data.timestamp.toDate().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            } else if (data.timestamp) {
+                timeString = new Date(new Date(data.timestamp).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            }
+            window.internDetailedReports[internName].push({ time: timeString, reg: r, vis: v, adm: a, rawData: data });
+        }
+    });
+
+    let pastLunchMap = {};
+    try {
+        let snap = await db.collection("lunch_history").where("date", "==", targetDate).get();
+        snap.forEach(doc => {
+            let d = doc.data();
+            if(!pastLunchMap[d.internName]) pastLunchMap[d.internName] = 0;
+            pastLunchMap[d.internName] += d.sessionMs;
+        });
+    } catch(e) {
+        console.error("Error fetching lunch history", e);
+    }
+
+    let rankedInterns = Object.values(aggregated).sort((a, b) => {
+        let totalA = a.adm + a.vis + a.reg;
+        let totalB = b.adm + b.vis + b.reg;
+        if (totalB !== totalA) return totalB - totalA; 
+        if (b.adm !== a.adm) return b.adm - a.adm;
+        if (b.vis !== a.vis) return b.vis - a.vis;
+        return b.reg - a.reg;
+    });
+
+    window.currentLeaderboardExportData = rankedInterns;
+
+    let tableHTML = "";
+    let d = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+    let todayISO = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+
+    rankedInterns.forEach((intern, index) => {
+        let rank = index + 1;
+        let timeStr = intern.latestTime ? new Date(new Date(intern.latestTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "N/A";
+        
+        let lunchStr = "0m 0s";
+        
+        if (targetDate === todayISO) {
+            if (typeof liveCompletedBreaksCache !== 'undefined') {
+                let breakRecord = liveCompletedBreaksCache.find(b => b.internName === intern.name);
+                if (breakRecord) {
+                    lunchStr = breakRecord.durationStr;
+                } else if (pastLunchMap[intern.name]) {
+                    let tMs = pastLunchMap[intern.name];
+                    let m = Math.floor(tMs / 60000);
+                    let s = Math.floor((tMs % 60000) / 1000);
+                    lunchStr = `${m}m ${s}s`;
+                }
+            }
+        } else {
+            if (pastLunchMap[intern.name]) {
+                let tMs = pastLunchMap[intern.name];
+                let m = Math.floor(tMs / 60000);
+                let s = Math.floor((tMs % 60000) / 1000);
+                lunchStr = `${m}m ${s}s`;
+            } else {
+                lunchStr = "0m 0s";
+            }
+        }
+
+        tableHTML += `<tr>
+            <td style="font-weight: 800; font-size: 16px; color: var(--text-muted); text-align: center;">#${rank}</td>
+            <td style="color: var(--text-muted); font-size: 13px;">${timeStr}</td>
+            <td><span class="badge">${intern.name}</span></td>
+            <td style="font-weight: 800; font-size: 16px; color: var(--primary);">${intern.reg}</td>
+            <td style="font-weight: 800; font-size: 16px; color: var(--info);">${intern.vis}</td>
+            <td style="font-weight: 800; font-size: 16px; color: var(--success);">${intern.adm}</td>
+            <td style="font-weight: 700; color: var(--warning); font-size: 14px;">${lunchStr}</td>
+            <td style="text-align: right;"><button class="action-btn" onclick="viewDetailedReports('${intern.name}')">View All Detail</button></td>
+        </tr>`;
+    });
+
+    if(tableHTML === "") tableHTML = `<tr><td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">No submissions found for ${targetDate}.</td></tr>`;
+    document.getElementById("tableBody").innerHTML = tableHTML;
+}
+
+function exportMainLeaderboardPDF() {
+    let exportData = window.currentLeaderboardExportData;
+    if(!exportData || exportData.length === 0) { 
+        alert("No data available to export."); 
+        return; 
+    }
+    
+    const { jsPDF } = window.jspdf;
+    let doc = new jsPDF();
+    
+    let reportDate = document.getElementById('leaderboardDate') ? document.getElementById('leaderboardDate').value : new Date().toISOString().split('T')[0];
+    if(!reportDate) reportDate = new Date().toISOString().split('T')[0];
+    
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(20);
+    doc.text("Daily Leaderboard & Submissions", 14, 20);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Date: ${reportDate}`, 14, 28);
+    
+    let tableData = exportData.map((intern, index) => {
+        return [index + 1, intern.name, intern.reg, intern.vis, intern.adm, (intern.reg + intern.vis + intern.adm)];
+    });
+
+    doc.autoTable({
+        head: [['Rank', 'Intern Name', 'Tokens', 'Visits', 'Admissions', 'Total Tasks']],
+        body: tableData,
+        startY: 35,
+        theme: 'grid',
+        headStyles: { fillColor: [139, 92, 246] }
+    });
+
+    exportData.forEach((intern) => {
+        let reports = window.internDetailedReports[intern.name] || [];
+        if(reports.length === 0) return;
+
+        let detailBody = [];
+
+        reports.forEach(r => {
+            let d = r.rawData;
+            
+            let hasDetailedArrays = (d.registrationDetails && d.registrationDetails.length > 0) || 
+                                    (d.visitDetails && d.visitDetails.length > 0) || 
+                                    (d.admissionDetails && d.admissionDetails.length > 0);
+
+            if (hasDetailedArrays) {
+                if (d.registrationDetails) {
+                    d.registrationDetails.forEach(entry => {
+                        let details = `Student Name: ${entry['reg-name'] || 'N/A'}\nLead No: ${entry['reg-lead'] || 'N/A'}\nToken No: ${entry['reg-token'] || 'N/A'}`;
+                        detailBody.push(['Token Generation', details]);
+                    });
+                }
+
+                if (d.visitDetails) {
+                    d.visitDetails.forEach(entry => {
+                        let details = `Student Name: ${entry['visit-name'] || 'N/A'}\nLead No: ${entry['visit-leadno'] || 'N/A'}\nCourse: ${entry['visit-course'] || 'N/A'}\nCounselor: ${entry['visit-counselor'] || 'N/A'}\nConcerned Person: ${entry['visit-person'] || 'N/A'}\nPlace: ${entry['visit-place'] || 'N/A'}`;
+                        detailBody.push(['Campus Visit', details]);
+                    });
+                }
+
+                if (d.admissionDetails) {
+                    d.admissionDetails.forEach(entry => {
+                        let details = `Student Name: ${entry['adm-name'] || 'N/A'}\nLead No: ${entry['adm-leadno'] || 'N/A'}\nEnrollment: ${entry['adm-enroll'] || 'N/A'}\nCounselor: ${entry['adm-counselor'] || 'N/A'}`;
+                        detailBody.push(['Admission Done', details]);
+                    });
+                }
+            } else if (r.reg > 0 || r.vis > 0 || r.adm > 0) {
+                detailBody.push(['Legacy Data', 'Waiting for user to update app to send detailed form data...']);
+            }
+        });
+
+        if (detailBody.length > 0) {
+            let finalY = doc.lastAutoTable.finalY + 15;
+            
+            if (finalY > doc.internal.pageSize.height - 20) {
+                doc.addPage();
+                finalY = 20;
+            }
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(14);
+            doc.text(`Detailed Report: ${intern.name}`, 14, finalY);
+
+            doc.autoTable({
+                head: [['Activity Type', 'Form Details']],
+                body: detailBody,
+                startY: finalY + 5,
+                theme: 'grid',
+                headStyles: { fillColor: [71, 85, 105] }, 
+                styles: { cellPadding: 3, valign: 'middle' }
+            });
+        }
+    });
+
+    doc.save(`Leaderboard_Report_${reportDate}.pdf`);
+}
+
 
 db.collection("banned_interns").onSnapshot((snapshot) => {
     bannedInternsList = {}; let now = new Date().getTime();
@@ -519,10 +982,6 @@ db.collection("banned_interns").onSnapshot((snapshot) => {
     renderUserTable(); 
 });
 
-
-/* =======================================================
-   ADMIN LUNCH CONTROLS - MULTIPLE BREAKS ADDITION 
-   ======================================================= */
 function handleBreak(internName, newStatus) {
     if(confirm(`Are you sure you want to ${newStatus === 'approved' ? 'APPROVE' : 'REJECT'} the break for ${internName}?`)) {
         db.collection("lunch_breaks").doc(internName).update({
@@ -543,12 +1002,12 @@ function endBreakAdmin(internName) {
                 let startMs = data.startTime || new Date().getTime();
                 let endMs = new Date().getTime();
                 let sessionMs = endMs - startMs;
-                let todayStr = new Date().toISOString().split('T')[0];
                 
-                // MULTIPLE BREAK MATHEMATICS: Accumulate time securely
+                let nowIST = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+                let todayStr = nowIST.getFullYear() + '-' + String(nowIST.getMonth() + 1).padStart(2, '0') + '-' + String(nowIST.getDate()).padStart(2, '0');
+                
                 let accumulatedMs = (data.dailyDate === todayStr ? (data.dailyTotalMs || 0) : 0) + sessionMs;
 
-                // 1. SAVE TO HISTORY COLLECTION (For Date Picker)
                 db.collection("lunch_history").add({
                     internName: internName,
                     date: todayStr,
@@ -556,12 +1015,11 @@ function endBreakAdmin(internName) {
                     note: data.note || "",
                     timestamp: endMs
                 }).then(() => {
-                    // 2. COMPLETE LIVE DOC
                     docRef.update({
                         status: 'completed',
                         endTime: endMs,
                         dailyDate: todayStr,
-                        dailyTotalMs: accumulatedMs // Accumulate for live leaderboard
+                        dailyTotalMs: accumulatedMs 
                     });
                 });
             }
@@ -569,16 +1027,12 @@ function endBreakAdmin(internName) {
     }
 }
 
-/* =======================================================
-   EXPORT AS PDF (REPLACED CSV)
-   ======================================================= */
 function exportHistoryPDF() {
     if(globalCompletedBreaks.length === 0) { 
         alert("No breaks available to export."); 
         return; 
     }
     
-    // Initialize jsPDF
     const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
     
@@ -592,12 +1046,13 @@ function exportHistoryPDF() {
     doc.text(`Date: ${reportDate}`, 14, 28);
     
     let tableData = globalCompletedBreaks.map((b, index) => {
-        let over = b.diffMins > 30 ? `+${b.diffMins - 30}m penalty` : "None";
-        return [index + 1, b.internName, b.durationStr, over, b.note];
+        let over = b.diffMins > 30 ? "Yes" : "No";
+        let timeRange = b.timeRangeStr ? b.timeRangeStr : "N/A";
+        return [index + 1, b.internName, timeRange, b.durationStr, over, b.note];
     });
 
     doc.autoTable({
-        head: [['Rank', 'Intern Name', 'Total Time Taken', 'Overtime', 'Note Details']],
+        head: [['Rank', 'Intern Name', 'Time Range', 'Total Duration', 'Overtime', 'Note Details']],
         body: tableData,
         startY: 35,
         theme: 'grid',
@@ -607,15 +1062,11 @@ function exportHistoryPDF() {
     doc.save(`Lunch_Breaks_${reportDate}.pdf`);
 }
 
-/* =======================================================
-   PAST DATA FETCHING LOGIC 
-   ======================================================= */
 function loadLunchLeaderboardForDate(selectedDate) {
-    let d = new Date();
+    let d = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
     let localDateStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-    let todayISO = d.toISOString().split('T')[0];
     
-    if (!selectedDate || selectedDate === localDateStr || selectedDate === todayISO) {
+    if (!selectedDate || selectedDate === localDateStr) {
         isViewingPastLunch = false;
         globalCompletedBreaks = typeof liveCompletedBreaksCache !== 'undefined' ? liveCompletedBreaksCache : [];
         renderLunchLeaderboard(globalCompletedBreaks); 
@@ -631,10 +1082,14 @@ function loadLunchLeaderboardForDate(selectedDate) {
         snap.forEach(doc => {
             let d = doc.data();
             if(!aggregated[d.internName]) {
-                aggregated[d.internName] = { totalMs: 0, notes: [] };
+                aggregated[d.internName] = { totalMs: 0, notes: [], sessions: [] };
             }
             aggregated[d.internName].totalMs += d.sessionMs;
             if(d.note) aggregated[d.internName].notes.push(d.note);
+            
+            let endT = d.timestamp;
+            let startT = d.timestamp - d.sessionMs;
+            aggregated[d.internName].sessions.push({ start: startT, end: endT });
         });
         
         let pastBreaks = [];
@@ -642,12 +1097,20 @@ function loadLunchLeaderboardForDate(selectedDate) {
             let tMs = aggregated[name].totalMs;
             let m = Math.floor(tMs / 60000);
             let s = Math.floor((tMs % 60000) / 1000);
+            
+            let rangesStr = aggregated[name].sessions.map(sess => {
+                let st = new Date(new Date(sess.start).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                let et = new Date(new Date(sess.end).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                return `(${st} to ${et})`;
+            }).join(" & ");
+            
             pastBreaks.push({
                 internName: name,
                 diffMins: m,
                 diffSecs: s,
                 durationStr: `${m}m ${s}s`,
-                note: aggregated[name].notes.join(" | ")
+                note: aggregated[name].notes.join(" | "),
+                timeRangeStr: rangesStr
             });
         }
         
@@ -659,9 +1122,6 @@ function loadLunchLeaderboardForDate(selectedDate) {
     });
 }
 
-/* =======================================================
-   LIVE LUNCH LISTENER (MODIFIED FOR BLINKING RED DOT)
-   ======================================================= */
 db.collection("lunch_breaks").orderBy("requestTime", "desc").onSnapshot((snapshot) => {
     let liveTableHTML = "";
     let pendingCount = 0;
@@ -670,8 +1130,14 @@ db.collection("lunch_breaks").orderBy("requestTime", "desc").onSnapshot((snapsho
     
     let currentDayBreaks = []; 
     
-    let todayStr = new Date().toDateString();
-    let todayISO = new Date().toISOString().split('T')[0];
+    let nowIST = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+    let todayStr = nowIST.toDateString();
+    let todayISO = nowIST.getFullYear() + '-' + String(nowIST.getMonth() + 1).padStart(2, '0') + '-' + String(nowIST.getDate()).padStart(2, '0');
+    
+    let lunchDateInput = document.getElementById("lunchHistoryDate");
+    if (lunchDateInput && !lunchDateInput.value) {
+        lunchDateInput.value = todayISO;
+    }
 
     snapshot.forEach((doc) => {
         let data = doc.data();
@@ -679,14 +1145,31 @@ db.collection("lunch_breaks").orderBy("requestTime", "desc").onSnapshot((snapsho
         let status = data.status;
         let note = data.note || "No note provided";
         
-        let reqDateStr = data.requestTime ? new Date(data.requestTime.toDate()).toDateString() : "";
-        
-        let isToday = (reqDateStr === todayStr) || (data.dailyDate === todayISO);
-        let isActive = (status === 'pending' || status === 'approved');
-        
-        if (!isToday && !isActive) return; 
+        let isToday = false;
 
-        let timeStr = data.requestTime ? data.requestTime.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "Just now";
+        if (data.requestTime) {
+            let reqDateIST = new Date(data.requestTime.toDate().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+            if (reqDateIST.toDateString() === todayStr) {
+                isToday = true;
+            }
+        }
+
+        if (data.endTime && status === 'completed') {
+            let endDateIST = new Date(new Date(data.endTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+            if (endDateIST.toDateString() === todayStr) {
+                isToday = true;
+            } else {
+                isToday = false;
+            }
+        } else if (data.dailyDate) {
+             if (data.dailyDate === todayISO) {
+                 isToday = true;
+             }
+        }
+
+        if (!isToday) return; 
+
+        let timeStr = data.requestTime ? new Date(data.requestTime.toDate().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "Just now";
 
         let baseTotalMs = (data.dailyDate === todayISO) ? (data.dailyTotalMs || 0) : 0;
         let liveSessionMs = 0;
@@ -698,6 +1181,10 @@ db.collection("lunch_breaks").orderBy("requestTime", "desc").onSnapshot((snapsho
         let diffMins = Math.floor(totalMs / 60000);
         let diffSecs = Math.floor((totalMs % 60000) / 1000);
         let durationStr = `${diffMins}m ${diffSecs}s`;
+        
+        let sTime = data.startTime ? new Date(new Date(data.startTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "--:--";
+        let eTime = (status === 'completed' && data.endTime) ? new Date(new Date(data.endTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "Present";
+        let timeRangeStr = (status === 'approved' || status === 'completed') ? `(${sTime} to ${eTime})` : "";
 
         let statusBadge = ""; let actionButtons = "";
 
@@ -706,7 +1193,6 @@ db.collection("lunch_breaks").orderBy("requestTime", "desc").onSnapshot((snapsho
             statusBadge = `<span class="badge" style="background: var(--warning); color: #000;">Pending</span>`;
             actionButtons = `<button class="action-btn btn-unban" onclick="handleBreak('${internName}', 'approved')">Approve</button> <button class="action-btn btn-ban" onclick="handleBreak('${internName}', 'rejected')">Reject</button>`;
             
-            // Pass standard name
             liveTableHTML += generateRow(internName, statusBadge, note, timeStr, actionButtons);
             
         } else if (status === "approved") {
@@ -721,22 +1207,20 @@ db.collection("lunch_breaks").orderBy("requestTime", "desc").onSnapshot((snapsho
                 </div>
             `;
             
-            // NEW: Add blinking red dot next to name in Control Room
             let activeBlinkingName = `${internName} <div class="live-dot" style="display:inline-block; width:8px; height:8px; margin-left:6px; margin-bottom:1px;" title="Currently on Break"></div>`;
             liveTableHTML += generateRow(activeBlinkingName, statusBadge, note, timeStr, actionButtons);
             
-            currentDayBreaks.push({ internName, note, durationStr, diffMins, diffSecs, isActive: true });
+            currentDayBreaks.push({ internName, note, durationStr, diffMins, diffSecs, isActive: true, timeRangeStr });
             
-        } else if (status === "rejected" && isToday) {
+        } else if (status === "rejected") {
             statusBadge = `<span class="badge banned">🔴 Rejected</span>`;
             actionButtons = `<span style="color: var(--text-muted); font-size: 13px;">-</span>`;
             
-            // Pass standard name
             liveTableHTML += generateRow(internName, statusBadge, note, timeStr, actionButtons);
             
-        } else if (status === "completed" && isToday) {
+        } else if (status === "completed") {
             completedCount++;
-            currentDayBreaks.push({ internName, note, durationStr, diffMins, diffSecs, isActive: false });
+            currentDayBreaks.push({ internName, note, durationStr, diffMins, diffSecs, isActive: false, timeRangeStr });
         }
     });
 
@@ -752,9 +1236,16 @@ db.collection("lunch_breaks").orderBy("requestTime", "desc").onSnapshot((snapsho
     else { badge.classList.add("hidden"); }
     
     liveCompletedBreaksCache = currentDayBreaks; 
+    
     if(!isViewingPastLunch) {
         globalCompletedBreaks = currentDayBreaks; 
         renderLunchLeaderboard(globalCompletedBreaks);
+    }
+    
+    let datePicker = document.getElementById("leaderboardDate");
+    let selectedDate = datePicker ? datePicker.value : todayISO;
+    if (selectedDate === todayISO) {
+        renderMainLeaderboard(selectedDate);
     }
 });
 
@@ -768,7 +1259,6 @@ function generateRow(internName, statusBadge, note, timeStr, actionButtons) {
     </tr>`;
 }
 
-// Dedicated Leaderboard UI Renderer
 function renderLunchLeaderboard(breaksArray) {
     let historyTableHTML = "";
     
@@ -784,15 +1274,15 @@ function renderLunchLeaderboard(breaksArray) {
         let progressPct = Math.min((b.diffMins / 30) * 100, 100);
         let barColor = b.diffMins > 30 ? 'var(--danger)' : 'var(--success)';
         
-        // NEW: Add blinking red dot next to name in Leaderboard
         let liveIndicator = b.isActive ? `<div class="live-dot" style="display:inline-block; width:8px; height:8px; margin-left:6px; margin-bottom:1px;" title="Currently on Break"></div> <span style="font-size: 11px; color: var(--danger); font-weight: bold; margin-left: 4px;">(ON LUNCH)</span>` : "";
+        let timeRangeHtml = b.timeRangeStr ? `<span style="font-size: 13px; color: var(--text-muted); font-weight: 500; margin-left: 10px;">${b.timeRangeStr}</span>` : "";
         
         historyTableHTML += `
             <tr>
                 <td style="font-weight: 800; font-size: 22px; text-align: center;">${medal}</td>
                 <td style="font-weight: 700; font-size: 15px;">${b.internName} ${liveIndicator}</td>
                 <td>
-                    <div style="font-weight: 700; color: ${barColor}; margin-bottom: 6px;">${b.durationStr} ${penalty}</div>
+                    <div style="font-weight: 700; color: ${barColor}; margin-bottom: 6px; display: flex; align-items: center; flex-wrap: wrap;">${b.durationStr} ${penalty} ${timeRangeHtml}</div>
                     <div style="width: 100%; height: 8px; background: rgba(0,0,0,0.05); border-radius: 4px; overflow: hidden;">
                         <div style="width: ${progressPct}%; height: 100%; background: ${barColor};"></div>
                     </div>
@@ -805,6 +1295,92 @@ function renderLunchLeaderboard(breaksArray) {
     if(historyTableHTML === "") historyTableHTML = `<tr><td colspan="4" style="text-align: center; padding: 30px; color: var(--text-muted);">No records found.</td></tr>`;
     document.getElementById("completedBreaksTableBody").innerHTML = historyTableHTML;
 }
+
+/* =======================================================
+   NEW: LEAVE MANAGEMENT SYSTEM (ADMIN LOGIC)
+   ======================================================= */
+function handleLeave(docId, newStatus) {
+    if(confirm(`Are you sure you want to ${newStatus === 'approved' ? 'APPROVE' : 'REJECT'} this leave request?`)) {
+        db.collection("leave_requests").doc(docId).update({
+            status: newStatus,
+            processedTime: firebase.firestore.FieldValue.serverTimestamp()
+        }).catch(error => {
+            alert("Error updating leave status: " + error.message);
+        });
+    }
+}
+
+db.collection("leave_requests").orderBy("requestTime", "desc").onSnapshot((snapshot) => {
+    let pendingHTML = "";
+    let historyHTML = "";
+    let pendingCount = 0;
+    let approvedCount = 0;
+    let rejectedCount = 0;
+
+    snapshot.forEach((doc) => {
+        let data = doc.data();
+        let docId = doc.id;
+        let internName = data.internName || "Unknown";
+        let dates = data.leaveDates || "N/A";
+        let reason = data.reason || "No reason provided";
+        let status = data.status || "pending";
+        
+        let timeStr = data.requestTime ? new Date(data.requestTime.toDate().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', month:'short', day:'numeric'}) : "Just now";
+        let processedTimeStr = data.processedTime ? new Date(data.processedTime.toDate().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', month:'short', day:'numeric'}) : "-";
+
+        if (status === "pending") {
+            pendingCount++;
+            let actionButtons = `
+                <button class="action-btn btn-unban" onclick="handleLeave('${docId}', 'approved')">Approve</button> 
+                <button class="action-btn btn-ban" onclick="handleLeave('${docId}', 'rejected')">Reject</button>
+            `;
+            pendingHTML += `<tr>
+                <td style="font-weight: 700; font-size: 15px;">${internName}</td>
+                <td style="font-weight: 600; color: var(--primary);">${dates}</td>
+                <td style="color: var(--text-muted); font-style: italic;">${reason}</td>
+                <td style="color: var(--text-muted); font-size: 13px;">${timeStr}</td>
+                <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">${actionButtons}</td>
+            </tr>`;
+        } else {
+            if (status === "approved") approvedCount++;
+            if (status === "rejected") rejectedCount++;
+            
+            let statusBadge = status === "approved" ? `<span class="badge active">Approved</span>` : `<span class="badge banned">Rejected</span>`;
+            
+            historyHTML += `<tr>
+                <td style="font-weight: 700; font-size: 15px;">${internName}</td>
+                <td style="font-weight: 600;">${dates}</td>
+                <td style="color: var(--text-muted); font-style: italic;">${reason}</td>
+                <td>${statusBadge}</td>
+                <td style="color: var(--text-muted); font-size: 13px;">${processedTimeStr}</td>
+            </tr>`;
+        }
+    });
+
+    document.getElementById('leaveStatPending').innerText = pendingCount;
+    document.getElementById('leaveStatApproved').innerText = approvedCount;
+    document.getElementById('leaveStatRejected').innerText = rejectedCount;
+
+    if(pendingHTML === "") pendingHTML = `<tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">No pending leave requests.</td></tr>`;
+    if(historyHTML === "") historyHTML = `<tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">No leave history.</td></tr>`;
+    
+    let pendEl = document.getElementById("pendingLeaveTableBody");
+    if(pendEl) pendEl.innerHTML = pendingHTML;
+    
+    let histEl = document.getElementById("historyLeaveTableBody");
+    if(histEl) histEl.innerHTML = historyHTML;
+    
+    let badge = document.getElementById("leaveBadge");
+    if(badge) {
+        if (pendingCount > 0) { 
+            badge.innerText = pendingCount; 
+            badge.classList.remove("hidden"); 
+        } else { 
+            badge.classList.add("hidden"); 
+        }
+    }
+});
+
 </script>
 
 </body>
