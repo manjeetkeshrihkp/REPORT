@@ -251,6 +251,54 @@
     </div>
 </div>
 
+<div id="leaveRequestModal" class="popup-bg hidden">
+    <div class="popup">
+        <h3>🌴 Request Leave</h3>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Submit your leave application for Admin approval.</p>
+        
+        <div id="leaveStatusDisplay" class="hidden" style="margin-bottom: 20px; font-weight: 600; padding: 10px; background: var(--input-bg); border-radius: 10px; font-size: 15px;">
+            Status: Not Requested
+        </div>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <div style="flex: 1; text-align: left;">
+                <label style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; display: block; font-weight: 600;">Start Date</label>
+                <input type="date" id="leaveDateFrom" style="margin-bottom: 0;">
+            </div>
+            <div style="flex: 1; text-align: left;">
+                <label style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; display: block; font-weight: 600;">End Date (Optional)</label>
+                <input type="date" id="leaveDateTo" style="margin-bottom: 0;">
+            </div>
+        </div>
+        
+        <label style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; display: block; text-align: left; font-weight: 600;">Time (Optional for half-day)</label>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <div style="flex: 1;">
+                <div class="custom-time-btn" onclick="openTimeModal(this)">
+                    <span data-default="Start Time">Start Time</span>
+                    <svg width="20" height="20" fill="none" stroke="#64748b" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <input type="hidden" id="leaveTimeStart">
+            </div>
+            <div style="flex: 1;">
+                <div class="custom-time-btn" onclick="openTimeModal(this)">
+                    <span data-default="End Time">End Time</span>
+                    <svg width="20" height="20" fill="none" stroke="#64748b" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <input type="hidden" id="leaveTimeEnd">
+            </div>
+        </div>
+
+        <div style="text-align: left; margin-bottom: 15px;">
+            <label style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; display: block; font-weight: 600;">Reason</label>
+            <input id="leaveReason" placeholder="Detailed Reason for leave" style="margin-bottom: 0;">
+        </div>
+        
+        <button id="submitLeaveBtn" class="primary-btn" onclick="submitLeaveRequest()">Submit Request</button>
+        <button class="cancel-btn" style="width: 100%; margin-top: 10px;" onclick="closeLeaveModal()">Close</button>
+    </div>
+</div>
+
 <div id="banOverlay" class="hidden">
     <div style="font-size: 64px; margin-bottom: 20px; animation: pulse 2s infinite;">🚫</div>
     <h1 style="font-size: 36px; font-weight: 800; color: #ef4444; margin-bottom: 15px; letter-spacing: 1px;">ACCESS DENIED</h1>
@@ -404,10 +452,12 @@
                 <div class="service-icon-wrapper"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
                 <span class="service-title">Call EV<br>Driver</span>
             </a>
-            <a href="#" onclick="alert('Opening Leave Message Draft...')" class="service-tile tile-5">
+            
+            <a href="#" onclick="openLeaveModal()" class="service-tile tile-5">
                 <div class="service-icon-wrapper"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div>
-                <span class="service-title">Leave<br>Message</span>
+                <span class="service-title">Leave<br>Request</span>
             </a>
+            
             <a href="https://paruluniversity.ac.in/wp-content/uploads/2025/12/A3-PU-Campus-Map-2023-R1-c2c_latest.pdf" target="_blank" class="service-tile tile-6">
                 <div class="service-icon-wrapper"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg></div>
                 <span class="service-title">College<br>Map</span>
@@ -428,7 +478,7 @@
                 <div class="service-icon-wrapper"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
                 <span class="service-title">Comming<br>Soon</span>
             </a>
-            <a href="boss.html" onclick="alert('Connecting to IT Support Helpdesk...')" class="service-tile tile-10">
+            <a href="#" onclick="alert('Connecting to IT Support Helpdesk...')" class="service-tile tile-10">
                 <div class="service-icon-wrapper"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg></div>
                 <span class="service-title">Comming<br>Soon</span>
             </a>
@@ -757,8 +807,9 @@ function showCustomDropdown(inputEl) {
     drop.style.top = (inputEl.offsetTop + inputEl.offsetHeight + 4) + 'px'; drop.style.left = inputEl.offsetLeft + 'px'; drop.style.width = inputEl.offsetWidth + 'px';
     filteredOptions.forEach(opt => {
         let item = document.createElement('div'); item.className = 'custom-option-item'; item.innerText = opt;
-        item.onmousedown = function(e) { e.preventDefault(); inputEl.value = opt; drop.remove(); activeDropdown = null; saveAllProgress(); };
-        item.ontouchstart = function(e) { e.preventDefault(); inputEl.value = opt; drop.remove(); activeDropdown = null; saveAllProgress(); };
+        // FIXED MOBILE SCROLL ISSUE HERE
+        item.onmousedown = function(e) { e.preventDefault(); }; 
+        item.onclick = function(e) { inputEl.value = opt; drop.remove(); activeDropdown = null; saveAllProgress(); };
         drop.appendChild(item);
     });
     inputEl.parentNode.insertBefore(drop, inputEl.nextSibling); drop.inputEl = inputEl; activeDropdown = drop;
@@ -810,50 +861,68 @@ checkIfBanned();
 
 function uploadDataToServer() {
     let regCount = 0, visCount = 0, admCount = 0;
+    let regDetails = [], visDetails = [], admDetails = [];
     
     document.querySelectorAll('#tokenCard .entry-block').forEach(b => {
-        if(b.querySelector('.reg-name').value || b.querySelector('.reg-lead').value) regCount++;
+        let name = b.querySelector('.reg-name').value;
+        let lead = b.querySelector('.reg-lead').value;
+        if(name || lead) {
+            regCount++;
+            regDetails.push({ 'reg-name': name, 'reg-lead': lead, 'reg-token': b.querySelector('.reg-token').value });
+        }
     });
+    
     document.querySelectorAll('#visitCard .entry-block').forEach(b => {
-        if(b.querySelector('.visit-name').value || b.querySelector('.visit-leadno').value) visCount++;
+        let name = b.querySelector('.visit-name').value;
+        let lead = b.querySelector('.visit-leadno').value;
+        if(name || lead) {
+            visCount++;
+            visDetails.push({
+                'visit-name': name, 'visit-leadno': lead, 'visit-course': b.querySelector('.visit-course').value,
+                'visit-counselor': b.querySelector('.visit-counselor').value, 'visit-person': b.querySelector('.visit-person').value,
+                'visit-place': b.querySelector('.visit-place').value, 'visit-start': b.querySelector('.visit-start').value, 'visit-end': b.querySelector('.visit-end').value
+            });
+        }
     });
+    
     document.querySelectorAll('#admissionCard .entry-block').forEach(b => {
-        if(b.querySelector('.adm-name').value || b.querySelector('.adm-leadno').value) admCount++;
+        let name = b.querySelector('.adm-name').value;
+        let lead = b.querySelector('.adm-leadno').value;
+        if(name || lead) {
+            admCount++;
+            admDetails.push({
+                'adm-name': name, 'adm-leadno': lead, 'adm-enroll': b.querySelector('.adm-enroll').value,
+                'adm-counselor': b.querySelector('.adm-counselor').value, 'adm-start': b.querySelector('.adm-start').value, 'adm-end': b.querySelector('.adm-end').value
+            });
+        }
     });
 
     if (regCount === 0 && visCount === 0 && admCount === 0) {
-        alert("There is no filled data to upload to the server.");
-        return;
+        alert("There is no filled data to upload to the server."); return;
     }
 
     let todayISO = new Date().toISOString().split('T')[0];
     let internName = getCookie('intern') || "Unknown Intern";
 
     db.collection("reports").add({
-        intern: internName,
+        intern: internName, 
         ip: window.internGlobalIP, 
         date: todayISO,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        registrations: regCount,
-        visits: visCount,
-        admissions: admCount
+        registrations: regCount, 
+        visits: visCount, 
+        admissions: admCount,
+        registrationDetails: regDetails, 
+        visitDetails: visDetails, 
+        admissionDetails: admDetails
     }).then(() => {
         alert("Data securely uploaded to Admin Server!");
-        
         let storedData = JSON.parse(localStorage.getItem('appPermanentAnalytics')) || [];
-        storedData.push({
-            date: todayISO,
-            timestamp: new Date().getTime(),
-            registrations: regCount,
-            visits: visCount,
-            admissions: admCount
-        });
+        storedData.push({ date: todayISO, timestamp: new Date().getTime(), registrations: regCount, visits: visCount, admissions: admCount });
         localStorage.setItem('appPermanentAnalytics', JSON.stringify(storedData));
-        
         updateAnalyticsUI();
     }).catch((error) => {
-        console.error("Error adding document: ", error);
-        alert("Failed to connect to Server. Please check your internet connection.");
+        console.error("Error adding document: ", error); alert("Failed to connect to Server.");
     });
 }
 
@@ -902,9 +971,9 @@ function updateAnalyticsUI() {
 }
 window.addEventListener('DOMContentLoaded', updateAnalyticsUI);
 
+
 /* =======================================================
-   NEW FEATURE: LUNCH BREAK SYSTEM 
-   (MODIFIED TO REMOVE INTERN "END BREAK" ACCESS)
+   LUNCH BREAK SYSTEM
    ======================================================= */
 let lunchTimerInterval;
 const BREAK_DURATION_MINUTES = 30;
@@ -928,7 +997,6 @@ function requestLunch() {
     let statusEl = document.getElementById('lunchStatusDisplay');
     let reqBtn = document.getElementById('requestLunchBtn');
     
-    // Disable button to prevent double clicks
     reqBtn.disabled = true;
     reqBtn.innerText = "Requesting...";
 
@@ -978,7 +1046,6 @@ function initLunchListener() {
                 closeLunchModal();
                 widget.classList.remove('hidden');
                 
-                // Set the start time globally if it hasn't been set yet
                 if (!data.startTime) {
                     let startTimeMs = new Date().getTime();
                     db.collection('lunch_breaks').doc(internName).update({ startTime: startTimeMs });
@@ -1004,8 +1071,6 @@ function startLunchTimer(startTimeMs) {
     
     lunchTimerInterval = setInterval(() => {
         let now = new Date().getTime();
-        
-        // Timer counts UP from 0 to show Total Time Taken
         let elapsed = now - startTimeMs; 
         
         let timerEl = document.getElementById('lunchTimerText');
@@ -1017,16 +1082,12 @@ function startLunchTimer(startTimeMs) {
         let formattedTime = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         
         if (elapsed <= durationMs) {
-            // Under 30 mins
             timerEl.innerText = formattedTime;
             timerEl.style.color = 'var(--success)';
             timerEl.style.opacity = '1'; 
         } else {
-            // Over 30 mins - Text turns red and blinks
             timerEl.innerText = formattedTime + " (OVERTIME)";
             timerEl.style.color = 'var(--danger)';
-            
-            // Blinking effect for overtime
             if (secs % 2 === 0) {
                 timerEl.style.opacity = '1';
             } else {
@@ -1036,8 +1097,124 @@ function startLunchTimer(startTimeMs) {
     }, 1000);
 }
 
-// Start the listener shortly after page loads to ensure cookies are read
 setTimeout(initLunchListener, 2000);
+
+/* =======================================================
+   NEW: LEAVE REQUEST SYSTEM (INTERN SIDE) 
+   ======================================================= */
+function openLeaveModal() {
+    document.getElementById('leaveRequestModal').classList.remove('hidden');
+}
+
+function closeLeaveModal() {
+    document.getElementById('leaveRequestModal').classList.add('hidden');
+}
+
+function submitLeaveRequest() {
+    let internName = getCookie('intern');
+    if (!internName) { 
+        alert("Please set your name first!"); 
+        return; 
+    }
+    
+    let dateFrom = document.getElementById('leaveDateFrom').value;
+    let dateTo = document.getElementById('leaveDateTo').value;
+    
+    let timeStart = document.getElementById('leaveTimeStart').value;
+    let timeEnd = document.getElementById('leaveTimeEnd').value;
+    
+    let reason = document.getElementById('leaveReason').value.trim();
+    
+    let dates = "";
+    if (dateFrom && dateTo && dateFrom !== dateTo) {
+        dates = `${dateFrom} to ${dateTo}`;
+    } else if (dateFrom) {
+        dates = dateFrom;
+    }
+    
+    if (timeStart && timeEnd) {
+        dates += ` (${timeStart} to ${timeEnd})`;
+    } else if (timeStart) {
+        dates += ` (From ${timeStart})`;
+    }
+    
+    if(!dates || !reason) {
+        alert("Please select at least a Start Date and provide a Reason.");
+        return;
+    }
+
+    let reqBtn = document.getElementById('submitLeaveBtn');
+    reqBtn.disabled = true;
+    reqBtn.innerText = "Submitting...";
+
+    db.collection('leave_requests').add({
+        internName: internName,
+        leaveDates: dates,
+        reason: reason,
+        status: 'pending',
+        requestTime: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        alert("Leave request submitted successfully!");
+        
+        // Reset Inputs
+        document.getElementById('leaveDateFrom').value = '';
+        document.getElementById('leaveDateTo').value = '';
+        document.getElementById('leaveTimeStart').value = '';
+        document.getElementById('leaveTimeEnd').value = '';
+        document.getElementById('leaveReason').value = '';
+        
+        // Reset Custom Time Spans
+        let timeSpans = document.querySelectorAll('#leaveRequestModal .custom-time-btn span');
+        timeSpans.forEach(span => { 
+            span.innerText = span.getAttribute('data-default'); 
+            span.parentElement.classList.remove('has-value'); 
+        });
+        
+        closeLeaveModal();
+        reqBtn.disabled = false;
+        reqBtn.innerText = "Submit Request";
+    }).catch(error => {
+        alert("Error submitting request: " + error.message);
+        reqBtn.disabled = false;
+        reqBtn.innerText = "Submit Request";
+    });
+}
+
+function initLeaveListener() {
+    let internName = getCookie('intern');
+    if (!internName) return;
+
+    db.collection('leave_requests')
+      .where("internName", "==", internName)
+      .onSnapshot(snapshot => {
+        let statusEl = document.getElementById('leaveStatusDisplay');
+        if (!snapshot.empty) {
+            // Sort in browser to find latest request without requiring Firebase composite indexes
+            let docs = snapshot.docs.map(d => d.data());
+            docs.sort((a, b) => {
+                let timeA = a.requestTime ? a.requestTime.toMillis() : 0;
+                let timeB = b.requestTime ? b.requestTime.toMillis() : 0;
+                return timeB - timeA; // Descending
+            });
+            
+            let latestData = docs[0];
+            statusEl.classList.remove('hidden');
+            
+            if (latestData.status === 'pending') {
+                statusEl.innerHTML = '<span style="color: #f59e0b;">Last Request: Pending Admin Approval ⏳</span>';
+            } else if (latestData.status === 'approved') {
+                statusEl.innerHTML = '<span style="color: var(--success);">Last Request: Approved! ✅</span>';
+            } else if (latestData.status === 'rejected') {
+                statusEl.innerHTML = '<span style="color: var(--danger);">Last Request: Rejected ❌</span>';
+            }
+        } else {
+            statusEl.classList.add('hidden');
+        }
+    });
+}
+
+setTimeout(initLeaveListener, 2500);
+
 </script>
 
 </body>
