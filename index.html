@@ -100,6 +100,7 @@
     input, select, .custom-time-btn {
         width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-color);
         background-color: var(--input-bg); font-size: 14px; color: var(--text-main); transition: all 0.3s ease; appearance: none;
+        color-scheme: light; /* FIX for white text on mobile calendars */
     }
 
     input[data-custom-list] {
@@ -621,7 +622,6 @@
 
 <div id="analyticsView" class="view-section hidden">
     <div class="container">
-        <div class="title">ANALYTICS</div>
 
         <div style="text-align: center; margin-top: 0px; margin-bottom: 25px; animation: slideUp 0.6s ease-out backwards; animation-delay: 0.05s;">
             <div style="display: inline-flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(59, 130, 246, 0.15)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.2); padding: 15px 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
@@ -673,7 +673,7 @@
                 
                 <div style="display: flex; gap: 10px; width: 100%; align-items: center;">
                     <div style="flex: 1; position: relative;">
-                        <input type="date" id="internLeaderboardDate" onchange="document.getElementById('internFilterSelect').value='custom'; loadInternLeaderboard(this.value);" style="width: 100%; padding: 8px 10px; font-size: 12px; font-weight: 500; border: 1px solid var(--border-color); border-radius: 8px; background: var(--input-bg); color: var(--text-main); margin: 0; outline: none; box-sizing: border-box; height: 36px;">
+                        <input type="date" id="internLeaderboardDate" onchange="document.getElementById('internFilterSelect').value='custom'; loadInternLeaderboard(this.value);" style="width: 100%; padding: 8px 10px; font-size: 12px; font-weight: 500; border: 1px solid var(--border-color); border-radius: 8px; background: var(--input-bg); color: var(--text-main); margin: 0; outline: none; box-sizing: border-box; height: 36px; color-scheme: light;">
                     </div>
                     <div style="flex: 1; position: relative;">
                         <select id="internFilterSelect" onchange="if(this.value !== 'custom') { document.getElementById('internLeaderboardDate').value=''; loadInternLeaderboard(this.value); }" style="width: 100%; padding: 8px 25px 8px 10px; font-size: 12px; font-weight: 700; border-radius: 8px; background-color: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.3); color: var(--primary); margin: 0; outline: none; cursor: pointer; box-sizing: border-box; height: 36px; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=%22none%22 stroke=\"%238b5cf6\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 9l-7 7-7-7\"></path></svg>'); background-repeat: no-repeat; background-position: right 8px center; background-size: 14px;">
@@ -707,7 +707,6 @@
 
 <div id="profileView" class="view-section hidden">
     <div class="container">
-        <div class="title">PROFILE</div>
         <div class="card" style="text-align: center; padding-top: 40px; padding-bottom: 40px;">
             <div class="profile-avatar"><svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="2" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
             <h2 id="profileNameDisplay" style="margin: 15px 0; color: var(--text-main); font-size: 28px;">Intern Name</h2>
@@ -724,7 +723,7 @@
                     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 
                     My History
                 </span>
-                <input type="date" id="internHistoryDate" onchange="loadInternHistory()" style="width: auto; padding: 6px 10px; font-size: 13px; margin: 0;">
+                <input type="date" id="internHistoryDate" onchange="loadInternHistory()" style="width: auto; padding: 6px 10px; font-size: 13px; margin: 0; color-scheme: light;">
             </h3>
 
             <div style="margin-bottom: 20px;">
@@ -891,7 +890,7 @@ function switchNav(element, targetViewId) {
     document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active')); element.classList.add('active');
     document.querySelectorAll('.view-section').forEach(view => { view.classList.add('hidden'); });
     const targetView = document.getElementById(targetViewId);
-    if (targetView) { targetView.classList.remove('hidden'); targetView.querySelector('.title').style.animation = 'none'; targetView.querySelector('.title').offsetHeight; targetView.querySelector('.title').style.animation = 'fadeInDown 0.8s ease-out'; }
+    if (targetView) { targetView.classList.remove('hidden'); targetView.querySelector('.title') ? targetView.querySelector('.title').style.animation = 'none' : null; targetView.querySelector('.title') ? targetView.querySelector('.title').offsetHeight : null; targetView.querySelector('.title') ? targetView.querySelector('.title').style.animation = 'fadeInDown 0.8s ease-out' : null; }
     if (targetViewId === 'profileView') { 
         let storedName = getCookie('intern'); 
         document.getElementById('profileNameDisplay').innerText = storedName ? storedName : "Intern"; 
