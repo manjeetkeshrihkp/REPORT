@@ -43,6 +43,7 @@
         padding-bottom: 100px; 
         line-height: 1.5;
         min-height: 100vh;
+        transition: padding-top 0.3s ease; /* Added for smooth timer transition */
     }
 
     @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
@@ -807,7 +808,6 @@ function showCustomDropdown(inputEl) {
     drop.style.top = (inputEl.offsetTop + inputEl.offsetHeight + 4) + 'px'; drop.style.left = inputEl.offsetLeft + 'px'; drop.style.width = inputEl.offsetWidth + 'px';
     filteredOptions.forEach(opt => {
         let item = document.createElement('div'); item.className = 'custom-option-item'; item.innerText = opt;
-        // FIXED MOBILE SCROLL ISSUE HERE
         item.onmousedown = function(e) { e.preventDefault(); }; 
         item.onclick = function(e) { inputEl.value = opt; drop.remove(); activeDropdown = null; saveAllProgress(); };
         drop.appendChild(item);
@@ -1033,18 +1033,21 @@ function initLunchListener() {
                 statusEl.innerHTML = '<span style="color: #f59e0b;">Status: Pending Admin Approval ⏳</span>';
                 reqBtn.classList.add('hidden');
                 widget.classList.add('hidden');
+                document.body.style.paddingTop = '';
                 
             } else if (data.status === 'rejected') {
                 statusEl.innerHTML = '<span style="color: var(--danger);">Status: Rejected ❌</span>';
                 reqBtn.classList.remove('hidden');
                 reqBtn.innerText = "Request Again";
                 widget.classList.add('hidden');
+                document.body.style.paddingTop = '';
                 
             } else if (data.status === 'approved') {
                 statusEl.innerHTML = '<span style="color: var(--success);">Status: Approved! ✅</span>';
                 reqBtn.classList.add('hidden');
                 closeLunchModal();
                 widget.classList.remove('hidden');
+                document.body.style.paddingTop = '90px'; // Prevent overlapping the back button
                 
                 if (!data.startTime) {
                     let startTimeMs = new Date().getTime();
@@ -1059,6 +1062,7 @@ function initLunchListener() {
                 reqBtn.classList.remove('hidden');
                 reqBtn.innerText = "Request 30 Min Break";
                 widget.classList.add('hidden');
+                document.body.style.paddingTop = '';
                 clearInterval(lunchTimerInterval);
             }
         }
