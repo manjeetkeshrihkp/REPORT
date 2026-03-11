@@ -119,6 +119,7 @@
     }
     .popup { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); }
     .popup.large { max-width: 650px; }
+    .popup.xlarge { max-width: 900px; width: 95%; max-height: 95vh; overflow-y: auto; text-align: left; }
     .popup h3 { margin-bottom: 15px; font-size: 20px; color: var(--text-main); font-weight: 800; }
     .popup input { width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; }
     .popup-btns { display: flex; gap: 10px; }
@@ -141,7 +142,7 @@
 
     <nav class="premium-nav" id="mainNav">
         <div class="nav-item active" id="navDash" onclick="superSwitch('dashboardView', 'navDash')">📊 Super Dashboard</div>
-        <div class="nav-item" id="navUsers" onclick="superSwitch('usersView', 'navUsers')">👥 User Access</div>
+        <div class="nav-item" id="navUsers" onclick="superSwitch('usersView', 'navUsers')">👥 User Data</div>
         <div class="nav-item" id="navBreaks" onclick="superSwitch('breaksUnifiedView', 'navBreaks')">
             🍔 Lunch Breaks <span id="pendingBadge" class="badge-pill hidden">0</span>
         </div>
@@ -198,7 +199,7 @@
                         <span style="font-size: 13px; font-weight: 600; color: var(--text-muted);">Select Date:</span>
                         <input type="date" id="leaderboardDate" onchange="changeLeaderboardDate(this.value)" style="padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 14px; cursor: pointer;">
                     </div>
-                    <button class="btn-export" onclick="exportMainLeaderboardPDF()">📄 Export PDF</button>
+                    <button class="btn-export" id="mainExportBtn" onclick="exportMainLeaderboardPDF()">📄 Export PDF</button>
                 </div>
             </div>
             <table>
@@ -223,7 +224,7 @@
 
     <div id="usersView" class="view-section hidden">
         <div class="table-container">
-            <h2 style="margin-bottom: 20px; font-size: 20px; color: var(--text-main);">Intern Directory & Access Control</h2>
+            <h2 style="margin-bottom: 20px; font-size: 20px; color: var(--text-main);">Intern Data & Access Control</h2>
             <table>
                 <thead>
                     <tr>
@@ -305,18 +306,26 @@
     </div>
 
     <div id="leaveView" class="view-section hidden">
-        <div class="stats-grid" style="margin-bottom: 20px;">
-            <div class="stat-card" style="border-top: 4px solid var(--warning); padding: 15px;">
-                <h3 style="font-size: 13px;">Pending Leaves</h3>
-                <h2 id="leaveStatPending" style="font-size: 40px; color: var(--warning);">0</h2>
+        <div class="stats-grid" style="margin-bottom: 20px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+            <div class="stat-card" style="border-top: 4px solid var(--info); padding: 15px; display: flex; flex-direction: column;">
+                <h3 style="font-size: 13px; display:flex; justify-content:space-between; align-items:center; margin-bottom: auto;">On Leave Today <span style="font-size:10px; background:rgba(0,0,0,0.05); padding:2px 6px; border-radius:10px;">Active</span></h3>
+                <h2 id="leaveStatCurrent" style="font-size: 36px; color: var(--info); margin-bottom: 10px;">0</h2>
+                <button onclick="openCurrentLeaveModal()" style="background: rgba(59, 130, 246, 0.1); border: 1px solid var(--info); color: var(--info); padding: 6px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s;">👁️ View Details</button>
             </div>
-            <div class="stat-card" style="border-top: 4px solid var(--success); padding: 15px;">
-                <h3 style="font-size: 13px;">Approved Leaves</h3>
-                <h2 id="leaveStatApproved" style="font-size: 40px; color: var(--success);">0</h2>
+            <div class="stat-card" style="border-top: 4px solid var(--warning); padding: 15px; display: flex; flex-direction: column;">
+                <h3 style="font-size: 13px; display:flex; justify-content:space-between; align-items:center; margin-bottom: auto;">Pending <span style="font-size:10px; background:rgba(0,0,0,0.05); padding:2px 6px; border-radius:10px;">All Time</span></h3>
+                <h2 id="leaveStatPendingTotal" style="font-size: 36px; color: var(--warning); margin-bottom: 5px;">0</h2>
+                <div style="font-size: 13px; color: var(--text-muted); font-weight: 600;">Today: <span id="leaveStatPendingToday" style="color: var(--text-main);">0</span></div>
             </div>
-            <div class="stat-card" style="border-top: 4px solid var(--danger); padding: 15px;">
-                <h3 style="font-size: 13px;">Rejected Leaves</h3>
-                <h2 id="leaveStatRejected" style="font-size: 40px; color: var(--danger);">0</h2>
+            <div class="stat-card" style="border-top: 4px solid var(--success); padding: 15px; display: flex; flex-direction: column;">
+                <h3 style="font-size: 13px; display:flex; justify-content:space-between; align-items:center; margin-bottom: auto;">Approved <span style="font-size:10px; background:rgba(0,0,0,0.05); padding:2px 6px; border-radius:10px;">All Time</span></h3>
+                <h2 id="leaveStatApprovedTotal" style="font-size: 36px; color: var(--success); margin-bottom: 5px;">0</h2>
+                <div style="font-size: 13px; color: var(--text-muted); font-weight: 600;">Today: <span id="leaveStatApprovedToday" style="color: var(--text-main);">0</span></div>
+            </div>
+            <div class="stat-card" style="border-top: 4px solid var(--danger); padding: 15px; display: flex; flex-direction: column;">
+                <h3 style="font-size: 13px; display:flex; justify-content:space-between; align-items:center; margin-bottom: auto;">Rejected <span style="font-size:10px; background:rgba(0,0,0,0.05); padding:2px 6px; border-radius:10px;">All Time</span></h3>
+                <h2 id="leaveStatRejectedTotal" style="font-size: 36px; color: var(--danger); margin-bottom: 5px;">0</h2>
+                <div style="font-size: 13px; color: var(--text-muted); font-weight: 600;">Today: <span id="leaveStatRejectedToday" style="color: var(--text-main);">0</span></div>
             </div>
         </div>
 
@@ -341,9 +350,28 @@
         </div>
 
         <div class="table-container">
-            <h2 style="margin-bottom: 15px; font-size: 18px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
-                📋 Leave History
-            </h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <h2 style="font-size: 18px; color: var(--text-main); display: flex; align-items: center; gap: 8px; margin: 0;">
+                    📋 Leave History
+                </h2>
+                
+                <div style="display: flex; gap: 10px; width: 100%; max-width: 350px; align-items: center;">
+                    <div style="flex: 1; position: relative;">
+                        <svg width="16" height="16" fill="none" stroke="var(--primary)" viewBox="0 0 24 24" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <input type="date" id="leaveHistoryDateFilter" onchange="document.getElementById('leaveHistorySelectFilter').value='custom'; renderFilteredLeaveHistory();" style="width: 100%; padding: 8px 10px 8px 32px; font-size: 12px; font-weight: 700; border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 8px; background: rgba(139, 92, 246, 0.08); color: var(--primary); -webkit-text-fill-color: var(--primary); margin: 0; outline: none; box-sizing: border-box; height: 36px; appearance: none; color-scheme: light;">
+                    </div>
+                    <div style="flex: 1; position: relative;">
+                        <select id="leaveHistorySelectFilter" onchange="if(this.value !== 'custom') { document.getElementById('leaveHistoryDateFilter').value=''; renderFilteredLeaveHistory(); }" style="width: 100%; padding: 8px 25px 8px 10px; font-size: 12px; font-weight: 700; border-radius: 8px; background-color: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.3); color: var(--primary); -webkit-text-fill-color: var(--primary); margin: 0; outline: none; cursor: pointer; box-sizing: border-box; height: 36px; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=%22none%22 stroke=\"%238b5cf6\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 9l-7 7-7-7\"></path></svg>'); background-repeat: no-repeat; background-position: right 8px center; background-size: 14px;">
+                            <option value="recent10">Top 10 Recent</option>
+                            <option value="7days">Last 7 Days</option>
+                            <option value="14days">Last 2 Weeks</option>
+                            <option value="30days">1 Month</option>
+                            <option value="all">All Time</option>
+                            <option value="custom" style="display:none;">Custom Date</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -427,12 +455,93 @@
                     </tr>
                 </thead>
                 <tbody id="detailTableBody">
-                    </tbody>
+                </tbody>
             </table>
         </div>
         <div class="popup-btns" style="margin-top: 20px;">
             <button class="btn-cancel" onclick="closeDetailModal()">Close</button>
         </div>
+    </div>
+</div>
+
+<div id="currentLeaveModal" class="popup-bg hidden">
+    <div class="popup large">
+        <h3 style="margin-bottom: 20px; color: var(--info);">🌴 Currently On Leave Today</h3>
+        <div style="max-height: 400px; overflow-y: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                <thead>
+                    <tr>
+                        <th style="padding: 12px; border-bottom: 2px solid var(--border-color);">Intern Name</th>
+                        <th style="padding: 12px; border-bottom: 2px solid var(--border-color);">Leave Date(s)</th>
+                        <th style="padding: 12px; border-bottom: 2px solid var(--border-color);">Reason</th>
+                    </tr>
+                </thead>
+                <tbody id="currentLeaveModalBody">
+                </tbody>
+            </table>
+        </div>
+        <div class="popup-btns" style="margin-top: 20px;">
+            <button class="btn-cancel" onclick="closeCurrentLeaveModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<div id="userFullDetailsModal" class="popup-bg hidden">
+    <div class="popup xlarge">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+            <h2 id="ufdName" style="margin: 0; font-size: 24px; color: var(--text-main); font-weight: 800;">Intern Name - Full Profile</h2>
+            <button class="cancel-btn" style="padding: 8px 16px; border-radius: 8px; border:none; cursor:pointer; background: #94a3b8; color: white; font-weight: 700;" onclick="closeUserFullDetails()">Close</button>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap; background: var(--input-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);">
+            <span style="font-weight: 700; font-size: 14px; color: var(--text-main);">Filter Data:</span>
+            <input type="date" id="ufdDate" onchange="document.getElementById('ufdSelect').value='custom'; loadUserFullDetailsData();" style="padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 14px; margin:0; width:auto;">
+            <select id="ufdSelect" onchange="if(this.value !== 'custom') { document.getElementById('ufdDate').value=''; loadUserFullDetailsData(); }" style="padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 14px; margin:0; width:auto; cursor:pointer;">
+                <option value="all">All Time</option>
+                <option value="week">Last 7 Days</option>
+                <option value="month">This Month</option>
+                <option value="custom" style="display:none;">Custom Date</option>
+            </select>
+            <button class="btn-export" onclick="exportUserFullDetailsPDF()" style="margin-left: auto; margin-top:0;">📄 Download Report</button>
+        </div>
+
+        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); margin-bottom: 25px; gap: 15px;">
+            <div class="stat-card" style="padding: 15px; border-top: 4px solid var(--text-main);"><h3 style="margin-bottom:5px; font-size:12px;">Current Rank</h3><h2 id="ufdRank" style="font-size: 32px; color:var(--text-main);">N/A</h2></div>
+            <div class="stat-card" style="padding: 15px; border-top: 4px solid var(--primary);"><h3 style="margin-bottom:5px; font-size:12px;">Total Tokens</h3><h2 id="ufdTokens" style="font-size: 32px; color:var(--primary);">0</h2></div>
+            <div class="stat-card" style="padding: 15px; border-top: 4px solid var(--info);"><h3 style="margin-bottom:5px; font-size:12px;">Total Visits</h3><h2 id="ufdVisits" style="font-size: 32px; color:var(--info);">0</h2></div>
+            <div class="stat-card" style="padding: 15px; border-top: 4px solid var(--success);"><h3 style="margin-bottom:5px; font-size:12px;">Total Admissions</h3><h2 id="ufdAdmissions" style="font-size: 32px; color:var(--success);">0</h2></div>
+            <div class="stat-card" style="padding: 15px; border-top: 4px solid var(--warning);"><h3 style="margin-bottom:5px; font-size:12px;">Avg Lunch Break</h3><h2 id="ufdAvgLunch" style="font-size: 32px; color:var(--warning);">0m</h2></div>
+        </div>
+
+        <h3 style="margin-bottom: 10px; font-size: 16px; color: var(--primary); display:flex; align-items:center; gap:6px;">📝 Submissions Details</h3>
+        <div style="max-height: 250px; overflow-y: auto; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 25px;">
+            <table style="width: 100%; font-size: 13px;">
+                <thead><tr style="border-bottom: 2px solid var(--border-color); background: rgba(0,0,0,0.02);"><th style="padding:12px;">Date / Time</th><th style="padding:12px;">Activity Count</th><th style="padding:12px;">Student Names & Details</th></tr></thead>
+                <tbody id="ufdSubmissionsBody"></tbody>
+            </table>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <div>
+                <h3 style="margin-bottom: 10px; font-size: 16px; color: var(--warning); display:flex; align-items:center; gap:6px;">🍔 Lunch Break History</h3>
+                <div style="max-height: 200px; overflow-y: auto; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 12px;">
+                    <table style="width: 100%; font-size: 13px;">
+                        <thead><tr style="border-bottom: 2px solid var(--border-color); background: rgba(0,0,0,0.02);"><th style="padding:10px;">Date</th><th style="padding:10px;">Duration</th><th style="padding:10px;">Note</th></tr></thead>
+                        <tbody id="ufdLunchBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <h3 style="margin-bottom: 10px; font-size: 16px; color: var(--danger); display:flex; align-items:center; gap:6px;">🌴 Leave History</h3>
+                <div style="max-height: 200px; overflow-y: auto; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 12px;">
+                    <table style="width: 100%; font-size: 13px;">
+                        <thead><tr style="border-bottom: 2px solid var(--border-color); background: rgba(0,0,0,0.02);"><th style="padding:10px;">Requested On</th><th style="padding:10px;">Leave Dates</th><th style="padding:10px;">Reason</th><th style="padding:10px;">Status</th></tr></thead>
+                        <tbody id="ufdLeavesBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -555,6 +664,14 @@ function closeDetailModal() {
     document.getElementById("detailModal").classList.add("hidden");
 }
 
+function openCurrentLeaveModal() {
+    document.getElementById('currentLeaveModal').classList.remove('hidden');
+}
+
+function closeCurrentLeaveModal() {
+    document.getElementById('currentLeaveModal').classList.add('hidden');
+}
+
 /* =======================================================
    ADVANCED NAV BAR ROUTING
    ======================================================= */
@@ -584,15 +701,26 @@ function switchAdminTab(targetViewId) {
 
 function renderUserTable() {
     let tableHTML = "";
-    if (knownInterns.size === 0) {
+    
+    let uniqueInternsMap = {};
+    Array.from(knownInterns).forEach(name => {
+        let lower = name.toLowerCase().trim();
+        if(!uniqueInternsMap[lower]) uniqueInternsMap[lower] = name;
+    });
+
+    let internArray = Object.values(uniqueInternsMap).sort();
+
+    if (internArray.length === 0) {
         document.getElementById("userTableBody").innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 40px; color: var(--text-muted);">No interns have submitted reports yet.</td></tr>`;
         return;
     }
-    Array.from(knownInterns).sort().forEach(intern => {
+    
+    internArray.forEach(intern => {
         let isBanned = bannedInternsList[intern] !== undefined;
         let banData = bannedInternsList[intern];
         let statusBadge = `<span class="badge active">🟢 Active</span>`;
         let actionButtons = `
+            <button class="action-btn" style="background: var(--info);" onclick="openUserFullDetails('${intern}')">👁️ View Details</button>
             <button class="action-btn btn-temp" onclick="openTempBanModal('${intern}')">⏱️ Temp Ban</button>
             <button class="action-btn btn-ban" onclick="permanentBan('${intern}')">🚫 Perm Ban</button>
         `;
@@ -807,8 +935,9 @@ async function renderMainLeaderboard(targetDate) {
         let snap = await db.collection("lunch_history").where("date", "==", targetDate).get();
         snap.forEach(doc => {
             let d = doc.data();
-            if(!pastLunchMap[d.internName]) pastLunchMap[d.internName] = 0;
-            pastLunchMap[d.internName] += d.sessionMs;
+            let name = d.internName;
+            if(!pastLunchMap[name]) pastLunchMap[name] = 0;
+            pastLunchMap[name] += d.sessionMs;
         });
     } catch(e) {
         console.error("Error fetching lunch history", e);
@@ -826,36 +955,34 @@ async function renderMainLeaderboard(targetDate) {
     window.currentLeaderboardExportData = rankedInterns;
 
     let tableHTML = "";
-    let d = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
-    let todayISO = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    let dNow = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+    let todayISO = dNow.getFullYear() + '-' + String(dNow.getMonth() + 1).padStart(2, '0') + '-' + String(dNow.getDate()).padStart(2, '0');
 
     rankedInterns.forEach((intern, index) => {
         let rank = index + 1;
         let timeStr = intern.latestTime ? new Date(new Date(intern.latestTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "N/A";
         
-        let lunchStr = "0m 0s";
+        let tMs = pastLunchMap[intern.name] || 0;
         
-        if (targetDate === todayISO) {
-            if (typeof liveCompletedBreaksCache !== 'undefined') {
-                let breakRecord = liveCompletedBreaksCache.find(b => b.internName === intern.name);
-                if (breakRecord) {
-                    lunchStr = breakRecord.durationStr;
-                } else if (pastLunchMap[intern.name]) {
-                    let tMs = pastLunchMap[intern.name];
-                    let m = Math.floor(tMs / 60000);
-                    let s = Math.floor((tMs % 60000) / 1000);
-                    lunchStr = `${m}m ${s}s`;
-                }
+        if (targetDate === todayISO && typeof liveCompletedBreaksCache !== 'undefined') {
+            let breakRecord = liveCompletedBreaksCache.find(b => b.internName === intern.name);
+            if (breakRecord) {
+                tMs = (breakRecord.diffMins * 60000) + (breakRecord.diffSecs * 1000);
             }
-        } else {
-            if (pastLunchMap[intern.name]) {
-                let tMs = pastLunchMap[intern.name];
-                let m = Math.floor(tMs / 60000);
-                let s = Math.floor((tMs % 60000) / 1000);
-                lunchStr = `${m}m ${s}s`;
+        }
+
+        let lunchStr = "0min";
+        let m = Math.floor(tMs / 60000);
+        if (m > 0) {
+            if (m >= 60) {
+                let h = Math.floor(m / 60);
+                let remM = m % 60;
+                lunchStr = `${h}h${remM}min`;
             } else {
-                lunchStr = "0m 0s";
+                lunchStr = `${m}min`;
             }
+        } else if (m === 0) {
+            lunchStr = `<span style="color: var(--text-muted); font-weight: 500;">N/A</span>`;
         }
 
         tableHTML += `<tr>
@@ -865,7 +992,7 @@ async function renderMainLeaderboard(targetDate) {
             <td style="font-weight: 800; font-size: 16px; color: var(--primary);">${intern.reg}</td>
             <td style="font-weight: 800; font-size: 16px; color: var(--info);">${intern.vis}</td>
             <td style="font-weight: 800; font-size: 16px; color: var(--success);">${intern.adm}</td>
-            <td style="font-weight: 700; color: var(--warning); font-size: 14px;">${lunchStr}</td>
+            <td style="font-weight: 700; color: var(--warning); font-size: 13px; line-height: 1.3;">${lunchStr}</td>
             <td style="text-align: right;"><button class="action-btn" onclick="viewDetailedReports('${intern.name}')">View All Detail</button></td>
         </tr>`;
     });
@@ -874,18 +1001,51 @@ async function renderMainLeaderboard(targetDate) {
     document.getElementById("tableBody").innerHTML = tableHTML;
 }
 
-function exportMainLeaderboardPDF() {
+/* =======================================================
+   UPDATED ASYNC PDF EXPORT - ADDED NEW TIME RANGE COLUMN
+   ======================================================= */
+async function exportMainLeaderboardPDF() {
     let exportData = window.currentLeaderboardExportData;
     if(!exportData || exportData.length === 0) { 
         alert("No data available to export."); 
         return; 
     }
     
-    const { jsPDF } = window.jspdf;
-    let doc = new jsPDF();
+    let btn = document.getElementById("mainExportBtn");
+    let originalText = btn ? btn.innerText : "📄 Export PDF";
+    if(btn) btn.innerText = "⏳ Generating...";
     
     let reportDate = document.getElementById('leaderboardDate') ? document.getElementById('leaderboardDate').value : new Date().toISOString().split('T')[0];
     if(!reportDate) reportDate = new Date().toISOString().split('T')[0];
+
+    let pastLunchMap = {};
+    let pastLunchRanges = {};
+    
+    try {
+        let snap = await db.collection("lunch_history").where("date", "==", reportDate).get();
+        snap.forEach(doc => {
+            let d = doc.data();
+            let name = d.internName;
+            if(!pastLunchMap[name]) pastLunchMap[name] = 0;
+            pastLunchMap[name] += d.sessionMs;
+            
+            if(!pastLunchRanges[name]) pastLunchRanges[name] = [];
+            let start = d.timestamp - d.sessionMs;
+            let end = d.timestamp;
+            
+            let st = new Date(new Date(start).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: 'numeric', minute:'2-digit', hour12: true});
+            let et = new Date(new Date(end).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: 'numeric', minute:'2-digit', hour12: true});
+            pastLunchRanges[name].push(`${st} to ${et}`);
+        });
+    } catch(e) {
+        console.error("Error fetching lunch history for PDF", e);
+    }
+
+    let dNow = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+    let todayISO = dNow.getFullYear() + '-' + String(dNow.getMonth() + 1).padStart(2, '0') + '-' + String(dNow.getDate()).padStart(2, '0');
+
+    const { jsPDF } = window.jspdf;
+    let doc = new jsPDF();
     
     doc.setFont("helvetica", "bold");
     doc.setFontSize(20);
@@ -895,15 +1055,48 @@ function exportMainLeaderboardPDF() {
     doc.text(`Date: ${reportDate}`, 14, 28);
     
     let tableData = exportData.map((intern, index) => {
-        return [index + 1, intern.name, intern.reg, intern.vis, intern.adm, (intern.reg + intern.vis + intern.adm)];
+        let name = intern.name;
+        let tMs = pastLunchMap[name] || 0;
+        let ranges = pastLunchRanges[name] || [];
+        
+        if (reportDate === todayISO && typeof liveCompletedBreaksCache !== 'undefined') {
+            let breakRecord = liveCompletedBreaksCache.find(b => b.internName === name);
+            if (breakRecord) {
+                tMs = (breakRecord.diffMins * 60000) + (breakRecord.diffSecs * 1000);
+                if (breakRecord.isActive && breakRecord.timeRangeStr) {
+                    ranges.push(breakRecord.timeRangeStr.replace(/[()]/g, ''));
+                } else if (ranges.length === 0 && breakRecord.timeRangeStr) {
+                    ranges = [breakRecord.timeRangeStr.replace(/[()]/g, '')];
+                }
+            }
+        }
+
+        let m = Math.floor(tMs / 60000);
+        let lunchStr = "0min";
+        if (m > 0) {
+            if (m >= 60) {
+                let h = Math.floor(m / 60);
+                let remM = m % 60;
+                lunchStr = `${h}h${remM}min`;
+            } else {
+                lunchStr = `${m}min`;
+            }
+        } else if (m === 0) {
+            lunchStr = "N/A";
+        }
+        
+        let timeRangeStr = ranges.length > 0 ? `(${ranges.join(', ')})` : "N/A";
+
+        return [index + 1, name, intern.reg, intern.vis, intern.adm, (intern.reg + intern.vis + intern.adm), lunchStr, timeRangeStr];
     });
 
     doc.autoTable({
-        head: [['Rank', 'Intern Name', 'Tokens', 'Visits', 'Admissions', 'Total Tasks']],
+        head: [['Rank', 'Intern Name', 'Tokens', 'Visits', 'Admissions', 'Total Tasks', 'Lunch Break', 'Time Range']],
         body: tableData,
         startY: 35,
         theme: 'grid',
-        headStyles: { fillColor: [139, 92, 246] }
+        headStyles: { fillColor: [139, 92, 246] },
+        styles: { cellPadding: 3, valign: 'middle' }
     });
 
     exportData.forEach((intern) => {
@@ -929,14 +1122,14 @@ function exportMainLeaderboardPDF() {
 
                 if (d.visitDetails) {
                     d.visitDetails.forEach(entry => {
-                        let details = `Student Name: ${entry['visit-name'] || 'N/A'}\nLead No: ${entry['visit-leadno'] || 'N/A'}\nCourse: ${entry['visit-course'] || 'N/A'}\nCounselor: ${entry['visit-counselor'] || 'N/A'}\nConcerned Person: ${entry['visit-person'] || 'N/A'}\nPlace: ${entry['visit-place'] || 'N/A'}`;
+                        let details = `Student Name: ${entry['visit-name'] || 'N/A'}\nLead No: ${entry['visit-leadno'] || 'N/A'}\nCourse: ${entry['visit-course'] || 'N/A'}\nCounselor: ${entry['visit-counselor'] || 'N/A'}\nConcerned Person: ${entry['visit-person'] || 'N/A'}\nPlace: ${entry['visit-place'] || 'N/A'}\nTime: ${entry['visit-start']||'?'} to ${entry['visit-end']||'?'}`;
                         detailBody.push(['Campus Visit', details]);
                     });
                 }
 
                 if (d.admissionDetails) {
                     d.admissionDetails.forEach(entry => {
-                        let details = `Student Name: ${entry['adm-name'] || 'N/A'}\nLead No: ${entry['adm-leadno'] || 'N/A'}\nEnrollment: ${entry['adm-enroll'] || 'N/A'}\nCounselor: ${entry['adm-counselor'] || 'N/A'}`;
+                        let details = `Student Name: ${entry['adm-name'] || 'N/A'}\nLead No: ${entry['adm-leadno'] || 'N/A'}\nEnrollment: ${entry['adm-enroll'] || 'N/A'}\nCounselor: ${entry['adm-counselor'] || 'N/A'}\nTime: ${entry['adm-start']||'?'} to ${entry['adm-end']||'?'}`;
                         detailBody.push(['Admission Done', details]);
                     });
                 }
@@ -969,6 +1162,7 @@ function exportMainLeaderboardPDF() {
     });
 
     doc.save(`Leaderboard_Report_${reportDate}.pdf`);
+    if(btn) btn.innerText = originalText;
 }
 
 
@@ -1299,6 +1493,8 @@ function renderLunchLeaderboard(breaksArray) {
 /* =======================================================
    NEW: LEAVE MANAGEMENT SYSTEM (ADMIN LOGIC)
    ======================================================= */
+window.allLeaveHistoryData = [];
+
 function handleLeave(docId, newStatus) {
     if(confirm(`Are you sure you want to ${newStatus === 'approved' ? 'APPROVE' : 'REJECT'} this leave request?`)) {
         db.collection("leave_requests").doc(docId).update({
@@ -1312,10 +1508,19 @@ function handleLeave(docId, newStatus) {
 
 db.collection("leave_requests").orderBy("requestTime", "desc").onSnapshot((snapshot) => {
     let pendingHTML = "";
-    let historyHTML = "";
-    let pendingCount = 0;
-    let approvedCount = 0;
-    let rejectedCount = 0;
+    let currentLeaveHTML = "";
+    
+    let counts = {
+        pendingTotal: 0, pendingToday: 0,
+        approvedTotal: 0, approvedToday: 0,
+        rejectedTotal: 0, rejectedToday: 0
+    };
+
+    let nowIST = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+    let todayISO = nowIST.getFullYear() + '-' + String(nowIST.getMonth() + 1).padStart(2, '0') + '-' + String(nowIST.getDate()).padStart(2, '0');
+
+    window.allLeaveHistoryData = [];
+    let currentLeaveCount = 0;
 
     snapshot.forEach((doc) => {
         let data = doc.data();
@@ -1325,11 +1530,42 @@ db.collection("leave_requests").orderBy("requestTime", "desc").onSnapshot((snaps
         let reason = data.reason || "No reason provided";
         let status = data.status || "pending";
         
-        let timeStr = data.requestTime ? new Date(data.requestTime.toDate().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', month:'short', day:'numeric'}) : "Just now";
-        let processedTimeStr = data.processedTime ? new Date(data.processedTime.toDate().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', month:'short', day:'numeric'}) : "-";
+        let reqD = data.requestTime ? new Date(data.requestTime.toDate().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})) : nowIST;
+        let reqISO = reqD.getFullYear() + '-' + String(reqD.getMonth()+1).padStart(2,'0') + '-' + String(reqD.getDate()).padStart(2,'0');
+        
+        let procD = data.processedTime ? new Date(data.processedTime.toDate().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})) : null;
+        let procISO = procD ? (procD.getFullYear() + '-' + String(procD.getMonth()+1).padStart(2,'0') + '-' + String(procD.getDate()).padStart(2,'0')) : null;
+
+        let timeStr = reqD.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', month:'short', day:'numeric'});
+        let processedTimeStr = procD ? procD.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', month:'short', day:'numeric'}) : "-";
+
+        let isOnLeaveToday = false;
+        if (status === 'approved') {
+            let dateMatches = dates.match(/\d{4}-\d{2}-\d{2}/g);
+            if (dateMatches) {
+                if (dateMatches.length === 1 && dateMatches[0] === todayISO) {
+                    isOnLeaveToday = true;
+                } else if (dateMatches.length >= 2) {
+                    if (todayISO >= dateMatches[0] && todayISO <= dateMatches[1]) {
+                        isOnLeaveToday = true;
+                    }
+                }
+            }
+        }
+
+        if (isOnLeaveToday) {
+            currentLeaveCount++;
+            currentLeaveHTML += `<tr>
+                <td style="padding: 12px; font-weight: 700; font-size: 14px; border-bottom: 1px solid rgba(0,0,0,0.05);">${internName}</td>
+                <td style="padding: 12px; font-weight: 600; color: var(--info); border-bottom: 1px solid rgba(0,0,0,0.05);">${dates}</td>
+                <td style="padding: 12px; color: var(--text-muted); font-style: italic; border-bottom: 1px solid rgba(0,0,0,0.05);">${reason}</td>
+            </tr>`;
+        }
 
         if (status === "pending") {
-            pendingCount++;
+            counts.pendingTotal++;
+            if (reqISO === todayISO) counts.pendingToday++;
+
             let actionButtons = `
                 <button class="action-btn btn-unban" onclick="handleLeave('${docId}', 'approved')">Approve</button> 
                 <button class="action-btn btn-ban" onclick="handleLeave('${docId}', 'rejected')">Reject</button>
@@ -1342,45 +1578,404 @@ db.collection("leave_requests").orderBy("requestTime", "desc").onSnapshot((snaps
                 <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">${actionButtons}</td>
             </tr>`;
         } else {
-            if (status === "approved") approvedCount++;
-            if (status === "rejected") rejectedCount++;
+            if (status === "approved") {
+                counts.approvedTotal++;
+                if (procISO === todayISO) counts.approvedToday++;
+            }
+            if (status === "rejected") {
+                counts.rejectedTotal++;
+                if (procISO === todayISO) counts.rejectedToday++;
+            }
             
             let statusBadge = status === "approved" ? `<span class="badge active">Approved</span>` : `<span class="badge banned">Rejected</span>`;
             
-            historyHTML += `<tr>
-                <td style="font-weight: 700; font-size: 15px;">${internName}</td>
-                <td style="font-weight: 600;">${dates}</td>
-                <td style="color: var(--text-muted); font-style: italic;">${reason}</td>
-                <td>${statusBadge}</td>
-                <td style="color: var(--text-muted); font-size: 13px;">${processedTimeStr}</td>
-            </tr>`;
+            window.allLeaveHistoryData.push({
+                internName, dates, reason, statusBadge, processedTimeStr,
+                timestamp: procD ? procD.getTime() : reqD.getTime(),
+                reqISO
+            });
         }
     });
 
-    document.getElementById('leaveStatPending').innerText = pendingCount;
-    document.getElementById('leaveStatApproved').innerText = approvedCount;
-    document.getElementById('leaveStatRejected').innerText = rejectedCount;
+    document.getElementById('leaveStatCurrent').innerText = currentLeaveCount;
+    document.getElementById('leaveStatPendingTotal').innerText = counts.pendingTotal;
+    document.getElementById('leaveStatPendingToday').innerText = counts.pendingToday;
+    
+    document.getElementById('leaveStatApprovedTotal').innerText = counts.approvedTotal;
+    document.getElementById('leaveStatApprovedToday').innerText = counts.approvedToday;
+    
+    document.getElementById('leaveStatRejectedTotal').innerText = counts.rejectedTotal;
+    document.getElementById('leaveStatRejectedToday').innerText = counts.rejectedToday;
 
     if(pendingHTML === "") pendingHTML = `<tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">No pending leave requests.</td></tr>`;
-    if(historyHTML === "") historyHTML = `<tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">No leave history.</td></tr>`;
+    if(currentLeaveHTML === "") currentLeaveHTML = `<tr><td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">No interns are on leave today.</td></tr>`;
     
     let pendEl = document.getElementById("pendingLeaveTableBody");
     if(pendEl) pendEl.innerHTML = pendingHTML;
     
-    let histEl = document.getElementById("historyLeaveTableBody");
-    if(histEl) histEl.innerHTML = historyHTML;
+    let curEl = document.getElementById("currentLeaveModalBody");
+    if(curEl) curEl.innerHTML = currentLeaveHTML;
     
     let badge = document.getElementById("leaveBadge");
     if(badge) {
-        if (pendingCount > 0) { 
-            badge.innerText = pendingCount; 
+        if (counts.pendingTotal > 0) { 
+            badge.innerText = counts.pendingTotal; 
             badge.classList.remove("hidden"); 
         } else { 
             badge.classList.add("hidden"); 
         }
     }
+
+    renderFilteredLeaveHistory();
 });
 
+function renderFilteredLeaveHistory() {
+    let filter = document.getElementById('leaveHistorySelectFilter').value;
+    let customDate = document.getElementById('leaveHistoryDateFilter').value;
+    let tbody = document.getElementById("historyLeaveTableBody");
+    
+    let now = new Date();
+    let d7 = new Date(now); d7.setDate(now.getDate() - 7);
+    let d14 = new Date(now); d14.setDate(now.getDate() - 14);
+    let d30 = new Date(now); d30.setDate(now.getDate() - 30);
+
+    let filtered = window.allLeaveHistoryData.filter(d => {
+        if(filter === 'all') return true;
+        if(filter === 'recent10') return true; 
+        if(filter === 'custom') return d.reqISO === customDate;
+        
+        let recD = new Date(d.timestamp);
+        if(filter === '7days') return recD >= d7;
+        if(filter === '14days') return recD >= d14;
+        if(filter === '30days') return recD >= d30;
+        return true;
+    });
+
+    if (filter === 'recent10') {
+        filtered = filtered.slice(0, 10);
+    }
+
+    let historyHTML = "";
+    filtered.forEach(d => {
+        historyHTML += `<tr>
+            <td style="font-weight: 700; font-size: 15px;">${d.internName}</td>
+            <td style="font-weight: 600;">${d.dates}</td>
+            <td style="color: var(--text-muted); font-style: italic;">${d.reason}</td>
+            <td>${d.statusBadge}</td>
+            <td style="color: var(--text-muted); font-size: 13px;">${d.processedTimeStr}</td>
+        </tr>`;
+    });
+
+    if(historyHTML === "") historyHTML = `<tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">No leave history found for this filter.</td></tr>`;
+    if(tbody) tbody.innerHTML = historyHTML;
+}
+
+/* =======================================================
+   NEW: USER FULL DETAILS MODAL LOGIC
+   ======================================================= */
+window.ufdCurrentIntern = "";
+window.ufdData = { reports: [], lunches: [], leaves: [] };
+window.ufdCurrentRank = "N/A";
+
+async function openUserFullDetails(internName) {
+    window.ufdCurrentIntern = internName;
+    document.getElementById('ufdName').innerText = internName + " - Full Profile";
+    document.getElementById('ufdSelect').value = 'all';
+    document.getElementById('ufdDate').value = '';
+    document.getElementById('userFullDetailsModal').classList.remove('hidden');
+    await loadUserFullDetailsData();
+}
+
+function closeUserFullDetails() {
+    document.getElementById('userFullDetailsModal').classList.add('hidden');
+}
+
+async function loadUserFullDetailsData() {
+    let internName = window.ufdCurrentIntern;
+    let filter = document.getElementById('ufdSelect').value;
+    let customDate = document.getElementById('ufdDate').value;
+    
+    let now = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+    let currentMonthStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+    let d7 = new Date(now);
+    d7.setDate(now.getDate() - 7);
+    d7.setHours(0,0,0,0);
+
+    function isDateInRange(dateStr, timestampMs) {
+        if(filter === 'all') return true;
+        if(filter === 'custom') return dateStr === customDate;
+        if(filter === 'month') return dateStr && dateStr.startsWith(currentMonthStr);
+        if(filter === 'week') {
+            if(!timestampMs) return false;
+            let recD = new Date(timestampMs);
+            return recD >= d7 && recD <= now;
+        }
+        return true;
+    }
+
+    // 0. Calculate Global Rank Based on Selected Date Range
+    try {
+        let allAggregated = {};
+        let rankSnap = await db.collection("reports").get();
+        rankSnap.forEach(doc => {
+            let d = doc.data();
+            let ts = d.timestamp ? (typeof d.timestamp.toMillis === 'function' ? d.timestamp.toMillis() : d.timestamp) : new Date().getTime();
+            let recD = new Date(new Date(ts).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+            let recDate = recD.getFullYear() + '-' + String(recD.getMonth() + 1).padStart(2, '0') + '-' + String(recD.getDate()).padStart(2, '0');
+            
+            if (isDateInRange(recDate, ts)) {
+                let n = d.intern || "Unknown";
+                if(!allAggregated[n]) allAggregated[n] = {reg:0, vis:0, adm:0, total:0};
+                allAggregated[n].reg += (d.registrations || 0);
+                allAggregated[n].vis += (d.visits || 0);
+                allAggregated[n].adm += (d.admissions || 0);
+                allAggregated[n].total += (d.registrations || 0) + (d.visits || 0) + (d.admissions || 0);
+            }
+        });
+        let rankedInternsList = Object.entries(allAggregated).map(([n, stats]) => ({name: n, ...stats})).sort((a,b) => {
+            if (b.total !== a.total) return b.total - a.total;
+            if (b.vis !== a.vis) return b.vis - a.vis;
+            return b.reg - a.reg;
+        });
+        let myRankIndex = rankedInternsList.findIndex(x => x.name === internName);
+        window.ufdCurrentRank = myRankIndex !== -1 ? `#${myRankIndex + 1}` : "N/A";
+    } catch(e) { window.ufdCurrentRank = "Error"; }
+    document.getElementById('ufdRank').innerText = window.ufdCurrentRank;
+
+    // 1. Fetch Submissions
+    let tReg = 0, tVis = 0, tAdm = 0;
+    let subHtml = "";
+    window.ufdData.reports = [];
+    
+    try {
+        let repSnap = await db.collection("reports").where("intern", "==", internName).get();
+        
+        let sortedReports = [];
+        repSnap.forEach(doc => sortedReports.push(doc.data()));
+        sortedReports.sort((a, b) => {
+            let tA = a.timestamp ? (typeof a.timestamp.toMillis === 'function' ? a.timestamp.toMillis() : a.timestamp) : 0;
+            let tB = b.timestamp ? (typeof b.timestamp.toMillis === 'function' ? b.timestamp.toMillis() : b.timestamp) : 0;
+            return tB - tA;
+        });
+
+        sortedReports.forEach(d => {
+            let ts = d.timestamp ? (typeof d.timestamp.toMillis === 'function' ? d.timestamp.toMillis() : d.timestamp) : new Date().getTime();
+            
+            let recD = new Date(new Date(ts).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+            let recDate = recD.getFullYear() + '-' + String(recD.getMonth() + 1).padStart(2, '0') + '-' + String(recD.getDate()).padStart(2, '0');
+            
+            if(isDateInRange(recDate, ts)) {
+                tReg += (d.registrations || 0);
+                tVis += (d.visits || 0);
+                tAdm += (d.admissions || 0);
+                
+                let timeStr = recD.toLocaleString("en-US", {dateStyle: 'short', timeStyle: 'short'});
+                
+                let detailsArr = [];
+                let pdfDetailsArr = [];
+
+                if(d.registrationDetails) {
+                    d.registrationDetails.forEach(x => {
+                        let s = `Student: ${x['reg-name']||'N/A'} | Lead ID: ${x['reg-lead']||'N/A'} | Token No: ${x['reg-token']||'N/A'}`;
+                        detailsArr.push(`<span style="color:var(--primary); font-weight:bold;">●</span> <span style="font-weight:600;">Token:</span> ${s}`);
+                        pdfDetailsArr.push(`[Token] ${s}`);
+                    });
+                }
+                if(d.visitDetails) {
+                    d.visitDetails.forEach(x => {
+                        let s = `Student: ${x['visit-name']||'N/A'} | Lead ID: ${x['visit-leadno']||'N/A'} | Course: ${x['visit-course']||'N/A'} | Counselor: ${x['visit-counselor']||'N/A'} | Person: ${x['visit-person']||'N/A'} | Place: ${x['visit-place']||'N/A'} | Time: ${x['visit-start']||'?'} to ${x['visit-end']||'?'}`;
+                        detailsArr.push(`<span style="color:var(--info); font-weight:bold;">●</span> <span style="font-weight:600;">Visit:</span> ${s}`);
+                        pdfDetailsArr.push(`[Visit] ${s}`);
+                    });
+                }
+                if(d.admissionDetails) {
+                    d.admissionDetails.forEach(x => {
+                        let s = `Student: ${x['adm-name']||'N/A'} | Lead ID: ${x['adm-leadno']||'N/A'} | Enroll No: ${x['adm-enroll']||'N/A'} | Counselor: ${x['adm-counselor']||'N/A'} | Time: ${x['adm-start']||'?'} to ${x['adm-end']||'?'}`;
+                        detailsArr.push(`<span style="color:var(--success); font-weight:bold;">●</span> <span style="font-weight:600;">Adm:</span> ${s}`);
+                        pdfDetailsArr.push(`[Admission] ${s}`);
+                    });
+                }
+                
+                let detStr = detailsArr.length > 0 ? detailsArr.join('<br>') : '<span style="color:#94a3b8; font-style:italic;">Legacy Count Only</span>';
+                let pdfDetStr = pdfDetailsArr.length > 0 ? pdfDetailsArr.join('\n') : 'Legacy Count Only';
+                
+                let typeStr = "";
+                if(d.registrations>0) typeStr += `<span class="badge" style="background:var(--primary); margin:2px; font-size:10px;">Token</span><br>`;
+                if(d.visits>0) typeStr += `<span class="badge" style="background:var(--info); margin:2px; font-size:10px;">Visit</span><br>`;
+                if(d.admissions>0) typeStr += `<span class="badge" style="background:var(--success); margin:2px; font-size:10px;">Adm</span>`;
+
+                window.ufdData.reports.push([timeStr, (d.registrations||0)+(d.visits||0)+(d.admissions||0) + " Tasks", pdfDetStr]);
+
+                subHtml += `<tr style="border-bottom: 1px solid rgba(0,0,0,0.05);"><td style="padding:10px; vertical-align:top; white-space:nowrap;">${timeStr}</td><td style="padding:10px; vertical-align:top;">${typeStr}</td><td style="padding:10px; vertical-align:top; line-height:1.6;">${detStr}</td></tr>`;
+            }
+        });
+    } catch(e) { console.error("Error loading user reports", e); }
+    
+    document.getElementById('ufdTokens').innerText = tReg;
+    document.getElementById('ufdVisits').innerText = tVis;
+    document.getElementById('ufdAdmissions').innerText = tAdm;
+    document.getElementById('ufdSubmissionsBody').innerHTML = subHtml || "<tr><td colspan='3' style='text-align:center; padding: 20px; color:var(--text-muted);'>No submissions found for selected period.</td></tr>";
+
+    // 2. Fetch Lunches
+    let lunchHtml = "";
+    let totalLunchMs = 0;
+    let lunchCount = 0;
+    window.ufdData.lunches = [];
+    
+    try {
+        let lunSnap = await db.collection("lunch_history").where("internName", "==", internName).get();
+        let sortedLunches = [];
+        lunSnap.forEach(doc => sortedLunches.push(doc.data()));
+        sortedLunches.sort((a, b) => b.timestamp - a.timestamp);
+
+        sortedLunches.forEach(d => {
+            if(isDateInRange(d.date, d.timestamp)) {
+                totalLunchMs += d.sessionMs;
+                lunchCount++;
+                let m = Math.floor(d.sessionMs / 60000);
+                
+                let start = d.timestamp - d.sessionMs;
+                let end = d.timestamp;
+                let st = new Date(new Date(start).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: 'numeric', minute:'2-digit', hour12: true});
+                let et = new Date(new Date(end).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})).toLocaleTimeString([], {hour: 'numeric', minute:'2-digit', hour12: true});
+                let range = `${st} to ${et}`;
+
+                window.ufdData.lunches.push([d.date, `${m} mins`, range, d.note || "N/A"]);
+                
+                lunchHtml += `<tr style="border-bottom: 1px solid rgba(0,0,0,0.05);"><td style="padding:10px; font-weight:600;">${d.date}</td><td style="padding:10px; font-weight:bold; color:var(--warning);">${m} mins <br><span style="font-size:11px; font-weight:normal; color:#64748b;">(${range})</span></td><td style="padding:10px;">${d.note || "-"}</td></tr>`;
+            }
+        });
+    } catch(e) { console.error("Error loading user lunches", e); }
+    
+    let avgMs = lunchCount > 0 ? (totalLunchMs / lunchCount) : 0;
+    document.getElementById('ufdAvgLunch').innerText = Math.floor(avgMs / 60000) + "m";
+    document.getElementById('ufdLunchBody').innerHTML = lunchHtml || "<tr><td colspan='3' style='text-align:center; padding: 20px; color:var(--text-muted);'>No lunch history.</td></tr>";
+
+    // 3. Fetch Leaves
+    let leaveHtml = "";
+    window.ufdData.leaves = [];
+    
+    try {
+        let levSnap = await db.collection("leave_requests").where("internName", "==", internName).get();
+        let sortedLeaves = [];
+        levSnap.forEach(doc => sortedLeaves.push(doc.data()));
+        sortedLeaves.sort((a, b) => {
+            let tA = a.requestTime ? (typeof a.requestTime.toMillis === 'function' ? a.requestTime.toMillis() : a.requestTime) : 0;
+            let tB = b.requestTime ? (typeof b.requestTime.toMillis === 'function' ? b.requestTime.toMillis() : b.requestTime) : 0;
+            return tB - tA;
+        });
+
+        sortedLeaves.forEach(d => {
+            let ts = d.requestTime ? (typeof d.requestTime.toMillis === 'function' ? d.requestTime.toMillis() : new Date().getTime()) : new Date().getTime();
+            let recD = new Date(new Date(ts).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+            let recIso = recD.getFullYear() + '-' + String(recD.getMonth()+1).padStart(2,'0') + '-' + String(recD.getDate()).padStart(2,'0');
+            
+            if(isDateInRange(recIso, ts)) {
+                let reqStr = recD.toLocaleString("en-US", {dateStyle: 'short'});
+                let badge = d.status === 'approved' ? `<span class="badge active">Approved</span>` : (d.status === 'rejected' ? `<span class="badge banned">Rejected</span>` : `<span class="badge" style="background:var(--warning); color:#000;">Pending</span>`);
+                
+                window.ufdData.leaves.push([reqStr, d.leaveDates, d.reason, d.status.toUpperCase()]);
+
+                leaveHtml += `<tr style="border-bottom: 1px solid rgba(0,0,0,0.05);"><td style="padding:10px;">${reqStr}</td><td style="padding:10px; font-weight:600; color:var(--primary);">${d.leaveDates}</td><td style="padding:10px; font-style:italic; color:var(--text-muted);">${d.reason}</td><td style="padding:10px;">${badge}</td></tr>`;
+            }
+        });
+    } catch(e) { console.error("Error loading user leaves", e); }
+    
+    document.getElementById('ufdLeavesBody').innerHTML = leaveHtml || "<tr><td colspan='4' style='text-align:center; padding: 20px; color:var(--text-muted);'>No leave requests.</td></tr>";
+}
+
+function exportUserFullDetailsPDF() {
+    let internName = window.ufdCurrentIntern;
+    if(!internName) return;
+
+    if (window.ufdData.reports.length === 0 && window.ufdData.lunches.length === 0 && window.ufdData.leaves.length === 0) {
+        alert("No data available to download for this period.");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    let doc = new jsPDF();
+    
+    let filter = document.getElementById('ufdSelect').value;
+    let customDate = document.getElementById('ufdDate').value;
+    let periodText = filter === 'all' ? "All Time" : (filter === 'week' ? "Last 7 Days" : (filter === 'month' ? "This Month" : `Date: ${customDate}`));
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(20);
+    doc.text(`Intern Profile Report: ${internName}`, 14, 20);
+    
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Period: ${periodText}  |  Generated on: ${new Date().toLocaleString()}`, 14, 28);
+    
+    // --- EXECUTIVE SUMMARY SECTION ---
+    let currentRank = window.ufdCurrentRank || "N/A";
+    let totalTokens = document.getElementById('ufdTokens').innerText;
+    let totalVisits = document.getElementById('ufdVisits').innerText;
+    let totalAdmissions = document.getElementById('ufdAdmissions').innerText;
+    let avgLunch = document.getElementById('ufdAvgLunch').innerText;
+    let totalLeaves = window.ufdData.leaves.length.toString();
+
+    doc.autoTable({
+        head: [['Current Rank', 'Total Tokens', 'Total Visits', 'Total Admissions', 'Avg Lunch Time', 'Total Leaves']],
+        body: [[currentRank, totalTokens, totalVisits, totalAdmissions, avgLunch, totalLeaves]],
+        startY: 35,
+        theme: 'grid',
+        headStyles: { fillColor: [51, 65, 85], halign: 'center', fontSize: 10 },
+        bodyStyles: { halign: 'center', fontStyle: 'bold', fontSize: 12, textColor: [15, 23, 42] }
+    });
+    
+    let startY = doc.lastAutoTable.finalY + 15;
+    // ---------------------------------
+
+    if (window.ufdData.reports.length > 0) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("Task Submissions", 14, startY);
+        doc.autoTable({
+            head: [['Date/Time', 'Tasks', 'Details']],
+            body: window.ufdData.reports,
+            startY: startY + 5,
+            theme: 'grid',
+            headStyles: { fillColor: [139, 92, 246] },
+            styles: { cellPadding: 3, valign: 'middle', fontSize: 10 }
+        });
+        startY = doc.lastAutoTable.finalY + 15;
+    }
+
+    if (window.ufdData.lunches.length > 0) {
+        if (startY > doc.internal.pageSize.height - 30) { doc.addPage(); startY = 20; }
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("Lunch Breaks", 14, startY);
+        doc.autoTable({
+            head: [['Date', 'Duration', 'Time Range', 'Note']],
+            body: window.ufdData.lunches,
+            startY: startY + 5,
+            theme: 'grid',
+            headStyles: { fillColor: [245, 158, 11] },
+            styles: { cellPadding: 3, valign: 'middle', fontSize: 10 }
+        });
+        startY = doc.lastAutoTable.finalY + 15;
+    }
+
+    if (window.ufdData.leaves.length > 0) {
+        if (startY > doc.internal.pageSize.height - 30) { doc.addPage(); startY = 20; }
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("Leave Requests", 14, startY);
+        doc.autoTable({
+            head: [['Requested', 'Leave Dates', 'Reason', 'Status']],
+            body: window.ufdData.leaves,
+            startY: startY + 5,
+            theme: 'grid',
+            headStyles: { fillColor: [239, 68, 68] },
+            styles: { cellPadding: 3, valign: 'middle', fontSize: 10 }
+        });
+    }
+
+    doc.save(`Intern_Report_${internName}.pdf`);
+}
 </script>
 
 </body>
