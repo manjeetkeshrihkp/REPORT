@@ -226,107 +226,6 @@
         display: flex; flex-direction: column; align-items: center; justify-content: center;
         text-align: center; padding: 20px; backdrop-filter: blur(20px);
     }
-
-    /* SHUTDOWN NOTICE MODAL STYLES */
-    #shutdownOverlay {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(15, 23, 42, 0.95); z-index: 999999;
-        display: flex; align-items: center; justify-content: center;
-        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    }
-
-    #shutdownModal {
-        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-        padding: 48px 40px; border-radius: 24px; max-width: 500px; width: 90%;
-        box-shadow: 0 30px 60px rgba(15, 23, 42, 0.4);
-        text-align: center; animation: slideUpShutdown 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        border: 2px solid rgba(244, 63, 94, 0.3);
-    }
-
-    @keyframes slideUpShutdown {
-        0% { opacity: 0; transform: translateY(40px) scale(0.95); }
-        100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    #shutdownModal .shutdown-icon {
-        width: 80px; height: 80px; margin: 0 auto 24px;
-        background: linear-gradient(135deg, #f43f5e, #e11d48);
-        border-radius: 50%; display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 8px 20px rgba(244, 63, 94, 0.3);
-        animation: pulse-shutdown 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse-shutdown {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-    }
-
-    #shutdownModal .shutdown-icon svg {
-        width: 44px; height: 44px; color: white; stroke-width: 2;
-    }
-
-    #shutdownModal h2 {
-        font-size: 28px; font-weight: 800; color: #0f172a;
-        margin-bottom: 16px; letter-spacing: -0.5px;
-    }
-
-    #shutdownModal .shutdown-notice {
-        color: #f43f5e; font-size: 13px; font-weight: 700;
-        text-transform: uppercase; letter-spacing: 1.5px;
-        margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;
-    }
-
-    #shutdownModal .shutdown-notice span {
-        width: 8px; height: 8px; background: #f43f5e; border-radius: 50%;
-        animation: pulse-dot 1.5s ease-in-out infinite;
-    }
-
-    @keyframes pulse-dot {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.4; }
-    }
-
-    #shutdownModal .message-body {
-        margin: 28px 0; line-height: 1.7; color: #475569;
-    }
-
-    #shutdownModal .message-body p {
-        margin: 12px 0; font-size: 15px;
-    }
-
-    #shutdownModal .message-body strong {
-        color: #0f172a; font-weight: 700;
-    }
-
-    #shutdownModal .alert-box {
-        background: rgba(244, 63, 94, 0.1); border-left: 4px solid #f43f5e;
-        padding: 16px; border-radius: 8px; margin: 24px 0; text-align: left;
-        font-size: 14px; color: #7f1d1d;
-    }
-
-    #shutdownModal .alert-box p {
-        margin: 8px 0; font-weight: 500;
-    }
-
-    #shutdownModal .footer-text {
-        font-size: 12px; color: #94a3b8; margin-top: 24px;
-        font-weight: 500; letter-spacing: 0.5px;
-    }
-
-    #shutdownModal .acknowledged-btn {
-        background: linear-gradient(135deg, #f43f5e, #e11d48); color: white;
-        padding: 14px 32px; border: none; border-radius: 12px; font-size: 15px;
-        font-weight: 700; cursor: pointer; margin-top: 24px; width: 100%;
-        transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(244, 63, 94, 0.3);
-    }
-
-    #shutdownModal .acknowledged-btn:hover {
-        transform: translateY(-2px); box-shadow: 0 12px 30px rgba(244, 63, 94, 0.4);
-    }
-
-    #shutdownModal .acknowledged-btn:active {
-        transform: translateY(0); box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
-    }
 </style>
 </head>
 
@@ -420,46 +319,6 @@
     <div style="font-size: 64px; margin-bottom: 20px; animation: pulse 2s infinite;">⏳</div>
     <h1 style="font-size: 32px; font-weight: 800; color: #f59e0b; margin-bottom: 15px; letter-spacing: 1px;">APPROVAL PENDING</h1>
     <p style="color: #cbd5e1; font-size: 16px; max-width: 400px; line-height: 1.6;">Your access request has been sent to the Admin.<br>Please wait while your workspace is being prepared.</p>
-</div>
-
-<!-- SHUTDOWN NOTICE MODAL -->
-<div id="shutdownOverlay">
-    <div id="shutdownModal">
-        <div class="shutdown-icon">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-        </div>
-
-        <div class="shutdown-notice">
-            <span></span>
-            SITE CLOSURE NOTICE
-            <span></span>
-        </div>
-
-        <h2>Service Discontinuation</h2>
-
-        <div class="message-body">
-            <p>We regret to inform you that <strong>this platform has been shut down</strong> effective immediately upon request from the appropriate governing authority.</p>
-
-            <p>This difficult decision has been made following <strong>serious data security concerns</strong> that have come to our attention. Our administration has determined that it is in the best interest of all users to cease operations at this time.</p>
-
-            <div class="alert-box">
-                <p><strong>Important Information:</strong></p>
-                <p>• The site owner has been formally notified by the authorities regarding unauthorized data access and potential data leakage.</p>
-                <p>• As the site operator, I take full responsibility for this incident and have cooperated fully with the investigation.</p>
-                <p>• This shutdown is a precautionary measure to prevent further compromise of user data and privacy.</p>
-            </div>
-
-            <p>We sincerely apologize for any inconvenience this may cause. The security and privacy of our users' information is our highest priority, and we have failed in that responsibility.</p>
-        </div>
-
-        <div class="footer-text">
-            For any inquiries or concerns, please contact the appropriate authorities. Thank you for your understanding.
-        </div>
-
-        <button class="acknowledged-btn" onclick="acknowledgeShutdown()">I Acknowledge This Notice</button>
-    </div>
 </div>
 
 <datalist id="courseList">
@@ -1199,13 +1058,6 @@ tpHourEl.addEventListener('blur', function() { let val = parseInt(this.innerText
 tpHourEl.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); this.blur(); } });
 tpMinEl.addEventListener('blur', function() { let val = parseInt(this.innerText.replace(/[^0-9]/g, ''), 10); if (!isNaN(val)) { if (val > 59) val = 59; if (val < 0) val = 0; tm = val; } updateTimeUI(); });
 tpMinEl.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); this.blur(); } });
-
-// SHUTDOWN MODAL FUNCTION
-function acknowledgeShutdown() {
-    localStorage.setItem('shutdownAcknowledged', 'true');
-    alert('Thank you for acknowledging this notice. The site will now be inaccessible.');
-    window.location.href = 'about:blank';
-}
 
 let activeDropdown = null;
 document.addEventListener('click', function(e) { if (activeDropdown && !activeDropdown.contains(e.target) && e.target !== activeDropdown.inputEl) { activeDropdown.remove(); activeDropdown = null; } });
@@ -1986,4 +1838,4 @@ async function loadInternLeaderboard(filter = "all") {
 </script>
 
 </body>
-             </html>
+                                                                                                                                                  </html>
