@@ -10,7 +10,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
     /* Premium "Midnight Glass" Color Palette */
@@ -269,15 +268,12 @@
         </h3>
         
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4;">
-            <strong>Hint:</strong> Start typing the name of the course (e.g., "B.Tech" or "MBA") to find the assigned building and room number. Data is pulled live from the cloud.
+            <strong>Hint:</strong> Start typing the name of the course (e.g., "B.Tech" or "MBA") to find the assigned building and room number.
         </p>
 
         <div style="position: relative; margin-bottom: 20px;">
             <input type="text" id="courseSearchInput" placeholder="Search course name..." oninput="filterCourses()" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--primary); outline: none;">
         </div>
-
-        <div id="courseLocatorStatus" style="font-size: 12px; color: var(--info); margin-bottom: 10px; text-align: center; font-weight: 600;">
-            </div>
 
         <div id="courseSearchResults" style="max-height: 300px; overflow-y: auto; font-size: 13px;">
             </div>
@@ -798,71 +794,33 @@ if (!firebase.apps.length) {
 const db = firebase.firestore();
 
 /* =======================================================
-   NEW FEATURE: FETCH EXCEL FROM GITHUB
+   NEW FEATURE: DIRECT JSON DATA FOR COURSE LOCATOR
    ======================================================= */
-let courseLocationData = [];
 
-// 👉👉 REPLACE THIS WITH YOUR ACTUAL GITHUB RAW URL 👈👈
-// E.g., "https://raw.githubusercontent.com/YourUsername/YourRepo/main/courses.xlsx"
-const GITHUB_EXCEL_RAW_URL = "https://github.com/manjeetkeshrihkp/REPORT/blob/main/full_detailed_courses_sheet.xlsx";
-
-async function fetchCourseDataFromGitHub() {
-    const statusEl = document.getElementById('courseLocatorStatus');
-    
-    // Stop if the URL hasn't been changed yet
-    if(GITHUB_EXCEL_RAW_URL === "full_detailed_courses_sheet.xlsx") {
-        statusEl.innerHTML = "<span style='color: var(--danger);'>⚠️ Please replace GITHUB_EXCEL_RAW_URL in the code with your actual link.</span>";
-        return;
-    }
-
-    try {
-        statusEl.innerText = "Syncing live course data from cloud...";
-        
-        // Fetch the file from Github
-        const response = await fetch(GITHUB_EXCEL_RAW_URL);
-        if (!response.ok) throw new Error("Network response was not ok");
-        
-        const arrayBuffer = await response.arrayBuffer();
-        
-        // Parse it using SheetJS
-        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        
-        // Convert to JSON
-        const rawData = XLSX.utils.sheet_to_json(worksheet);
-        
-        // Map the data (this allows some flexibility if your Excel headers aren't perfect)
-        courseLocationData = rawData.map(row => ({
-            course: row.Course || row['Course Name'] || row.course || Object.values(row)[0] || "",
-            building: row.Building || row['Building Name'] || row.building || Object.values(row)[1] || "",
-            room: row.Room || row['Room Number'] || row.room || row['Room No'] || Object.values(row)[2] || ""
-        }));
-
-        statusEl.innerHTML = "<span style='color: var(--success);'>✅ Course database loaded successfully!</span>";
-        
-        // Hide success message after 3 seconds so it looks clean
-        setTimeout(() => { statusEl.innerText = ""; }, 3000);
-
-    } catch (error) {
-        console.error("Error loading Excel file:", error);
-        statusEl.innerHTML = "<span style='color: var(--danger);'>❌ Failed to load course data. Check console for details.</span>";
-    }
-}
-
-// Call the fetch function as soon as the app loads
-window.addEventListener('DOMContentLoaded', fetchCourseDataFromGitHub);
+// 👉 PASTE YOUR CONVERTED JSON DATA INSIDE THESE BRACKETS 👈
+const courseLocationData = [
+  {
+    "course": "B.Tech. Computer Science",
+    "building": "Engineering Block A",
+    "room": "Room 101"
+  },
+  {
+    "course": "MBA",
+    "building": "Management Wing",
+    "room": "Hall 3"
+  },
+  {
+    "course": "B.Pharm.",
+    "building": "Pharmacy Block",
+    "room": "Lab 2"
+  }
+  // Make sure to add a comma after each block except the last one!
+];
 
 function openCourseLocatorModal() {
     document.getElementById('courseLocatorModal').classList.remove('hidden');
     document.getElementById('courseSearchInput').value = '';
-    
-    // If they open it and data hasn't loaded (maybe internet is slow)
-    if(courseLocationData.length === 0 && GITHUB_EXCEL_RAW_URL !== "YOUR_GITHUB_RAW_URL_HERE") {
-         document.getElementById('courseSearchResults').innerHTML = '<p style="color: var(--warning); text-align: center; padding: 20px;">Fetching data, please wait...</p>';
-    } else {
-         document.getElementById('courseSearchResults').innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">Type a course name above to see results.</p>';
-    }
+    document.getElementById('courseSearchResults').innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">Type a course name above to see results.</p>';
 }
 
 function filterCourses() {
