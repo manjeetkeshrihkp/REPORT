@@ -152,9 +152,9 @@
     .popup-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; z-index: 999; }
     .popup { background: white; padding: 40px 32px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
     @keyframes popIn { 0% { opacity: 0; transform: scale(0.8) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
-    .popup h3 { margin-bottom: 24px; font-size: 24px; color: var(--text-main); font-weight: 800; }
-    .popup input { margin-bottom: 8px; font-size: 16px; padding: 14px 16px; }
-    .popup .primary-btn { margin-top: 20px; width: 100%; }
+    .popup h3 { margin-bottom: 10px; font-size: 24px; color: var(--text-main); font-weight: 800; }
+    .popup input { margin-bottom: 12px; font-size: 16px; padding: 14px 16px; }
+    .popup .primary-btn { margin-top: 15px; width: 100%; }
 
     .time-selector-area { display: flex; justify-content: center; align-items: center; gap: 20px; margin: 20px 0 30px 0; }
     .time-col { display: flex; flex-direction: column; align-items: center; gap: 12px; }
@@ -237,9 +237,11 @@
     <div class="popup">
         <h3 style="display:flex; justify-content:center; align-items:center; gap:8px;">
             <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            NAMASTE<br><span style="font-size: 14px; font-weight: 400; color: #64748b;"></span>
+            NAMASTE<br>
         </h3>
+        <div id="popupSubtitle" style="font-size: 14px; font-weight: 500; color: var(--primary); margin-bottom: 15px;">Welcome! Let's get you set up.</div>
         <input id="internInput" placeholder="Enter Intern Name">
+        <input id="misIdInput" placeholder="Enter MIS ID (e.g., 45754)" inputmode="numeric">
         <button id="saveBtn" class="primary-btn">Continue</button>
     </div>
 </div>
@@ -315,7 +317,7 @@
 
             <a href="#" onclick="openCourseLocatorModal(); return false;" class="service-tile tile-8">
                 <div class="service-icon-wrapper"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div>
-                <span class="service-title">🌏<br>Location</span>
+                <span class="service-title">Course<br>Locator</span>
             </a>
 
             <a href="#" onclick="alert('Syncing University Event Calendar...')" class="service-tile tile-9">
@@ -540,7 +542,7 @@
             <p style="color: var(--text-muted); margin-bottom: 30px;">Admission Activity Logger</p>
             <button class="add-entry-btn" onclick="triggerEditName()" style="max-width: 250px; margin: 0 auto; display: flex;">
                 <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-right: 8px;"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                Edit Saved Name
+                Edit Saved Details
             </button>
         </div>
 
@@ -597,28 +599,28 @@
 
 <datalist id="courseList">
     <option value="ANM">
-    <option value="B.Arch.">
+    <option value="B.Arch">
     <option value="B.Com B.Ed">
-    <option value="B.Com.">
-    <option value="B.Com. - (Hons.)">
-    <option value="B.Com. - (Hons.) in Investment Management With CFA Preparation">
-    <option value="B.Com. - (Hons.) With ACCA Certification">
-    <option value="B.Com. - (Hons.) With Integrated CA Preparation">
-    <option value="B.Des.">
+    <option value="B.Com">
+    <option value="B.Com - (Hons.)">
+    <option value="B.Com - (Hons.) in Investment Management With CFA Preparation">
+    <option value="B.Com - (Hons.) With ACCA Certification">
+    <option value="B.Com - (Hons.) With Integrated CA Preparation">
+    <option value="B.Des">
     <option value="B.Lib.I.Sc.">
     <option value="B.Pharm.">
     <option value="B.Pharm. - LE">
     <option value="B.Sc B.Ed">
     <option value="B.Sc.">
-    <option value="B.Sc. - IT">
-    <option value="B.Sc. - IT (Hons.)">
-    <option value="B.Sc. - Nursing">
-    <option value="B.Sc. (Hons.)">
-    <option value="B.Sc. Agriculture (Hons.)">
-    <option value="B.Tech.">
-    <option value="B.Tech. - WIP">
-    <option value="B.Tech. (Hons.)">
-    <option value="B.Tech. LE">
+    <option value="B.Sc - IT">
+    <option value="B.Sc - IT (Hons.)">
+    <option value="B.Sc - Nursing">
+    <option value="B.Sc (Hons.)">
+    <option value="B.Sc Agriculture (Hons.)">
+    <option value="B.Tech">
+    <option value="B.Tech - WIP">
+    <option value="B.Tech (Hons.)">
+    <option value="B.Tech LE">
     <option value="BA">
     <option value="BA (Hons.)">
     <option value="BA B.Ed">
@@ -642,7 +644,7 @@
     <option value="MBA (2 Years Program)">
     <option value="MCA (1 Year Program)">
     <option value="MCA (2 Years Program)">
-    <option value="M.Tech.">
+    <option value="M.Tech">
     <option value="M.Sc.">
     <option value="M.Sc. - IT">
     <option value="M.Sc. - Data Science">
@@ -960,27 +962,49 @@ function checkAccessStatus(name) {
 }
 
 window.onload=function(){ 
-    let name=getCookie("intern"); 
+    let name = getCookie("intern"); 
+    let misId = getCookie("mis_id");
     
-    // TEMPORARY TESTING PHASE: Auto-assign name and bypass popup
-    if(name === ""){ 
-        name = "Test Intern";
-        setCookie("intern", name, 365);
+    // Checks if the user is completely new or missing an MIS ID
+    if (name === "" || misId === "") {
+        document.getElementById("popup").style.display = "flex";
+        
+        if (name !== "") {
+            // Existing user, only missing the MIS ID
+            document.getElementById("internInput").style.display = "none";
+            document.getElementById("internInput").value = name; // Keep it populated for the save function
+            document.getElementById("popupSubtitle").innerText = "System Update: Please provide your MIS ID";
+        } else {
+            // Completely new user
+            document.getElementById("popupSubtitle").innerText = "Welcome! Let's get you set up.";
+        }
+    } else {
+        // User has both Name and MIS ID
+        document.getElementById("popup").style.display = "none"; 
+        let prof = document.getElementById('profileNameDisplay');
+        if (prof) {
+            prof.innerHTML = `${name}<br><span style="font-size: 16px; font-weight: 500; color: var(--text-muted); margin-top: 5px; display: inline-block;">MIS ID: ${misId}</span>`;
+        }
+        checkAccessStatus(name);
     }
-    
-    document.getElementById("popup").style.display="none"; 
-    let prof = document.getElementById('profileNameDisplay');
-    if(prof) prof.innerText = name;
-    checkAccessStatus(name);
 }
 
 document.getElementById("saveBtn").onclick=function(){ 
-    let name=document.getElementById("internInput").value.trim(); 
-    if(name===""){ alert("Please enter your name"); return; } 
-    setCookie("intern",name,365); 
+    let name = document.getElementById("internInput").value.trim(); 
+    let misId = document.getElementById("misIdInput").value.trim(); 
+    
+    if(name === ""){ alert("Please enter your name"); return; } 
+    if(misId === ""){ alert("Please enter your MIS ID"); return; } 
+    
+    setCookie("intern", name, 365); 
+    setCookie("mis_id", misId, 365); 
+    
     document.getElementById("popup").style.display="none"; 
+    
     let prof = document.getElementById('profileNameDisplay');
-    if(prof) prof.innerText = name; 
+    if (prof) {
+        prof.innerHTML = `${name}<br><span style="font-size: 16px; font-weight: 500; color: var(--text-muted); margin-top: 5px; display: inline-block;">MIS ID: ${misId}</span>`;
+    }
     checkAccessStatus(name);
     window.location.reload();
 }
@@ -990,8 +1014,10 @@ function getToday(){ let d=new Date(); let day=String(d.getDate()).padStart(2,'0
 function formatLead(val) { if (!val) return ""; return val.startsWith("#") ? val : "#" + val; }
 
 function generateMessage(){
-    let intern=getCookie("intern")
-    let msg=`*Date:* ${getToday()}\n*Intern:* ${intern}\n\n`
+    let intern = getCookie("intern");
+    let misId = getCookie("mis_id");
+    let msg = `*Date:* ${getToday()}\n*Intern:* ${intern}\n*MIS ID:* ${misId}\n\n`;
+    
     if(!document.getElementById('tokenCard').classList.contains("hidden")){
         msg+=`*🎟️ TOKEN REGISTRATION*\n\n`;
         let entries = document.querySelectorAll('#tokenCard .entry-block');
@@ -1059,7 +1085,11 @@ function switchNav(element, targetViewId) {
     if (targetView) { targetView.classList.remove('hidden'); targetView.querySelector('.title') ? targetView.querySelector('.title').style.animation = 'none' : null; targetView.querySelector('.title') ? targetView.querySelector('.title').offsetHeight : null; targetView.querySelector('.title') ? targetView.querySelector('.title').style.animation = 'fadeInDown 0.8s ease-out' : null; }
     if (targetViewId === 'profileView') { 
         let storedName = getCookie('intern'); 
-        document.getElementById('profileNameDisplay').innerText = storedName ? storedName : "Intern"; 
+        let storedMisId = getCookie('mis_id');
+        let prof = document.getElementById('profileNameDisplay');
+        if (prof) {
+            prof.innerHTML = `${storedName ? storedName : "Intern"}<br><span style="font-size: 16px; font-weight: 500; color: var(--text-muted); margin-top: 5px; display: inline-block;">MIS ID: ${storedMisId ? storedMisId : "N/A"}</span>`;
+        }
         initInternHistory(); 
     }
     if (targetViewId === 'analyticsView') { 
@@ -1070,7 +1100,14 @@ function switchNav(element, targetViewId) {
         loadInternLeaderboard('all');
     }
 }
-function triggerEditName() { document.getElementById('internInput').value = getCookie('intern'); document.getElementById('popup').style.display = 'flex'; }
+
+function triggerEditName() { 
+    document.getElementById('internInput').style.display = 'block'; 
+    document.getElementById('popupSubtitle').innerText = "Update your details";
+    document.getElementById('internInput').value = getCookie('intern'); 
+    document.getElementById('misIdInput').value = getCookie('mis_id'); 
+    document.getElementById('popup').style.display = 'flex'; 
+}
 
 const tpHourEl = document.getElementById('tp-hour'); const tpMinEl = document.getElementById('tp-min');
 tpHourEl.addEventListener('blur', function() { let val = parseInt(this.innerText.replace(/[^0-9]/g, ''), 10); if (!isNaN(val)) { if (val > 12) val = 12; if (val < 1) val = 1; th = val; } updateTimeUI(); });
@@ -1143,7 +1180,7 @@ function checkIfBanned() {
 checkIfBanned();
 
 function uploadDataToServer(isAuto = false) {
-    if(!isAuto && !confirm("Are you sure you want to ERRASE and SUBMIT this data?")) return;
+    if(!isAuto && !confirm("⚡Are you sure you want to ERRASE this data?")) return;
     
     let regCount = 0, visCount = 0, admCount = 0;
     let regDetails = [], visDetails = [], admDetails = [];
@@ -1189,9 +1226,11 @@ function uploadDataToServer(isAuto = false) {
 
     let todayISO = new Date().toISOString().split('T')[0];
     let internName = getCookie('intern') || "Unknown Intern";
+    let misIdVal = getCookie('mis_id') || "N/A"; // Captures MIS ID
 
     db.collection("reports").add({
         intern: internName, 
+        misId: misIdVal, // Uploads MIS ID to database
         ip: window.internGlobalIP, 
         date: todayISO,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -1202,7 +1241,7 @@ function uploadDataToServer(isAuto = false) {
         visitDetails: visDetails, 
         admissionDetails: admDetails
     }).then(() => {
-        if(!isAuto) alert("Data securely uploaded to Admin Server!");
+        if(!isAuto) alert("Your Data Will Be Cleared Successfully ❤️");
         let storedData = JSON.parse(localStorage.getItem('appPermanentAnalytics')) || [];
         storedData.push({ date: todayISO, timestamp: new Date().getTime(), registrations: regCount, visits: visCount, admissions: admCount });
         localStorage.setItem('appPermanentAnalytics', JSON.stringify(storedData));
@@ -1524,4 +1563,4 @@ setInterval(() => {
 </script>
 
 </body>
-    </html>
+</html>
