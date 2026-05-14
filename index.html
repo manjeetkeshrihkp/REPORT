@@ -6,10 +6,11 @@
 <title>Admission Activity Logger</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
     /* Premium "Midnight Glass" Color Palette */
@@ -268,12 +269,14 @@
         </h3>
         
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4;">
-            <strong>Hint:</strong> Start typing the name of the course (e.g., "B.Tech" or "MBA") to find the assigned building and room number.
+            <strong>Hint:</strong> Start typing the name of the course (e.g., "B.Tech" or "Nursing") to find the assigned building and room number.
         </p>
 
-        <div style="position: relative; margin-bottom: 20px;">
+        <div style="position: relative; margin-bottom: 10px;">
             <input type="text" id="courseSearchInput" placeholder="Search course name..." oninput="filterCourses()" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--primary); outline: none;">
         </div>
+
+        <div id="courseLocatorStatus" style="font-size: 11px; margin-bottom: 10px; font-weight: 600;"></div>
 
         <div id="courseSearchResults" style="max-height: 300px; overflow-y: auto; font-size: 13px;">
             </div>
@@ -314,7 +317,7 @@
                 <div class="service-icon-wrapper"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div>
                 <span class="service-title">Course<br>Locator</span>
             </a>
-            
+
             <a href="#" onclick="alert('Syncing University Event Calendar...')" class="service-tile tile-9">
                 <div class="service-icon-wrapper"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
                 <span class="service-title">Coming<br>Soon</span>
@@ -806,7 +809,8 @@ async function fetchCourseDataFromGitHub() {
     if (!statusEl) return;
     
     try {
-        statusEl.innerText = "Syncing live course data from cloud...";
+        statusEl.style.color = "var(--info)";
+        statusEl.innerText = "🔄 Syncing course data...";
         
         // Fetch the file from Github
         const response = await fetch(GITHUB_EXCEL_RAW_URL);
@@ -822,19 +826,22 @@ async function fetchCourseDataFromGitHub() {
         // Convert to JSON
         const rawData = XLSX.utils.sheet_to_json(worksheet);
         
-        // Map the data to our format
+        // Map the data using headers from your specific CSV/Excel format
         courseLocationData = rawData.map(row => ({
-            course: row.Course || row['Course Name'] || row.course || Object.values(row)[0] || "",
-            building: row.Building || row['Building Name'] || row.building || Object.values(row)[1] || "",
-            room: row.Room || row['Room Number'] || row.room || row['Room No'] || Object.values(row)[2] || ""
+            course: row['Course Name'] || row.Course || row.course || Object.values(row)[0] || "",
+            building: row['Building Name'] || row.Building || row.building || Object.values(row)[1] || "N/A",
+            room: row['Room No'] || row.Room || row['Room Number'] || row.room || Object.values(row)[2] || "N/A",
+            hint: row.Hint || row.hint || ""
         }));
 
-        statusEl.innerHTML = "<span style='color: var(--success);'>✅ Course database loaded successfully!</span>";
+        statusEl.style.color = "var(--success)";
+        statusEl.innerText = "✅ Live database active!";
         setTimeout(() => { statusEl.innerText = ""; }, 3000);
 
     } catch (error) {
         console.error("Error loading Excel file:", error);
-        statusEl.innerHTML = "<span style='color: var(--danger);'>❌ Failed to load course data. Make sure your GitHub repository is set to PUBLIC.</span>";
+        statusEl.style.color = "var(--danger)";
+        statusEl.innerText = "❌ Failed to load course data. Make sure your GitHub repo is PUBLIC.";
     }
 }
 
@@ -847,7 +854,6 @@ function openCourseLocatorModal() {
     
     if(courseLocationData.length === 0) {
          document.getElementById('courseSearchResults').innerHTML = '<p style="color: var(--warning); text-align: center; padding: 20px;">Fetching data, please wait...</p>';
-         // Try fetching again just in case it failed the first time
          fetchCourseDataFromGitHub();
     } else {
          document.getElementById('courseSearchResults').innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">Type a course name above to see results.</p>';
@@ -875,24 +881,28 @@ function filterCourses() {
     let html = '';
     filtered.forEach(item => {
         html += `
-            <div style="margin-bottom: 10px; padding: 12px; border-radius: 8px; background: rgba(139, 92, 246, 0.05); border-left: 4px solid var(--primary);">
-                <strong style="color: var(--text-main); font-size: 14px;">${item.course}</strong>
-                <div style="margin-top: 5px; display: flex; flex-direction: column; gap: 4px; color: var(--text-muted);">
-                    <span style="display: flex; align-items: center; gap: 5px;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                        Building: <strong style="color: var(--info);">${item.building}</strong>
-                    </span>
-                    <span style="display: flex; align-items: center; gap: 5px;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                        Room: <strong style="color: var(--success);">${item.room}</strong>
-                    </span>
+            <div style="margin-bottom: 12px; padding: 15px; border-radius: 12px; background: rgba(139, 92, 246, 0.05); border-left: 5px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
+                <strong style="color: var(--text-main); font-size: 14px; display: block; margin-bottom: 8px;">${item.course}</strong>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px;">
+                    <div style="color: var(--text-muted);">
+                        <div style="font-weight: 700; color: var(--info); font-size: 10px; text-transform: uppercase;">Building</div>
+                        ${item.building}
+                    </div>
+                    <div style="color: var(--text-muted);">
+                        <div style="font-weight: 700; color: var(--success); font-size: 10px; text-transform: uppercase;">Room No</div>
+                        ${item.room}
+                    </div>
                 </div>
+                ${item.hint ? `<div style="margin-top: 8px; font-style: italic; color: var(--text-muted); font-size: 12px; padding-top: 5px; border-top: 1px dashed rgba(0,0,0,0.05);">Note: ${item.hint}</div>` : ''}
             </div>
         `;
     });
     resultsContainer.innerHTML = html;
 }
 
+/* =======================================================
+   ORIGINAL FORM LOGIC
+   ======================================================= */
 function addEntry(cardId) {
     const container = document.querySelector(`#${cardId} .entries-container`);
     const firstBlock = container.querySelector('.entry-block');
@@ -1514,4 +1524,4 @@ setInterval(() => {
 </script>
 
 </body>
-</html>
+    </html>
